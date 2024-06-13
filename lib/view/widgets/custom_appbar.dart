@@ -56,7 +56,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               child: SvgPicture.asset(
                 'assets/menuIcon.svg',
-                height: 30.h,
+                height: 40.h,
               ),
             ),
           ],

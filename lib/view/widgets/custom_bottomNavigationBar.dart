@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg package
 import 'package:resize/resize.dart';
@@ -8,7 +10,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onItemTapped;
   final Animation<double> animation;
 
-  CustomBottomNavigationBar({
+  const CustomBottomNavigationBar({super.key, 
     required this.selectedIndex,
     required this.onItemTapped,
     required this.animation,
@@ -17,11 +19,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
       decoration: BoxDecoration(
         color: AppColors.orangeButtonColor,
         borderRadius: BorderRadius.circular(25.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 10,
@@ -74,9 +76,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
   }
 
   double _selectedIndexToLeft(BuildContext context, int index) {
-    final double containerPadding = 20.0;
+    const double containerPadding = 20.0;
     final double iconSegmentWidth = (MediaQuery.of(context).size.width - 2 * containerPadding) / 4;
-    final double iconWidth = 55.0; // Adjust this to the actual width of your icon container
+    const double iconWidth = 55.0; // Adjust this to the actual width of your icon container
 
     switch (index) {
       case 0:
@@ -84,9 +86,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
       case 1:
         return containerPadding + (iconSegmentWidth * 1.10.w - iconWidth / 2);
       case 2:
-        return containerPadding + (iconSegmentWidth * 1.75.w - iconWidth / 2);
+        return containerPadding + (iconSegmentWidth * 2.1.w - iconWidth / 2);
       case 3:
-        return containerPadding + (iconSegmentWidth * 2.60.w - iconWidth / 2);
+        return containerPadding + (iconSegmentWidth * 2.9.w - iconWidth / 2);
       default:
         return containerPadding + (iconSegmentWidth * 0.5.w - iconWidth / 2);
     }

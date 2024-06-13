@@ -1,4 +1,7 @@
+// ignore_for_file: file_names
+
 import 'package:resize/resize.dart';
+import 'package:social_crm/view/screens/client_updatestatus.dart';
 
 import '../../utilis/constant_colors.dart';
 import '../screens/dashboard_screen.dart';
@@ -9,13 +12,16 @@ import '../widgets/custom_bottomNavigationBar.dart';
 
 // Assuming these are the paths to your screens
 
-
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -24,7 +30,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
     _animation = Tween<double>(begin: 0, end: -30).animate(
@@ -49,21 +55,22 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget _getScreen(int index) {
     switch (index) {
       case 0:
-        return DashboardScreen();
+        return const DashboardScreen();
       case 1:
-        return StatusHistoryView();
+        return const StatusHistoryView();
       case 2:
-        return DashboardScreen();
+        return const DashboardScreen();
       case 3:
-        return StatusHistoryView();
+        return ClientUpdateStatus();
       default:
-        return DashboardScreen();
+        return const DashboardScreen();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.scaffoldColor,
       body: Column(
         children: [
@@ -71,7 +78,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             child: _getScreen(_selectedIndex),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 25.0, left: 14.h,right: 14.h),
+            padding: EdgeInsets.only(bottom: 18.h, left: 14.h, right: 14.h),
             child: CustomBottomNavigationBar(
               selectedIndex: _selectedIndex,
               onItemTapped: _onItemTapped,
