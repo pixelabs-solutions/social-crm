@@ -4,6 +4,7 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
+import 'package:social_crm/view/widgets/custom_bottomNavigationBar.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -204,6 +205,7 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
+
     );
   }
 }
