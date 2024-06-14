@@ -15,6 +15,12 @@ class AppConstantsTextStyle {
     fontFamily: 'Noto Sans Hebrew',
     fontWeight: FontWeight.w400,
   );
+  static TextStyle kNormalOrangeNotoTextStyle = TextStyle(
+    color: AppColors.orangeButtonColor,
+    fontSize: 14.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.w900,
+  );
     static TextStyle kNormalWhiteNotoSmallTextStyle = TextStyle(
     color: AppColors.kWhiteColor,
     fontSize: 12.sp,

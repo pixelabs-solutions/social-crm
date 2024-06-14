@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:resize/resize.dart';
-import 'package:social_crm/view/screens/client_updatestatus.dart';
+import 'package:social_crm/view/screens/statuscalender.dart';
 
 import '../../utilis/constant_colors.dart';
 import '../screens/dashboard_screen.dart';
@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen>
       case 2:
         return const DashboardScreen();
       case 3:
-        return ClientUpdateStatus();
+        return StatusCalendar();
       default:
         return const DashboardScreen();
     }
