@@ -5,6 +5,8 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
+import 'StatusUploadScreen.dart';
+
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -175,30 +177,37 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
              SizedBox(height: 14.h),
-            RoundedContainer(
-              color: AppColors.primaryColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('The Upcoming Status',
-                          style: AppConstantsTextStyle.heading2Style),
-                       SizedBox(
-                        height: 3.h,
-                      ),
-                      Text(
-                        '16:45  24/05/ 2024',
-                        style: AppConstantsTextStyle.paragraph2Style,
-                      ),
-                    ],
-                  ),
-                   SizedBox(
-                    width: 13.w,
-                  ),
-                  SvgPicture.asset("assets/faMobile.svg",height: 40.h,width: 35.w,),
-                ],
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (i)=>StatusUploadScreen())
+                );
+              },
+              child: RoundedContainer(
+                color: AppColors.primaryColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('The Upcoming Status',
+                            style: AppConstantsTextStyle.heading2Style),
+                         SizedBox(
+                          height: 3.h,
+                        ),
+                        Text(
+                          '16:45  24/05/ 2024',
+                          style: AppConstantsTextStyle.paragraph2Style,
+                        ),
+                      ],
+                    ),
+                     SizedBox(
+                      width: 13.w,
+                    ),
+                    SvgPicture.asset("assets/faMobile.svg",height: 40.h,width: 35.w,),
+                  ],
+                ),
               ),
             ),
           ],
