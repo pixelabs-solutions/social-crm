@@ -56,6 +56,11 @@ class AppConstantsTextStyle {
     color: Colors.white,
     fontFamily: 'Rubik One',
   );
+  static TextStyle heading1StyleOrange = const TextStyle(
+    fontSize: 18,
+    color: AppColors.orangeButtonColor,
+    fontFamily: 'Rubik One',
+  );
 
   static TextStyle heading2Style = const TextStyle(
       fontSize: 18,
@@ -69,7 +74,7 @@ class AppConstantsTextStyle {
       fontFamily: 'Noto Sans',
       fontWeight: FontWeight.bold);
   static TextStyle paragraph2Style = const TextStyle(
-      fontSize: 16,
+      fontSize: 14,
       color: AppColors.orangeButtonColor,
       fontFamily: 'Noto Sans',
       fontWeight: FontWeight.w500);

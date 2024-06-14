@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resize/resize.dart';
+import 'package:resize/resize.dart' ;
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_images.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
