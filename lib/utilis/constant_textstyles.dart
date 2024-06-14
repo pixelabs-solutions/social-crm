@@ -9,6 +9,24 @@ class AppConstantsTextStyle {
     fontFamily: 'Rubik One',
     fontWeight: FontWeight.normal,
   );
+  static TextStyle kNormalWhiteNotoTextStyle = TextStyle(
+    color: AppColors.kWhiteColor,
+    fontSize: 14.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle kNormalOrangeNotoTextStyle = TextStyle(
+    color: AppColors.orangeButtonColor,
+    fontSize: 14.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.w900,
+  );
+    static TextStyle kNormalWhiteNotoSmallTextStyle = TextStyle(
+    color: AppColors.kWhiteColor,
+    fontSize: 12.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.normal,
+  );
   static TextStyle kSmallButtonBoldWhiteTextStyle = TextStyle(
     color: AppColors.kWhiteColor,
     fontSize: 12.sp,
@@ -20,6 +38,18 @@ class AppConstantsTextStyle {
     fontSize: 14.sp,
     fontFamily: 'Noto Sans Hebrew',
     fontWeight: FontWeight.normal,
+  );
+  static TextStyle kTextFieldTextStyle = TextStyle(
+    color: AppColors.scaffoldColor,
+    fontSize: 14.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.w800,
+  );
+  static TextStyle kNormalTextWeight800TextStyle = TextStyle(
+    color: AppColors.defaultTextColor,
+    fontSize: 14.sp,
+    fontFamily: 'Noto Sans Hebrew',
+    fontWeight: FontWeight.w800,
   );
   static TextStyle heading1Style = const TextStyle(
     fontSize: 18,

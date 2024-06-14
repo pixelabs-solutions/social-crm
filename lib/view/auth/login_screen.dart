@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/auth/forgotpassword_screen.dart';
-import 'package:social_crm/view/screens/dashboard_screen.dart';
+import 'package:social_crm/view/screens/NavigatonMain.dart';
 import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
@@ -41,7 +41,7 @@ class LoginForm extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const DashboardScreen()));
+                    builder: (context) =>  const MainScreen()));
           },
         ),
         SizedBox(height: 5.h),

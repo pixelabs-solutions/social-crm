@@ -15,12 +15,11 @@ class StatusHistoryView extends StatelessWidget {
       appBar: const HomeAppBar(),
       backgroundColor: AppColors.scaffoldColor,
       body: Padding(
-        padding:  EdgeInsets.only(left: 8.w, right: 8.w),
+        padding: EdgeInsets.only(left: 8.w, right: 8.w),
         child: Column(
           children: [
-           
             Padding(
-              padding:  EdgeInsets.only(left: 8.w, right: 8.w),
+              padding: EdgeInsets.only(left: 8.w, right: 8.w),
               child: Row(
                 children: [
                   IconButton(
@@ -42,12 +41,10 @@ class StatusHistoryView extends StatelessWidget {
                 ],
               ),
             ),
-            
             Container(
               height: MediaQuery.of(context).size.height * 0.6,
               margin: const EdgeInsets.all(12.0),
-              padding:  EdgeInsets.only(
-                  top: 12.0.h),
+              padding: EdgeInsets.only(top: 12.0.h),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(25.0),
@@ -56,7 +53,7 @@ class StatusHistoryView extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 10, // Replace with your dynamic item count
                 itemBuilder: (context, index) {
-                  return  Column(
+                  return Column(
                     children: [
                       const StatusRow(
                         iconPath: 'assets/viewIcon.svg',
@@ -65,7 +62,7 @@ class StatusHistoryView extends StatelessWidget {
                         rightIconPath: 'assets/e6.png',
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal:20.w),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: const Divider(
                           color: Colors.white,
                         ),
@@ -98,7 +95,7 @@ class StatusRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:  EdgeInsets.only(left: 20.0.h, right: 20.h,top: 12.h),
+      padding: EdgeInsets.only(left: 20.0.h, right: 20.h, top: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -121,12 +118,12 @@ class StatusRow extends StatelessWidget {
             children: [
               Text(
                 time,
-                style:  TextStyle(
+                style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 16.sp),
               ),
-               SizedBox(width: 12.w),
+              SizedBox(width: 12.w),
               Image.asset(
                 rightIconPath,
                 height: 28.h,

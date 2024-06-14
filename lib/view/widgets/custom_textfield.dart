@@ -11,23 +11,24 @@ class CustomTextField extends StatelessWidget {
   String? hintText = "";
   TextInputType keyboardType; // Add keyboardType parameter
   bool showBorder; // New parameter to control border visibility
-  CustomTextField({
-    super.key,
-    required this.height,
-    required this.controller,
-    this.hintText,
-    required this.keyboardType, // Make keyboardType required
-    this.showBorder = false, // Default value for showBorder
-  });
+  Color backgroundColor;
+  CustomTextField(
+      {super.key,
+      required this.height,
+      required this.controller,
+      this.hintText,
+      required this.keyboardType, // Make keyboardType required
+      this.showBorder = false, // Default value for showBorder
+      this.backgroundColor = AppColors.kWhiteColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(
-            25), // Nullify border if showBorder is false
+        color: backgroundColor,
+        borderRadius:
+            BorderRadius.circular(25), // Nullify border if showBorder is false
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -38,9 +39,9 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           maxLines: null,
           cursorColor: AppColors.cursorColor,
-          style: AppConstantsTextStyle.kDefaultappTextStyle,
+          style: AppConstantsTextStyle.kTextFieldTextStyle,
           decoration: InputDecoration(
-            hintStyle: AppConstantsTextStyle.kDefaultappTextStyle,
+            hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
             hintText: hintText,
             border:
                 showBorder ? null : InputBorder.none, // Remove default border
@@ -84,7 +85,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
           controller: widget.controller,
           keyboardType: TextInputType.visiblePassword,
           cursorColor: AppColors.cursorColor,
-          style: AppConstantsTextStyle.kDefaultappTextStyle,
+          style: AppConstantsTextStyle.kTextFieldTextStyle,
           decoration: InputDecoration(
               suffixIcon: IconButton(
                 icon: _isPasswordVisible
@@ -102,9 +103,52 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
                   });
                 },
               ),
-              hintStyle: AppConstantsTextStyle.kNormalWhiteTextStyle,
+              hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
               hintText: widget.hintText,
               border: InputBorder.none),
+        ),
+      ),
+    );
+  }
+}
+
+class SearchTextField extends StatelessWidget {
+  TextEditingController controller;
+  String hintText;
+  bool showBorder; // New parameter to control border visibility
+  Color backgroundColor;
+  SearchTextField(
+      {super.key,
+      required this.controller,
+      required this.hintText,
+      this.showBorder = false, // Default value for showBorder
+      this.backgroundColor = AppColors.kWhiteColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 38.h,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius:
+            BorderRadius.circular(25), // Nullify border if showBorder is false
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 0.1.h),
+        child: TextFormField(
+          controller: controller,
+          cursorColor: AppColors.cursorColor,
+          style: AppConstantsTextStyle.kTextFieldTextStyle,
+          decoration: InputDecoration(
+            prefixIcon: const Icon(
+              Icons.search,
+              color: AppColors.scaffoldColor,
+            ),
+            hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
+            hintText: hintText,
+            border:
+                showBorder ? null : InputBorder.none, // Remove default border
+          ),
         ),
       ),
     );
