@@ -19,7 +19,7 @@ class CustomTextField extends StatelessWidget {
       this.hintText,
       required this.keyboardType, // Make keyboardType required
       this.showBorder = false, // Default value for showBorder
-      this.backgroundColor = AppColors.kWhiteColor});
+      this.backgroundColor = AppColors.kWhiteColor, required TextDirection textDirection});
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +34,21 @@ class CustomTextField extends StatelessWidget {
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.05,
             vertical: 0.1.h),
-        child: TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLines: null,
-          cursorColor: AppColors.cursorColor,
-          style: AppConstantsTextStyle.kTextFieldTextStyle,
-          decoration: InputDecoration(
-            hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
-            hintText: hintText,
-            border:
-                showBorder ? null : InputBorder.none, // Remove default border
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: null,
+            cursorColor: AppColors.cursorColor,
+            style: AppConstantsTextStyle.kTextFieldTextStyle,
+            decoration: InputDecoration(
+              hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
+              hintText: hintText,
+
+              border:
+                  showBorder ? null : InputBorder.none, // Remove default border
+            ),
           ),
         ),
       ),

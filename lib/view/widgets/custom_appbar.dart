@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
-import 'package:social_crm/view/screens/status_view_history.dart';
+
+
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -48,12 +49,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const StatusHistoryView()));
-              },
+              // onTap: () {
+              //   Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (context) => const StatusCalendarScreen()));
+              // },
               child: SvgPicture.asset(
                 'assets/menuIcon.svg',
                 height: 40.h,

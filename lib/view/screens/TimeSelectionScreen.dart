@@ -6,28 +6,32 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/screens/publishSuccesScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
+import 'package:intl/intl.dart';
+
+import '../../Model/Status.dart';
 
 class TimeSelection extends StatefulWidget {
-  const TimeSelection({Key? key}) : super(key: key);
+  final StatusData? statusData;
+  const TimeSelection({Key? key, this.statusData}) : super(key: key);
 
   @override
   State<TimeSelection> createState() => _TimeSelectionState();
 }
 
 class _TimeSelectionState extends State<TimeSelection> {
-  DateTime _currentDate = DateTime.now();
+  DateTime _selectedTime = DateTime.now();
 
   // Sample list of times
   List<String> times = [
-    '10:00 ',
-    '11:00 ',
-    '12:00 ',
-    '01:00 ',
-    '02:00 ',
-    '03:00 ',
-    '04:00 ',
-    '05:00 ',
-    '06:00 ',
+    '10:00',
+    '11:00',
+    '12:00',
+    '01:00',
+    '02:00',
+    '03:00',
+    '04:00',
+    '05:00',
+    '06:00',
   ];
 
   @override
@@ -55,16 +59,15 @@ class _TimeSelectionState extends State<TimeSelection> {
                     },
                   ),
                   Text(
-                    'Status timing',
+                    'תזמון הסטטוס',
                     style: AppConstantsTextStyle.heading1Style,
                   ),
-                  // Optionally add arrows for month navigation here
                 ],
               ),
             ),
             SizedBox(height: 20.0.h),
             Padding(
-              padding:  EdgeInsets.only(left: 12.0.w, right: 12.w),
+              padding: EdgeInsets.only(left: 12.0.w, right: 12.w),
               child: Container(
                 height: 400.0.h, // Adjust height as needed
                 decoration: BoxDecoration(
@@ -76,84 +79,104 @@ class _TimeSelectionState extends State<TimeSelection> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
                       SizedBox(height: 10.0),
-                      Text(
-                        "Choose a Time",
-                        style: AppConstantsTextStyle.heading2Style,
-                      ),
-                      SizedBox(height: 10.0.h),
-                      Container(
-                        height: 70.0.h, // Adjust height as needed
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50.0),
-                          gradient: RadialGradient(
-                            center: Alignment.center,
-                            radius: 2.0,
-                            colors: [
-                              // #A3A3A3 in 32-bit hexadecimal (ARGB)
-                              Color(0xFF097382),
-                              Color(0xFFA3A3A3),// #097382 in 32-bit hexadecimal (ARGB)
+                      GestureDetector(
+                        onTap: () async {
+                          final TimeOfDay? pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(_selectedTime),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              _selectedTime = DateTime(
+                                _selectedTime.year,
+                                _selectedTime.month,
+                                _selectedTime.day,
+                                pickedTime.hour,
+                                pickedTime.minute,
+                              );
+                              // Update selectedTime in StatusData
+                              widget.statusData?.selectedTime = _selectedTime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          height: 70.0.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50.0),
+                            gradient: RadialGradient(
+                              center: Alignment.center,
+                              radius: 2.0,
+                              colors: [
+                                Color(0xFF097382),
+                                Color(0xFFA3A3A3),
+                              ],
+                              stops: [0.0, 1.0],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 3.0,
+                                spreadRadius: 1.0,
+                                offset: Offset(0, 2),
+                              ),
                             ],
-                            stops: [0.0, 1.0],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 3.0,
-                              spreadRadius: 1.0,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '10',
-                              style: TextStyle(
-                                fontSize: 36.0.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                DateFormat('HH').format(_selectedTime),
+                                style: TextStyle(
+                                  fontSize: 36.0.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 8.0),
-                            Text(
-                              ':',
-                              style: TextStyle(
-                                fontSize: 36.0.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                              SizedBox(width: 8.0),
+                              Text(
+                                ':',
+                                style: TextStyle(
+                                  fontSize: 36.0.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 8.0),
-                            Text(
-                              '30',
-                              style: TextStyle(
-                                fontSize: 36.0.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                              SizedBox(width: 8.0),
+                              Text(
+                                DateFormat('mm').format(_selectedTime),
+                                style: TextStyle(
+                                  fontSize: 36.0.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 10.0.h),
-                      Text("Busy Times", style: AppConstantsTextStyle.heading2Style,),
+                      Text("זמנים תפוסים", style: AppConstantsTextStyle.heading2Style),
                       SizedBox(height: 10.0.h),
-
                       Column(
-
                         children: _buildTimeRows(),
                       ),
                       SizedBox(height: 20.0.h),
                       Padding(
                         padding: EdgeInsets.only(bottom: 8.0),
                         child: ConstantLargeButton(
-                          text: "Select an Hour -->",
+                          text: "לפרסום הסטטוס ←",
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (i)=>PublishSuccess())
+                            print('Selected Text: ${widget.statusData?.text}');
+                            print('Selected Background Color: ${widget.statusData?.backgroundColorHex}');
+                            print('Selected Image Path: ${widget.statusData?.imagePaths}');
+                            print('Selected Date: ${widget.statusData?.selectedDate}');
+                            print('Selected Time: ${widget.statusData?.selectedTime}');
+                            print('Selected Video: ${widget.statusData?.videoPath}');
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (i) => PublishSuccess()),
                             );
                           },
                         ),
@@ -194,13 +217,12 @@ class _TimeSelectionState extends State<TimeSelection> {
   }
 
   Widget _buildTimeContainer(int index) {
-    // Replace with your SVG assets or use a placeholder
     String svgAsset = 'assets/smalImgIcon.svg';
 
     return Container(
       margin: EdgeInsets.only(left: 2.w, right: 2.w),
-      width: 70.0.w, // Adjust width as needed
-      height: 35.h, // Adjust height as needed
+      width: 70.0.w,
+      height: 35.h,
       decoration: BoxDecoration(
         color: AppColors.kWhiteColor40Opacity,
         borderRadius: BorderRadius.circular(50.0),
@@ -218,13 +240,13 @@ class _TimeSelectionState extends State<TimeSelection> {
         children: [
           SvgPicture.asset(
             svgAsset,
-            height: 16.0.h, // Adjust size as needed
+            height: 16.0.h,
             width: 16.0.w,
           ),
-          SizedBox(width: 8.w,),
+          SizedBox(width: 8.w),
           Text(
             times[index],
-            style: AppConstantsTextStyle.paragraph2Style
+            style: AppConstantsTextStyle.paragraph2Style,
           ),
         ],
       ),

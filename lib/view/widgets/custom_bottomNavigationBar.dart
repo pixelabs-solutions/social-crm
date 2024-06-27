@@ -37,10 +37,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(context, 0, 'assets/userVector.svg'), // Replace with SVG path
-              _buildNavItem(context, 1, 'assets/userVector.svg'), // Replace with SVG path
+              _buildNavItem(context, 0, 'assets/faUserFrnds.svg'), // Replace with SVG path
+              _buildNavItem(context, 1, 'assets/faStats.svg'), // Replace with SVG path
               _buildNavItem(context, 2, 'assets/faCalendar.svg'), // Replace with SVG path
-              _buildNavItem(context, 3, 'assets/userVector.svg'), // Replace with SVG path
+              _buildNavItem(context, 3, 'assets/faHome.svg'), // Replace with SVG path
             ],
           ),
           AnimatedBuilder(
@@ -86,9 +86,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
       case 1:
         return containerPadding + (iconSegmentWidth * 1.10.w - iconWidth / 2);
       case 2:
-        return containerPadding + (iconSegmentWidth * 2.1.w - iconWidth / 2);
+        return containerPadding + (iconSegmentWidth * 1.9.w - iconWidth / 2);
       case 3:
-        return containerPadding + (iconSegmentWidth * 2.9.w - iconWidth / 2);
+        return containerPadding + (iconSegmentWidth * 2.6.w - iconWidth / 2);
       default:
         return containerPadding + (iconSegmentWidth * 0.5.w - iconWidth / 2);
     }
@@ -97,13 +97,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
   String _selectedIndexToIcon(int index) {
     switch (index) {
       case 0:
-        return 'assets/userVector.svg';
+        return 'assets/faUserFrnds.svg';
       case 1:
-        return 'assets/userVector.svg';
+        return 'assets/faStats.svg';
       case 2:
         return 'assets/faCalendar.svg';
       case 3:
-        return 'assets/userVector.svg';
+        return 'assets/faHome.svg';
       default:
         return 'assets/userVector.svg';
     }

@@ -9,8 +9,13 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
+import '../../Model/Status.dart';
+
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  final StatusData? statusData;
+
+  const CalendarScreen({Key? key, this.statusData}) : super(key: key);
+
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -44,7 +49,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     },
                   ),
                   Text(
-                    'Status timing',
+                    'תזמון הסטטוס',
                     style: AppConstantsTextStyle.heading1Style,
                   ),
 
@@ -64,7 +69,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 20.h,),
-                    Text("Choose a Day", style: AppConstantsTextStyle.heading2Style,),
+                    Text("בחירת יום ", style: AppConstantsTextStyle.heading2Style,),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 16.w),
                       child: CalendarCarousel<Event>(
@@ -96,10 +101,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                     Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 15.0.w),
-                      child: ConstantLargeButton(text: "Select an Hour -->",
+                      child: ConstantLargeButton(text: "לבחירת שעה ←",
                           onPressed:(){
+                            print('Selected Video at Calendar Scrren: ${widget.statusData?.videoPath}');
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (i)=>TimeSelection())
+                                MaterialPageRoute(builder: (i)=>TimeSelection(
+                                  statusData: StatusData(
+                                    text: widget.statusData?.text,
+                                    backgroundColorHex: widget.statusData?.backgroundColorHex,
+                                    imagePaths: widget.statusData?.imagePaths,
+                                    videoPath: widget.statusData?.videoPath,
+                                    selectedDate: _currentDate,
+                                  ),
+                                ))
                             );
                           }
                       ),

@@ -5,9 +5,14 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
+import 'pagestatus_dailyposting_schedule.dart';
 
 class StatusScheduleMonthView extends StatefulWidget {
-  const StatusScheduleMonthView({Key? key}) : super(key: key);
+  final DateTime selectedDate;
+  const StatusScheduleMonthView({
+    Key? key,
+    required this.selectedDate,
+  }) : super(key: key);
 
   @override
   State<StatusScheduleMonthView> createState() => _StatusScheduleMonthViewState();
@@ -18,70 +23,80 @@ class _StatusScheduleMonthViewState extends State<StatusScheduleMonthView> {
 
   void _goToNextDay() {
     setState(() {
-      _selectedDate = _getNextWeekStartDate(_selectedDate);
+      _selectedDate = _selectedDate.add(Duration(days: 1));
     });
   }
 
   void _goToPreviousDay() {
     setState(() {
-      _selectedDate = _getPreviousWeekStartDate(_selectedDate);
+      _selectedDate = _selectedDate.subtract(Duration(days: 1));
     });
-  }
-
-  DateTime _getNextWeekStartDate(DateTime currentDate) {
-    // Calculate the next week's starting date
-    return currentDate.add(Duration(days: 7 - currentDate.weekday + 1));
-  }
-
-  DateTime _getPreviousWeekStartDate(DateTime currentDate) {
-    // Calculate the previous week's starting date
-    return currentDate.subtract(Duration(days: currentDate.weekday));
   }
 
   List<Map<String, String>> _statusEntries = [
     {"time": "10:00 AM", "icon": "status_icon_1"},
     {"time": "02:00 PM", "icon": "status_icon_2"},
+    {"time": "10:00 AM", "icon": "status_icon_1"},
+    {"time": "02:00 PM", "icon": "status_icon_2"},
+    {"time": "10:00 AM", "icon": "status_icon_1"},
+    {"time": "02:00 PM", "icon": "status_icon_2"},
+    // Add more entries as needed
   ];
 
-  List<Widget> _buildDayWidgets() {
-    List<Widget> dayWidgets = [];
-    DateTime startDate = _selectedDate.subtract(Duration(days: _selectedDate.weekday - 1));
-    DateTime endDate = startDate.add(Duration(days: 6));
+  List<Widget> _buildHourWidgets() {
+    List<Widget> hourWidgets = [];
 
-    for (DateTime day = startDate; day.isBefore(endDate) || day.isAtSameMomentAs(endDate); day = day.add(Duration(days: 1))) {
-      dayWidgets.add(
+    // Example: Simulating hours for the selected day (adjust as per your logic)
+    List<String> hours = [
+      "10:00 AM", "11:00 AM", "12:00 PM",
+      "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"
+    ];
+
+    for (String hour in hours) {
+      hourWidgets.add(
         Column(
           children: [
             Divider(color: Colors.grey),
             Row(
               children: [
                 Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _statusEntries.map((entry) {
-                      return Container(
-                        margin: EdgeInsets.only(left: 4.0, right: 4.0),
-                        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.kWhiteColor40Opacity,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SvgPicture.asset("assets/smalImgIcon.svg"),
-                            SizedBox(width: 5),
-                            Text(entry['time']!, style: AppConstantsTextStyle.paragraph2Style),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _statusEntries.where((entry) => entry['time'] == hour).map((entry) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DailyPostingSchedule()),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 4.0, right: 4.0),
+                            padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                            decoration: BoxDecoration(
+                              color: AppColors.kWhiteColor40Opacity,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SvgPicture.asset("assets/smalImgIcon.svg"),
+                                SizedBox(width: 5),
+                                Text(entry['time']!, style: AppConstantsTextStyle.paragraph2Style),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    DateFormat('dd').format(day), // Display day of the month
+                    hour,
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
@@ -92,7 +107,7 @@ class _StatusScheduleMonthViewState extends State<StatusScheduleMonthView> {
       );
     }
 
-    return dayWidgets;
+    return hourWidgets;
   }
 
   @override
@@ -120,7 +135,7 @@ class _StatusScheduleMonthViewState extends State<StatusScheduleMonthView> {
                     },
                   ),
                   Text(
-                    'Status Schedule',
+                    'העלאת סטטוס',
                     style: AppConstantsTextStyle.heading1Style,
                   ),
                 ],
@@ -171,7 +186,7 @@ class _StatusScheduleMonthViewState extends State<StatusScheduleMonthView> {
                           physics: BouncingScrollPhysics(),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _buildDayWidgets(),
+                            children: _buildHourWidgets(),
                           ),
                         ),
                       ),

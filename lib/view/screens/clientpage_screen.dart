@@ -8,6 +8,8 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
+import 'editing_customerdetails_screen.dart';
+
 class ClientPage extends StatelessWidget {
   const ClientPage({super.key});
 
@@ -41,7 +43,7 @@ class ClientPage extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      'Client details: Eliyahu Malka',
+                      'פרטי לקוח: אליהו מלכה',
                       style: AppConstantsTextStyle.heading2Style,
                     ),
                   ),
@@ -59,69 +61,81 @@ class ClientPage extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SizedBox(height: 10.h,),
-                      _customRow("Email", "Active"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 20.h,
-                            width: 65.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: AppColors.offstatusContainerColor,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(height: 10.h,),
+                        _customRow("דוא\"ל", "פעיל"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 20.h,
+                              width: 65.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: AppColors.offstatusContainerColor,
+                              ),
+                              child: const Center(child: Text("כבוי")),
                             ),
-                            child: const Center(child: Text("off")),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "elyau.dms@gmail.com",
-                              style: AppConstantsTextStyle
-                                  .kNormalWhiteNotoTextStyle,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      _customIconRow("assets/editIcon.svg", "Phone"),
-                      showText("03114858538"),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      _customIconRow("assets/deleteIcon.svg", "Profession"),
-                      showText("make-up"),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Container(
-                        height: 35.h,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: AppColors.kWhiteColor23pacity,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                            child: Text(
-                          "The publication history",
-                          style:
-                              AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-                        )),
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      statusRow("14,500", "06/15/24", "Vedio status",
-                          "assets/vedioStatusIcon.svg"),
-                      statusRow(
-                          "14,500", "06/15/24", "Text status", "assets/A.svg"),
-                      statusRow("14,500", "06/15/24", "Image status",
-                          "assets/photoStatusIcon.svg"),
-                    ],
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.h),
+                              child: Text(
+                                "elyau.dms@gmail.com",
+                                style: AppConstantsTextStyle
+                                    .kNormalWhiteNotoTextStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (o)=>EditingCustomerDetails())
+                          );
+                        }),
+                        showText("03114858538"),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        _customIconRow("assets/deleteIcon.svg", "מקצוע",
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (o)=>EditingCustomerDetails())
+                              );
+                            }),
+                        showText("איפור"),
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Container(
+                          height: 35.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: AppColors.kWhiteColor23pacity,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                              child: Text(
+                                "היסטוריית פרסומים",
+                                style:
+                                AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                              )),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        statusRow("14,500", "24/06/15", "סטטוס וידאו",
+                            "assets/vedioStatusIcon.svg"),
+                        statusRow(
+                            "14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
+                        statusRow("14,500", "24/06/15", "סטטוס תמונה",
+                            "assets/photoStatusIcon.svg"),
+                      ],
+                    ),
                   ),
                 )),
           ],
@@ -215,16 +229,19 @@ class ClientPage extends StatelessWidget {
     );
   }
 
-  Widget _customIconRow(String icon, String text) {
+  Widget _customIconRow(String icon, String text,{ required VoidCallback onTap}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset(
-            icon,
-            width: 20.w,
-            height: 20.h,
+          GestureDetector(
+            onTap: onTap,
+            child: SvgPicture.asset(
+              icon,
+              width: 20.w,
+              height: 20.h,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 7.h),

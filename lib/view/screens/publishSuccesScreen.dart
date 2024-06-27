@@ -39,14 +39,14 @@ class _PublishSuccessState extends State<PublishSuccess> {
                     },
                   ),
                   Text(
-                    'Something awaits your followers',
+                    'משהו חדש מחכה לעוקבים שלך',
                     style: AppConstantsTextStyle.heading2Style,
                   ),
                   // Optionally add arrows for month navigation here
                 ],
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 10.0.h),
             Padding(
               padding:  EdgeInsets.only(left: 14.w, right: 8.w, top: 9.h),
               child: Container(
@@ -81,9 +81,12 @@ class _PublishSuccessState extends State<PublishSuccess> {
                       // Text overlay
                       Positioned.fill(
                         child: Center(
-                          child: Text(
-                            'Status Published Succesfuly',
-                            style: AppConstantsTextStyle.heading2Style
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Text(
+                              "הסטטוס פורסם בהצלחה!",
+                              style: AppConstantsTextStyle.heading2Style
+                            ),
                           ),
                         ),
                       ),
@@ -92,6 +95,14 @@ class _PublishSuccessState extends State<PublishSuccess> {
                 ),
               ),
             ),
+            SizedBox(height: 10.0.h),
+            ConstantLargeButton(
+              text: "בוצע",
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            )
+
           ],
         ),
       ),

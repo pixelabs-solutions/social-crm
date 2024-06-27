@@ -45,7 +45,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ),
                         const Text(
-                          'Ads Pending',
+                          'מודעות ממתינות',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
@@ -77,7 +77,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ),
                         const Text(
-                          'Customers',
+                          'לקוחות ',
                           style: TextStyle(color: Colors.black),
                         ),
                       ],
@@ -118,8 +118,9 @@ class DashboardScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(height: 15.h,),
                           Text(
-                            "Highest number of viewers",
+                            "מספר הצופים הגבוה ביותר",
                             style: AppConstantsTextStyle.paragraph1Style,
                           ),
                            SizedBox(
@@ -150,7 +151,7 @@ class DashboardScreen extends StatelessWidget {
                                 color: Colors.transparent,
                               ),
                               child:  Text(
-                                'Post it to me as Status',
+                                'פרסם לי את זה בסטטוס ←',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14.sp,
@@ -191,7 +192,7 @@ class DashboardScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('The Upcoming Status',
+                        Text('הסטטוס הקרוב ב ',
                             style: AppConstantsTextStyle.heading2Style),
                          SizedBox(
                           height: 3.h,

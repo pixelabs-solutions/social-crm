@@ -7,6 +7,10 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
+import 'StatusUploadScreen.dart';
+import 'adding_customer.dart';
+import 'statusScheduleMonthView.dart';
+
 class StatusCalendar extends StatefulWidget {
   const StatusCalendar({super.key});
 
@@ -16,6 +20,38 @@ class StatusCalendar extends StatefulWidget {
 
 class _StatusCalendarState extends State<StatusCalendar> {
   DateTime _currentDate = DateTime.now();
+  final EventList<Event> _markedDates = EventList<Event>(events: {});
+
+  @override
+  void initState() {
+    super.initState();
+    _markFridays();
+    print("Marked dates initialized: ${_markedDates.events}");
+  }
+  void _markFridays() {
+    DateTime now = DateTime.now();
+    DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
+    int daysInMonth = DateTime(now.year, now.month + 1, 0).day; // Number of days in the current month
+
+    for (int i = 0; i < daysInMonth; i++) {
+      DateTime date = firstDayOfMonth.add(Duration(days: i));
+      if (date.weekday == DateTime.friday) {
+        _markedDates.add(
+          date,
+          Event(
+            date: date,
+            title: 'Friday',
+            dot: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              color: Colors.red,
+              height: 5.0,
+              width: 5.0,
+            ),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +79,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                       },
                     ),
                     Text(
-                      'bulletin board ',
+                      'לוח פרסומים  ',
                       style: AppConstantsTextStyle.heading1Style,
                     ),
                   ],
@@ -64,11 +100,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                         padding: EdgeInsets.symmetric(
                             vertical: 1.0.h, horizontal: 16.w),
                         child: CalendarCarousel<Event>(
-                          onDayPressed: (DateTime date, List<Event> events) {
-                            setState(() {
-                              _currentDate = date;
-                            });
-                          },
+
                           weekendTextStyle:
                               const TextStyle(color: Colors.white),
                           thisMonthDayBorderColor: Colors.grey,
@@ -93,7 +125,32 @@ class _StatusCalendarState extends State<StatusCalendar> {
                           nextDaysTextStyle:
                               const TextStyle(color: Colors.white),
                           iconColor: AppColors
-                              .orangeButtonColor, // Next month arrow color
+                              .orangeButtonColor,
+                          markedDatesMap: _markedDates,
+                          markedDateShowIcon: true,
+                          markedDateIconBuilder: (event) {
+                            return Container(
+
+                              child: Center(
+                                child: Text(
+                                  event.date.day.toString(),
+                                  style: TextStyle(
+                                    color: AppColors.orangeButtonColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          onDayPressed: (DateTime date, List<Event> events) {
+                            if (events.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StatusScheduleMonthView(selectedDate: date),
+                                ),
+                              );
+                            }
+                          },// Next month arrow color
                         ),
                       ),
                     ],
@@ -107,18 +164,28 @@ class _StatusCalendarState extends State<StatusCalendar> {
                     Column(
                       children: [
                         _iconCOntainer(
-                            "Status upload ",
+                            "העלאת סטטוס ",
                             "assets/mobileIcon.svg",
                             AppColors.orangeButtonColor,
-                            AppConstantsTextStyle.kNormalWhiteNotoTextStyle),
+                            AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (o)=>StatusUploadScreen ())
+                              );
+                            }),
                         SizedBox(
                           height: 17.h,
                         ),
                         _iconCOntainer(
-                            "Add customer ",
+                            "הוספת לקוח ",
                             "assets/userVector.svg",
                             AppColors.kWhiteColor,
-                            AppConstantsTextStyle.kNormalOrangeNotoTextStyle)
+                            AppConstantsTextStyle.kNormalOrangeNotoTextStyle,
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (o)=>AddingCustomerDetails ())
+                              );
+                            })
                       ],
                     ),
                     SizedBox(
@@ -135,7 +202,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Total this month",
+                            "סה”כ החודש ",
                             style:
                                 AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
                           ),
@@ -145,7 +212,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                 .kNormalOrangeNotoTextStyle,
                           ),
                           Text(
-                            "scheduled statuses",
+                            "סטטוסים מתוזמנים",
                             style:
                                 AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
                           ),
@@ -161,29 +228,36 @@ class _StatusCalendarState extends State<StatusCalendar> {
   }
 
   Widget _iconCOntainer(
-      String title, String icon, Color color, TextStyle textStyle) {
-    return Container(
-      height: 35.h,
-      width: 150.w,
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            icon,
-            width: 15.w,
-            height: 18.h,
-          ),
-          SizedBox(
-            width: 5.w,
-          ),
-          Text(
-            title,
-            style: textStyle,
-          )
-        ],
+      String title, String icon, Color color, TextStyle textStyle,
+      {
+        required VoidCallback onTap,
+        }
+      ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 35.h,
+        width: 150.w,
+        decoration:
+            BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              icon,
+              width: 12.w,
+              height: 15.h,
+            ),
+            SizedBox(
+              width: 5.w,
+            ),
+            Text(
+              title,
+              style: textStyle,
+            )
+          ],
+        ),
       ),
     );
   }

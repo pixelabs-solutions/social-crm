@@ -22,9 +22,12 @@ class ConstantLargeButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.orangeButtonColor),
-        child: Text(
-          text,
-          style: AppConstantsTextStyle.kSmallButtonBoldWhiteTextStyle,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text(
+            text,
+            style: AppConstantsTextStyle.kSmallButtonBoldWhiteTextStyle,
+          ),
         ),
       ),
     );

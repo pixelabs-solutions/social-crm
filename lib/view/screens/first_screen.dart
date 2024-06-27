@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resize/resize.dart' ;
+import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_images.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
@@ -7,15 +7,14 @@ import 'package:social_crm/view/auth/login_screen.dart';
 import 'package:social_crm/view/auth/signup_form.dart';
 import 'package:social_crm/view/widgets/cunstom_smallbutton.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _MainScreenState createState() => _MainScreenState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   bool showLogin = true;
 
   void toggleForm(bool isLogin) {
@@ -38,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: Image.asset(
-                   MyAppImages.logo,
+                    MyAppImages.logo,
                     height: 160.h,
                   ),
                 ),
@@ -47,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ConstantSmallButton(
-                      text: 'Enrollment',
+                      text: 'הרשמה',
                       isSelected: !showLogin,
                       onPressed: () {
                         toggleForm(false);
@@ -55,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     SizedBox(width: 20.h),
                     ConstantSmallButton(
-                      text: 'Entrance',
+                      text: 'כניסה',
                       isSelected: showLogin,
                       onPressed: () {
                         toggleForm(true);
@@ -66,13 +65,22 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(height: 20.h),
                 showLogin ? LoginForm() : SignUpForm(),
                 SizedBox(height: 40.h),
-                Text('Characterization design and development',
-                    style: AppConstantsTextStyle.kDefaultappTextStyle),
-                Text(
-                  "Eliyahu Malka",
-                  style: AppConstantsTextStyle.kDefaultappTextStyle,
-                  textAlign: TextAlign.center,
-                )
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Column(
+                    children: [
+                      Text(
+                        'איפיון עיצוב ופיתוח',
+                        style: AppConstantsTextStyle.kDefaultappTextStyle,
+                      ),
+                      Text(
+                        "אליהו מלכה",
+                        style: AppConstantsTextStyle.kDefaultappTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

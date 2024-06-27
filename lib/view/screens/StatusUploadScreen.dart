@@ -7,9 +7,10 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import 'StatusCalendar.dart';
+
 import 'TextStatusStep1.dart';
 import 'imgUploadStep1.dart';
+import 'statuscalender.dart';
 import 'videoStatusStep1.dart';
 
 class StatusUploadScreen extends StatefulWidget {
@@ -48,7 +49,7 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
 
                     Center(
                       child: Text(
-                        'Status Uplaod',
+                        'העלאת סטטוס ',
                         style: AppConstantsTextStyle.heading1Style,
                       ),
                     ),
@@ -69,10 +70,10 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                   child:  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Status Type", style: AppConstantsTextStyle.heading2Style,),
+                      Text("סוג הסטטוס", style: AppConstantsTextStyle.heading2Style,),
                       _buildStatusItem(
                         context,
-                        'Text Status',
+                        'מודעת טקסט',
                         'assets/textIconLarge.svg',
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
@@ -90,7 +91,7 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                       ),
                       _buildStatusItem(
                         context,
-                        'Image Status',
+                        'תמונה',
                         'assets/imgIconLarge.svg',
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
@@ -110,7 +111,7 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                       ),
                       _buildStatusItem(
                         context,
-                        'Video Status',
+                        'וידיאו',
                         'assets/videoIconLarge.svg',
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
@@ -132,10 +133,10 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                         child: ConstantLargeButton(
-                            text: "Next Step",
+                            text: "לשלב הבא ←",
                             onPressed: (){
                                  Navigator.push(context,
-                                    MaterialPageRoute(builder: (o)=>StatusCalendarScreen())
+                                    MaterialPageRoute(builder: (o)=>StatusCalendar())
                                  );
                             }),
                       )

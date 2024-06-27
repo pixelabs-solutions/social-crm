@@ -40,7 +40,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
                   ),
                   Center(
                     child: Text(
-                      'Status Upload',
+                      'העלאת סטטוס ',
                       style: AppConstantsTextStyle.heading1Style,
                     ),
                   ),
@@ -62,7 +62,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
                   child: Column(
                     children: [
                       SizedBox(height: 20.h,),
-                      Text("Video Cut Successfully", style: AppConstantsTextStyle.heading2Style,),
+                      Text("הסרטון נחתך בהצלחה!", style: AppConstantsTextStyle.heading2Style,),
                       SizedBox(height: 10.h,),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0.h, horizontal: 16.w),
@@ -83,7 +83,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
                       ),
                       Padding(
                         padding:  EdgeInsets.all(16.0),
-                        child: ConstantLargeButton(text: "Schedule Status -->",
+                        child: ConstantLargeButton(text: "לתזמון הסטטוס ←",
                             onPressed: (){
                           
                           Navigator.push(context,

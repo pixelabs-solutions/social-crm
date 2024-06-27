@@ -6,11 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/view/screens/CalendarScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-class DailyPostingSChedule extends StatelessWidget {
-  const DailyPostingSChedule({super.key});
+class DailyPostingSchedule extends StatelessWidget {
+  const DailyPostingSchedule({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class DailyPostingSChedule extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      'Editing status details',
+                      'עריכת פרטי סטטוס',
                       style: AppConstantsTextStyle.heading2Style,
                     ),
                   ),
@@ -60,67 +61,74 @@ class DailyPostingSChedule extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 18.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Icon(Icons.arrow_back_ios_outlined,
-                              color: AppColors.orangeButtonColor),
-                          Column(
-                            children: [
-                              labelText("06/15/2024"),
-                              showText("08:10")
-                            ],
-                          ),
-                          const Icon(Icons.arrow_forward_ios_outlined,
-                              color: AppColors.orangeButtonColor),
-                        ],
-                      ),
-                       SizedBox(
-                        height: 5.h,
-                      ),
-                      const Divider(),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      _customRow("Status type"),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      labelText("Client Name"),
-                      showText("Eliyahu Malka"),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      labelText("Phone"),
-                      showText("03114858538"),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        child: Text(
-                          "preview",
-                          style:
-                              AppConstantsTextStyle.kNormalOrangeNotoTextStyle,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Icon(Icons.arrow_back_ios_outlined,
+                                color: AppColors.orangeButtonColor),
+                            Column(
+                              children: [
+                                labelText("15/06/2024"),
+                                showText("08:10")
+                              ],
+                            ),
+                            const Icon(Icons.arrow_forward_ios_outlined,
+                                color: AppColors.orangeButtonColor),
+                          ],
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          statusContainer("assets/mobileImage.png"),
-                          statusContainer("assets/mobileImage.png"),
-                          statusContainer("assets/mobileImage.png")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25.h,
-                      ),
-                      ConstantLargeButton(
-                          text: "To change the posting times →", onPressed: () {})
-                    ],
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        const Divider(),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        _customRow("סוג סטטוס"),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        labelText("שם לקוח"),
+                        showText("אליהו מלכה"),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        labelText("טלפון"),
+                        showText("03114858538"),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          child: Text(
+                            "תצוגה מקדימה",
+                            style: AppConstantsTextStyle.kNormalOrangeNotoTextStyle,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            statusContainer("assets/mobileImage.png"),
+                            statusContainer("assets/mobileImage.png"),
+                            statusContainer("assets/mobileImage.png")
+                          ],
+                        ),
+                        SizedBox(
+                          height: 25.h,
+                        ),
+                        ConstantLargeButton(
+                          text: "לשנות את זמני הפרסום →",
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (i) => CalendarScreen()));
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 )),
           ],
@@ -151,7 +159,7 @@ class DailyPostingSChedule extends StatelessWidget {
     );
   }
 
-  Widget _customRow(String email) {
+  Widget _customRow(String statusType) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -159,7 +167,6 @@ class DailyPostingSChedule extends StatelessWidget {
           "assets/deleteIcon.svg",
           width: 18.w,
           height: 18.h,
-          // ignore: deprecated_member_use
           color: AppColors.orangeButtonColor,
         ),
         Padding(
@@ -175,7 +182,7 @@ class DailyPostingSChedule extends StatelessWidget {
                 width: 5.w,
               ),
               Text(
-                email,
+                statusType,
                 style: AppConstantsTextStyle.kNormalWhiteTextStyle,
               ),
             ],

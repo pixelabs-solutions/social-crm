@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/view/screens/CalendarScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'dart:async';
 
+import '../../Model/Status.dart';
 import 'videoStatusStep3.dart';
 // Import your next screen
 
 class VideoUploadStep2Screen extends StatefulWidget {
+  final StatusData? statusData;
+
+  const VideoUploadStep2Screen({Key? key, this.statusData}) : super(key: key);
   @override
   _VideoUploadStep2ScreenState createState() => _VideoUploadStep2ScreenState();
 }
@@ -49,7 +54,9 @@ class _VideoUploadStep2ScreenState extends State<VideoUploadStep2Screen> {
     Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => VideoUploadStep3Screen()), // Replace with your next screen widget
+        MaterialPageRoute(builder: (context) => CalendarScreen(
+          statusData: widget.statusData,
+        )), // Replace with your next screen widget
       );
     });
   }
@@ -80,7 +87,7 @@ class _VideoUploadStep2ScreenState extends State<VideoUploadStep2Screen> {
                   ),
                   Center(
                     child: Text(
-                      'Status Upload',
+                      'העלאת סטטוס ',
                       style: AppConstantsTextStyle.heading1Style,
                     ),
                   ),
@@ -104,7 +111,7 @@ class _VideoUploadStep2ScreenState extends State<VideoUploadStep2Screen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "The APP Cuts Video for You",
+                        "האפלקצייה חותכת את הסרטון עבורך",
                         style: AppConstantsTextStyle.heading2Style,
                       ),
                       SizedBox(height: 20.0.h),
