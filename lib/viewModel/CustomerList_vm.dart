@@ -20,7 +20,7 @@ class CustomerViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   List<Customer> get customers => _customers;
 
-  List<ValueItem> _items = [
+  final List<ValueItem> _items = [
     const ValueItem(label: 'איפור', value: 'makeup'),
     const ValueItem(label: 'מספרת שיער', value: 'hair_cuter'),
     // Add more items as needed
@@ -99,7 +99,6 @@ class CustomerViewModel extends ChangeNotifier {
       print('Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-
       if (response.statusCode == 201) {
         fetchCustomers(); // Refresh the customer list
         clearForm();
@@ -158,7 +157,6 @@ class CustomerViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   bool validateForm() {
     bool isValid = true;

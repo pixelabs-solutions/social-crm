@@ -73,14 +73,16 @@ class CustomersList extends StatelessWidget {
                   child: Consumer<CustomerViewModel>(
                     builder: (context, viewModel, child) {
                       if (viewModel.isLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       return ScrollbarTheme(
                         data: ScrollbarThemeData(
-                          thumbColor: MaterialStateProperty.all(AppColors.orangeButtonColor),
-                          trackColor: MaterialStateProperty.all(AppColors.kWhiteColor40Opacity),
-                          thickness: MaterialStateProperty.all(8.w),
+                          thumbColor: WidgetStateProperty.all(
+                              AppColors.orangeButtonColor),
+                          trackColor: WidgetStateProperty.all(
+                              AppColors.kWhiteColor40Opacity),
+                          thickness: WidgetStateProperty.all(8.w),
                           radius: const Radius.circular(8),
                         ),
                         child: ClipRRect(
@@ -104,37 +106,48 @@ class CustomersList extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (o) => ClientPage(),
+                                          builder: (o) => const ClientPage(),
                                         ),
                                       );
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5.w),
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 5.h),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.h),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Container(
                                                   height: 20.h,
                                                   width: 65.w,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(20),
-                                                    color: AppColors.statusContainerColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: AppColors
+                                                        .statusContainerColor,
                                                   ),
-                                                  child: Center(child: Text(customer.status)),
+                                                  child: Center(
+                                                      child: Text(
+                                                          customer.status)),
                                                 ),
                                                 Text(
                                                   "שם: ${customer.name}",
-                                                  style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                                                  style: AppConstantsTextStyle
+                                                      .kNormalWhiteNotoTextStyle,
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 2.w),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 2.w),
                                             child: const Divider(
                                               color: Colors.white,
                                             ),

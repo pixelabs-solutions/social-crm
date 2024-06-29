@@ -9,18 +9,19 @@ import 'status_view_history.dart';
 import 'statuscalender.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  List<Widget> _screens = [
-
+  final List<Widget> _screens = [
     CustomersList(),
-    StatusHistoryView(),
-    StatusCalendar(),
-    DashboardScreen(),
+    const StatusHistoryView(),
+    const StatusCalendar(),
+    const DashboardScreen(),
   ];
 
   @override
@@ -35,12 +36,12 @@ class _MainScreenState extends State<MainScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 height: 45.h,
                 decoration: BoxDecoration(
                   color: AppColors.orangeButtonColor,
                   borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 10,
@@ -49,7 +50,9 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22.0.w), // Increased padding for left and right
+                  padding: EdgeInsets.symmetric(
+                      horizontal:
+                          22.0.w), // Increased padding for left and right
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -70,7 +73,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildAnimatedIcon(int index) {
-    double leftPosition = (MediaQuery.of(context).size.width / 8) * (2 * index + 1);
+    double leftPosition =
+        (MediaQuery.of(context).size.width / 8) * (2 * index + 1);
     double iconSize = 20.h; // Adjust the size of the icon as needed
 
     // Adjusting left position for the last icon to move it slightly left
@@ -85,10 +89,11 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
       bottom: _selectedIndex == index ? 40 : 18, // Adjusted bottom position
-      left: leftPosition - 18, // Adjusted left position to center the icon, considering padding
+      left: leftPosition -
+          18, // Adjusted left position to center the icon, considering padding
 
       child: GestureDetector(
         onTap: () {
@@ -102,20 +107,22 @@ class _MainScreenState extends State<MainScreen> {
             height: 45.h, // Total height of the icon container
             width: 50.w, // Total width of the icon container
             decoration: BoxDecoration(
-              color: _selectedIndex == index ? AppColors.primaryColor : Colors.transparent,
+              color: _selectedIndex == index
+                  ? AppColors.primaryColor
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(15),
               border: _selectedIndex == index
                   ? Border.all(
-                  color: AppColors.scaffoldColor,
-                  width: 4) // Adjust the border color and width as needed
+                      color: AppColors.scaffoldColor,
+                      width: 4) // Adjust the border color and width as needed
                   : null,
-
-
             ),
             child: Center(
               child: SvgPicture.asset(
                 _getIconPath(index),
-                color: _selectedIndex == index ? AppColors.orangeButtonColor : Colors.black,
+                color: _selectedIndex == index
+                    ? AppColors.orangeButtonColor
+                    : Colors.black,
                 height: iconSize,
               ),
             ),

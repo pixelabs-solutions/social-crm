@@ -6,7 +6,8 @@ class CustomSlider extends StatefulWidget {
   final double initialValue;
   final Function(double) onValueChanged;
 
-  CustomSlider({
+  const CustomSlider({
+    super.key,
     required this.minValue,
     required this.maxValue,
     required this.initialValue,
@@ -39,7 +40,7 @@ class _CustomSliderState extends State<CustomSlider> {
           _updateValue(details.localPosition.dx);
         });
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: 55.0,
         child: CustomPaint(
@@ -55,7 +56,8 @@ class _CustomSliderState extends State<CustomSlider> {
 
   void _updateValue(double position) {
     final double width = context.size!.width;
-    double newValue = widget.minValue + (position / width) * (widget.maxValue - widget.minValue);
+    double newValue = widget.minValue +
+        (position / width) * (widget.maxValue - widget.minValue);
     newValue = newValue.clamp(widget.minValue, widget.maxValue);
     _currentValue = newValue;
     widget.onValueChanged(newValue);
@@ -96,7 +98,8 @@ class _SliderPainter extends CustomPainter {
     );
 
     // Draw active track
-    final double activeTrackEnd = 8.0 + (trackLength * (value - minValue) / (maxValue - minValue));
+    final double activeTrackEnd =
+        8.0 + (trackLength * (value - minValue) / (maxValue - minValue));
     canvas.drawLine(
       Offset(8.0, trackY),
       Offset(activeTrackEnd, trackY),
@@ -118,7 +121,7 @@ class _SliderPainter extends CustomPainter {
     TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: '${value.toInt()}',
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 14.0,
           fontWeight: FontWeight.bold,
@@ -129,7 +132,8 @@ class _SliderPainter extends CustomPainter {
     textPainter.layout();
     textPainter.paint(
       canvas,
-      Offset(activeTrackEnd - textPainter.width / 2, trackY - textPainter.height / 2),
+      Offset(activeTrackEnd - textPainter.width / 2,
+          trackY - textPainter.height / 2),
     );
   }
 

@@ -6,11 +6,11 @@ class StatusData {
   final DateTime? selectedDate;
   DateTime? selectedTime;
 
-  StatusData({
-    this.text,
-    this.backgroundColorHex,
-    this.imagePaths,
-    this.selectedDate,
-    this.selectedTime,
-    this.videoPath});
+  StatusData(
+      {this.text,
+      this.backgroundColorHex,
+      this.imagePaths,
+      this.selectedDate,
+      this.selectedTime,
+      this.videoPath});
 }

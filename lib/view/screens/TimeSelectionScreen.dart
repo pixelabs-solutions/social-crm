@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/utilis/variables.dart';
 import 'package:social_crm/view/screens/publishSuccesScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:intl/intl.dart';
 
-import '../../Model/Status.dart';
+import '../../Model/status.dart';
+import '../../viewModel/Status_viewModel.dart';
 
 class TimeSelection extends StatefulWidget {
   final StatusData? statusData;
-  const TimeSelection({Key? key, this.statusData}) : super(key: key);
+  const TimeSelection({super.key, this.statusData});
 
   @override
   State<TimeSelection> createState() => _TimeSelectionState();
@@ -37,159 +40,194 @@ class _TimeSelectionState extends State<TimeSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 12.0, right: 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const CircleAvatar(
-                      backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Text(
-                    'תזמון הסטטוס',
-                    style: AppConstantsTextStyle.heading1Style,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0.h),
-            Padding(
-              padding: EdgeInsets.only(left: 12.0.w, right: 12.w),
-              child: Container(
-                height: 400.0.h, // Adjust height as needed
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        backgroundColor: AppColors.scaffoldColor,
+        appBar: const HomeAppBar(),
+        body: ChangeNotifierProvider(
+          create: (_) => TextStatusViewModel(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(height: 10.0),
-                      GestureDetector(
-                        onTap: () async {
-                          final TimeOfDay? pickedTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(_selectedTime),
-                          );
-                          if (pickedTime != null) {
-                            setState(() {
-                              _selectedTime = DateTime(
-                                _selectedTime.year,
-                                _selectedTime.month,
-                                _selectedTime.day,
-                                pickedTime.hour,
-                                pickedTime.minute,
-                              );
-                              // Update selectedTime in StatusData
-                              widget.statusData?.selectedTime = _selectedTime;
-                            });
-                          }
+                      IconButton(
+                        icon: const CircleAvatar(
+                          backgroundColor: AppColors.primaryColor,
+                          child: Icon(Icons.arrow_back_ios_outlined,
+                              color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
                         },
-                        child: Container(
-                          height: 70.0.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.0),
-                            gradient: RadialGradient(
-                              center: Alignment.center,
-                              radius: 2.0,
-                              colors: [
-                                Color(0xFF097382),
-                                Color(0xFFA3A3A3),
-                              ],
-                              stops: [0.0, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 3.0,
-                                spreadRadius: 1.0,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                DateFormat('HH').format(_selectedTime),
-                                style: TextStyle(
-                                  fontSize: 36.0.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                              Text(
-                                ':',
-                                style: TextStyle(
-                                  fontSize: 36.0.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                              Text(
-                                DateFormat('mm').format(_selectedTime),
-                                style: TextStyle(
-                                  fontSize: 36.0.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
-                      SizedBox(height: 10.0.h),
-                      Text("זמנים תפוסים", style: AppConstantsTextStyle.heading2Style),
-                      SizedBox(height: 10.0.h),
-                      Column(
-                        children: _buildTimeRows(),
-                      ),
-                      SizedBox(height: 20.0.h),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 8.0),
-                        child: ConstantLargeButton(
-                          text: "לפרסום הסטטוס ←",
-                          onPressed: () {
-                            print('Selected Text: ${widget.statusData?.text}');
-                            print('Selected Background Color: ${widget.statusData?.backgroundColorHex}');
-                            print('Selected Image Path: ${widget.statusData?.imagePaths}');
-                            print('Selected Date: ${widget.statusData?.selectedDate}');
-                            print('Selected Time: ${widget.statusData?.selectedTime}');
-                            print('Selected Video: ${widget.statusData?.videoPath}');
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (i) => PublishSuccess()),
-                            );
-                          },
-                        ),
+                      Text(
+                        'תזמון הסטטוס',
+                        style: AppConstantsTextStyle.heading1Style,
                       ),
                     ],
                   ),
                 ),
-              ),
+                SizedBox(height: 20.0.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.0.w, right: 12.w),
+                  child: Container(
+                    height: 400.0.h, // Adjust height as needed
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 14.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 10.0),
+                          GestureDetector(
+                            onTap: () async {
+                              final TimeOfDay? pickedTime =
+                                  await showTimePicker(
+                                context: context,
+                                initialTime:
+                                    TimeOfDay.fromDateTime(_selectedTime),
+                              );
+                              if (pickedTime != null) {
+                                setState(() {
+                                  _selectedTime = DateTime(
+                                    _selectedTime.year,
+                                    _selectedTime.month,
+                                    _selectedTime.day,
+                                    pickedTime.hour,
+                                    pickedTime.minute,
+                                  );
+                                  // Update selectedTime in StatusData
+                                  widget.statusData?.selectedTime =
+                                      _selectedTime;
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 70.0.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50.0),
+                                gradient: const RadialGradient(
+                                  center: Alignment.center,
+                                  radius: 2.0,
+                                  colors: [
+                                    Color(0xFF097382),
+                                    Color(0xFFA3A3A3),
+                                  ],
+                                  stops: [0.0, 1.0],
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 3.0,
+                                    spreadRadius: 1.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DateFormat('HH').format(_selectedTime),
+                                    style: TextStyle(
+                                      fontSize: 36.0.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    ':',
+                                    style: TextStyle(
+                                      fontSize: 36.0.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    DateFormat('mm').format(_selectedTime),
+                                    style: TextStyle(
+                                      fontSize: 36.0.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.0.h),
+                          Text("זמנים תפוסים",
+                              style: AppConstantsTextStyle.heading2Style),
+                          SizedBox(height: 10.0.h),
+                          Column(
+                            children: _buildTimeRows(),
+                          ),
+                          SizedBox(height: 20.0.h),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Consumer<TextStatusViewModel>(
+                                builder: (context, viewModel, child) {
+                              if (viewModel.isLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              return ConstantLargeButton(
+                                text: "לפרסום הסטטוס ←",
+                                onPressed: () {
+                                  if (widget.statusData?.imagePaths != null) {
+                                    viewModel.postImageStatus(
+                                      context,
+                                      widget.statusData?.text,
+                                      widget.statusData?.selectedDate
+                                          .toString(),
+                                      widget.statusData?.selectedTime
+                                          .toString(),
+                                    );
+                                  } else {
+                                    viewModel.postTextStatus(
+                                      context,
+                                      widget.statusData?.backgroundColorHex,
+                                      widget.statusData?.text,
+                                      widget.statusData?.selectedDate
+                                          .toString(),
+                                      widget.statusData?.selectedTime
+                                          .toString(),
+                                    );
+                                  }
+
+                                  print(
+                                      'Selected Text: ${widget.statusData?.text}');
+                                  print(
+                                      'Selected Background Color: ${widget.statusData?.backgroundColorHex}');
+                                  print(
+                                      'Selected Image Path: ${widget.statusData?.imagePaths}');
+                                  print(
+                                      'Selected Date: ${widget.statusData?.selectedDate}');
+                                  print(
+                                      'Selected Time: ${widget.statusData?.selectedTime}');
+                                },
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
   List<Widget> _buildTimeRows() {
@@ -226,7 +264,7 @@ class _TimeSelectionState extends State<TimeSelection> {
       decoration: BoxDecoration(
         color: AppColors.kWhiteColor40Opacity,
         borderRadius: BorderRadius.circular(50.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 3.0,

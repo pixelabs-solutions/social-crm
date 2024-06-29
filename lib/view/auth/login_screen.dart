@@ -13,6 +13,8 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../../utilis/shared_prefes.dart';
+
 class LoginForm extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -99,8 +101,7 @@ class LoginForm extends StatelessWidget {
     final String password = passwordController.text;
 
     try {
-
-      final requestBody = jsonEncode(<String, String>{
+      final requestBody = jsonEncode({
         'phone_number': phone,
         'password': password,
       });
@@ -127,7 +128,7 @@ class LoginForm extends StatelessWidget {
         // Navigate to main screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
         );
 
         // Show success toast
@@ -141,10 +142,6 @@ class LoginForm extends StatelessWidget {
           fontSize: 16.0,
         );
       } else {
-        print('Failed to log in');
-        print('Response code: ${response.statusCode}');
-        print('Response data: ${response.body}');
-
         // Show error toast
         Fluttertoast.showToast(
           msg: 'Failed to log in',
@@ -172,11 +169,7 @@ class LoginForm extends StatelessWidget {
     }
   }
 
-
   Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-    print('Token saved to SharedPreferences: $token');
+    SharedPrefernce.prefs?.setString('token', token);
   }
-
 }

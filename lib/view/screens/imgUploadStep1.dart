@@ -9,23 +9,25 @@ import 'package:social_crm/view/screens/CalendarScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../Model/Status.dart';
+import '../../Model/status.dart';
+import '../../utilis/variables.dart';
 
 class ImageUploadStep1Screen extends StatefulWidget {
+  const ImageUploadStep1Screen({super.key});
+
   @override
   _ImageUploadStep1ScreenState createState() => _ImageUploadStep1ScreenState();
 }
 
 class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
-  List<File?> selectedImages = []; // Store selected images here, allow null for placeholders
-
   void _nextToCalendarScreen() {
     // Prepare StatusData with selected image paths
-    List<String> imagePaths = selectedImages.map((file) => file!.path).toList();
-    print('Selected Image Paths:');
-    imagePaths.forEach((path) {
+    List<String> imagePaths =
+        Variables.selectedImages.map((file) => file.path).toList();
+
+    for (var path in imagePaths) {
       print(path);
-    });
+    }
 
     StatusData statusData = StatusData(
       imagePaths: imagePaths,
@@ -34,16 +36,16 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
     // Navigate to CalendarScreen and pass statusData
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CalendarScreen(statusData: statusData)),
+      MaterialPageRoute(
+          builder: (context) => CalendarScreen(statusData: statusData)),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -57,7 +59,8 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
                   IconButton(
                     icon: const CircleAvatar(
                       backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                      child: Icon(Icons.arrow_back_ios_outlined,
+                          color: Colors.white),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -76,7 +79,8 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
             Padding(
               padding: EdgeInsets.only(left: 16.0.w, right: 8.w),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.5, // 50% of screen height
+                height: MediaQuery.of(context).size.height *
+                    0.5, // 50% of screen height
                 width: MediaQuery.of(context).size.width * 0.7,
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
@@ -87,36 +91,52 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 20.h,),
-                      Text("העלאת קבצים  ", style: AppConstantsTextStyle.heading2Style,),
-                      SizedBox(height: 10.h,),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Text(
+                        "העלאת קבצים  ",
+                        style: AppConstantsTextStyle.heading2Style,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                       _buildVideoSelectionContainer(),
-                      SizedBox(height: 10.h,),
-                      Text("תצוגה מקדימה", style: AppConstantsTextStyle.heading2Style,),
-                      SizedBox(height: 10.h,),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text(
+                        "תצוגה מקדימה",
+                        style: AppConstantsTextStyle.heading2Style,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                       SizedBox(
                         height: 120.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: selectedImages.length + 1, // Show selected images + add button
+                          itemCount: Variables.selectedImages.length +
+                              1, // Show selected images + add button
                           itemBuilder: (context, index) {
-                            if (index < selectedImages.length) {
+                            if (index < Variables.selectedImages.length) {
                               return Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: _buildContainerWithIcon(selectedImages[index]!),
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: _buildContainerWithIcon(
+                                    Variables.selectedImages[index]),
                               );
                             } else {
                               return Padding(
-                                padding: EdgeInsets.only(right: 8.0),
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: _buildAddImageButton(),
                               );
                             }
                           },
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Padding(
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.zero,
                         child: ConstantLargeButton(
                           text: "לתזמון הסטטוס ←",
                           onPressed: () {
@@ -124,7 +144,9 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
                           },
                         ),
                       ),
-                      SizedBox(height: 10.h,),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                     ],
                   ),
                 ),
@@ -138,7 +160,8 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
 
   Widget _buildContainerWithIcon(File imageFile) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.0.w), // Add horizontal padding here
+      padding: EdgeInsets.symmetric(
+          horizontal: 2.0.w), // Add horizontal padding here
       child: Stack(
         children: [
           ClipRRect(
@@ -156,16 +179,18 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
             child: GestureDetector(
               onTap: () {
                 setState(() {
-                  selectedImages.remove(imageFile); // Remove image from list
+                  Variables.selectedImages
+                      .remove(imageFile); // Remove image from list
                 });
               },
               child: Container(
-                padding: EdgeInsets.all(4.0),
+                padding: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.black.withOpacity(0.6),
                 ),
-                child: Icon(Icons.delete, color: Colors.white, size: 20.0),
+                child:
+                    const Icon(Icons.delete, color: Colors.white, size: 20.0),
               ),
             ),
           ),
@@ -178,12 +203,13 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
     return GestureDetector(
       onTap: () => _selectImage(),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.0), // Add horizontal padding here
+        padding: const EdgeInsets.symmetric(
+            horizontal: 8.0), // Add horizontal padding here
         width: 85.0.w,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 3.0,
@@ -192,7 +218,7 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
             ),
           ],
         ),
-        child: Center(
+        child: const Center(
           child: Icon(Icons.add, color: AppColors.primaryColor, size: 32.0),
         ),
       ),
@@ -204,11 +230,11 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
       onTap: () => _selectImage(),
       child: Container(
         height: 55.h,
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
           color: AppColors.kWhiteColor40Opacity,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               offset: Offset(0, 2),
@@ -231,10 +257,11 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
   }
 
   void _selectImage() async {
-    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        selectedImages.add(File(image.path));
+        Variables.selectedImages.add(File(image.path));
       });
     }
   }
