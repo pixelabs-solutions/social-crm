@@ -69,7 +69,7 @@ class StatusHistoryView extends StatelessWidget {
                             return Column(
                               children: [
                                 StatusRow(
-                                  iconPath: 'assets/icons/dummy_icon.svg', // Replace with actual icon path
+                                  iconPath: 'assets/eyeIcon.svg', // Replace with actual icon path
                                   views: status.views.toString(),
                                   time: status.scheduleTime, // assuming scheduleTime is a string
                                   rightIconPath: 'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
@@ -123,7 +123,7 @@ class StatusRow extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 iconPath,
-                height: 22.h,
+                height: 20.h,
               ),
               SizedBox(width: 12.w),
               Text(

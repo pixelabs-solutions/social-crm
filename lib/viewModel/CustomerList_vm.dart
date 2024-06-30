@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../model/customer.dart';
+
+import '../Model/customer.dart';
+import '../utilis/ApiConstants.dart';
+import '../utilis/Toast.dart';
 
 class CustomerViewModel extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
@@ -13,28 +16,25 @@ class CustomerViewModel extends ChangeNotifier {
   final TextEditingController mailController = TextEditingController();
   final MultiSelectController controller = MultiSelectController();
 
-  bool _isLoading = false;
-  List<Customer> _customers = [];
+  bool _isLoading = true;
+  List<CustomerData> customers = [];
   List<ValueItem> selectedItems = [];
 
   bool get isLoading => _isLoading;
-  List<Customer> get customers => _customers;
 
-  final List<ValueItem> _items = [
-    const ValueItem(label: 'איפור', value: 'makeup'),
-    const ValueItem(label: 'מספרת שיער', value: 'hair_cuter'),
+
+  List<ValueItem> _items = [
+    const ValueItem(label: 'Influencer', value: 'Influencer'),
+    const ValueItem(label: 'Doctor', value: 'Doctor'),
     // Add more items as needed
   ];
 
   List<ValueItem> get items => _items;
 
-  CustomerViewModel() {
-    fetchCustomers();
-  }
-
   Future<void> fetchCustomers() async {
-    _isLoading = true;
-    notifyListeners();
+    final String apiUrl = ApiEndPointsConstants.listCustomers;
+    // _isLoading = true;
+    // notifyListeners();
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,28 +44,51 @@ class CustomerViewModel extends ChangeNotifier {
         throw Exception('No token found');
       }
 
+
+
       final response = await http.get(
-        Uri.parse('https://scrm-apis.woo-management.com/api/customer/list'),
+        Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
       );
 
+      print('Request: ${response.request}');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        _customers = data.map((json) => Customer.fromJson(json)).toList();
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        if (responseData['status'] == 'success' && responseData['data'] is List) {
+          List<CustomerData> customerList = (responseData['data'] as List)
+              .map((data) => CustomerData.fromJson(data))
+              .toList();
+          customers = customerList;
+          ToastUtil.showToast(msg: 'Customers loaded successfully', backgroundColor: Colors.green);
+        } else {
+          throw Exception('Invalid response format');
+        }
       } else {
-        throw Exception('Failed to load customers');
+        throw Exception('Failed to fetch customers');
       }
     } catch (error) {
       print('Error fetching customers: $error');
+      ToastUtil.showToast(msg: 'Error loading customers', backgroundColor: Colors.red);
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      if(_isLoading){
+        _isLoading = false;
+        notifyListeners();
+      }
+
     }
   }
 
-  Future<void> addCustomer() async {
+
+
+
+  Future<void> addCustomer(BuildContext context) async {
+    final String apiUrl = ApiEndPointsConstants.CreateCustomers;
     if (!validateForm()) return;
 
     _isLoading = true;
@@ -80,8 +103,11 @@ class CustomerViewModel extends ChangeNotifier {
         throw Exception('No token found');
       }
 
+      // Convert the list of selected items to a comma-separated string
+      String occupations = selectedItems.map((item) => item.value).join(',');
+
       final response = await http.post(
-        Uri.parse('https://scrm-apis.woo-management.com/api/customer/create'),
+        Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -90,7 +116,7 @@ class CustomerViewModel extends ChangeNotifier {
           'name': nameController.text,
           'phone': phoneController.text,
           'email': mailController.text,
-          'occupation': selectedItems.map((item) => item.value).toList(),
+          'occupation': occupations, // Send as a comma-separated string
         }),
       );
 
@@ -100,22 +126,29 @@ class CustomerViewModel extends ChangeNotifier {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
-        fetchCustomers(); // Refresh the customer list
+        ToastUtil.showToast(msg: 'לקוח נוסף בהצלחה',
+            backgroundColor: Colors.green
+        );
+        fetchCustomers();
+        Navigator.pop(context);
+
         clearForm();
       } else {
         throw Exception('Failed to add customer');
       }
     } catch (error) {
       print('Error adding customer: $error');
+      ToastUtil.showToast(msg: 'שגיאה בהוספת לקוח',
+          backgroundColor: Colors.red
+      );
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> editCustomer() async {
-    if (!validateForm()) return;
-
+  Future<void> deleteCustomer(String customerId) async {
+    final String apiUrl = ApiEndPointsConstants.DeleteCustomers;
     _isLoading = true;
     notifyListeners();
 
@@ -127,8 +160,56 @@ class CustomerViewModel extends ChangeNotifier {
         throw Exception('No token found');
       }
 
+      final response = await http.delete(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Request: ${response.request}');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        ToastUtil.showToast(
+          msg: 'משתמש נמחק בהצלחה',
+          backgroundColor: Colors.green,
+        );
+      } else {
+        throw Exception('Failed to delete customer');
+      }
+    } catch (error) {
+      print('Error deleting customer: $error');
+      ToastUtil.showToast(
+        msg: 'שגיאה במחיקת משתמש',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> editCustomer(int customerId) async {
+    if (!validateForm()) return;
+    final String apiUrl = ApiEndPointsConstants.EditCustomers;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('No token found');
+      }
+      final occupation = selectedItems.map((item) => item.value).join(',');
+
       final response = await http.put(
-        Uri.parse('https://scrm-apis.woo-management.com/api/customer/edit'),
+        Uri.parse('$apiUrl/$customerId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -137,7 +218,7 @@ class CustomerViewModel extends ChangeNotifier {
           'name': nameController.text,
           'phone': phoneController.text,
           'email': mailController.text,
-          'occupation': selectedItems.map((item) => item.value).toList(),
+          'occupation': occupation
         }),
       );
 
@@ -157,6 +238,57 @@ class CustomerViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> setActiveStatus(int customerId, int activeStatus) async {
+    final String apiUrl = ApiEndPointsConstants.EditCustomersStatus;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('No token found');
+      }
+
+      final response = await http.put(
+        Uri.parse('$apiUrl'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'id': customerId,
+          'active': activeStatus,
+        }),
+      );
+
+      print('Request: ${response.request}');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Update local data if needed
+        final customerIndex = customers.indexWhere((c) => c.id == customerId);
+        if (customerIndex != -1) {
+          customers[customerIndex].active = activeStatus;
+        }
+        notifyListeners();
+        ToastUtil.showToast(msg: 'Status updated successfully', backgroundColor: Colors.green);
+      } else {
+        throw Exception('Failed to update status');
+      }
+    } catch (error) {
+      print('Error updating status: $error');
+      ToastUtil.showToast(msg: 'Error updating status', backgroundColor: Colors.red);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
 
   bool validateForm() {
     bool isValid = true;

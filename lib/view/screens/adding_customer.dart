@@ -116,7 +116,7 @@ class AddingCustomerDetails extends StatelessWidget {
                                 : ConstantLargeButton(
                               text: 'הוסף לקוח →',
                               onPressed: ()async {
-                               await viewModel.addCustomer(context);
+                                await viewModel.addCustomer(context);
 
                               },
                             ),
