@@ -3,15 +3,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
+import '../../Model/customer.dart';
+import '../../viewModel/CustomerList_vm.dart';
 import 'editing_customerdetails_screen.dart';
 
-class ClientPage extends StatelessWidget {
-  const ClientPage({super.key});
+class ClientPage extends StatefulWidget {
+
+  final CustomerData customer;
+
+
+  const ClientPage({required this.customer, super.key});
+
+  @override
+  State<ClientPage> createState() => _ClientPageState();
+}
+
+class _ClientPageState extends State<ClientPage> {
+  CustomerViewModel customerViewModel= CustomerViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +56,20 @@ class ClientPage extends StatelessWidget {
                     width: 13.w,
                   ),
                   Center(
-                    child: Text(
-                      'פרטי לקוח: אליהו מלכה',
-                      style: AppConstantsTextStyle.heading2Style,
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Row(
+                        children: [
+                          Text(
+                            'פרטי לקוח:',
+                            style: AppConstantsTextStyle.heading2Style,
+                          ),
+                          Text(
+                            ' ${widget.customer.name}',
+                            style: AppConstantsTextStyle.heading2Style,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -61,86 +86,105 @@ class ClientPage extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10.h,),
-                        _customRow("דוא\"ל", "פעיל"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 20.h,
-                              width: 65.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: AppColors.offstatusContainerColor,
-                              ),
-                              child: const Center(child: Text("כבוי")),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(height: 10.h,),
+                      _customRow("דוא\"ל", "פעיל"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+
+
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.h),
+                            child: Text(
+                              "${widget.customer.email}",
+                              style: AppConstantsTextStyle
+                                  .kNormalWhiteNotoTextStyle,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5.h),
-                              child: Text(
-                                "elyau.dms@gmail.com",
-                                style: AppConstantsTextStyle
-                                    .kNormalWhiteNotoTextStyle,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (o)=>EditingCustomerDetails())
-                          );
-                        }),
-                        showText("03114858538"),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        _customIconRow("assets/deleteIcon.svg", "מקצוע",
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (o)=>EditingCustomerDetails())
-                              );
-                            }),
-                        showText("איפור"),
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        Container(
-                          height: 35.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: AppColors.kWhiteColor23pacity,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Center(
-                              child: Text(
-                                "היסטוריית פרסומים",
-                                style:
-                                AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-                              )),
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        statusRow("14,500", "24/06/15", "סטטוס וידאו",
-                            "assets/vedioStatusIcon.svg"),
-                        statusRow(
-                            "14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
-                        statusRow("14,500", "24/06/15", "סטטוס תמונה",
-                            "assets/photoStatusIcon.svg"),
-                      ],
-                    ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (o)=>EditingCustomerDetails(
+                              customer: widget.customer,))
+                        );
+                      }),
+                      showText("${widget.customer.phoneNumber}"),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      _customIconRow("assets/deleteIcon.svg", "מקצוע",
+                          onTap: () {
+
+                          }),
+                      showText("${widget.customer.occupation}"),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Container(
+                        height: 35.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: AppColors.kWhiteColor23pacity,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                            child: Text(
+                              "היסטוריית פרסומים",
+                              style:
+                              AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      statusRow("14,500", "24/06/15", "סטטוס וידאו",
+                          "assets/vedioStatusIcon.svg"),
+                      statusRow(
+                          "14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
+                      statusRow("14,500", "24/06/15", "סטטוס תמונה",
+                          "assets/photoStatusIcon.svg"),
+                    ],
                   ),
                 )),
           ],
         ),
       ),
+    );
+  }
+
+  void showDeleteDialog(BuildContext context,
+      CustomerViewModel viewModel, String customerId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('אישור מחיקה'),
+          content: const Text('האם אתה בטוח שברצונך למחוק את הלקוח?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ביטול'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('מחק'),
+              onPressed: () {
+                viewModel.deleteCustomer(customerId).then((_) {
+                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop(); // Navigate back to previous screen
+                });
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -209,15 +253,35 @@ class ClientPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          height: 20.h,
-          width: 65.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.statusContainerColor,
+        GestureDetector(
+          onTap: () async {
+            int newStatus = widget.customer.active == 1 ? 0 : 1;
+            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
+          },
+          child: Consumer<CustomerViewModel>(
+            builder: (context, viewModel, child) {
+              // Determine the active status based on the view model state
+
+
+              return Container(
+                height: 20.h,
+                width: 65.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: ( widget.customer.active == 0)
+                      ? AppColors.offstatusContainerColor
+                      : AppColors.statusContainerColor,
+                ),
+                child: Center(
+                  child: Text(
+                    widget.customer.active == 0  ? "כבוי" : "פעיל",
+                  ),
+                ),
+              );
+            },
           ),
-          child: Center(child: Text(status)),
         ),
+
         Padding(
           padding: EdgeInsets.only(top: 7.h),
           child: Text(

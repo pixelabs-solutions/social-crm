@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
+import 'package:social_crm/utilis/Toast.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/auth/forgotpassword_screen.dart';
+import 'package:social_crm/view/auth/whatsappCode.dart';
 import 'package:social_crm/view/screens/NavigatonMain.dart';
 import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
@@ -99,7 +101,6 @@ class LoginForm extends StatelessWidget {
     final String password = passwordController.text;
 
     try {
-
       final requestBody = jsonEncode(<String, String>{
         'phone_number': phone,
         'password': password,
@@ -119,26 +120,32 @@ class LoginForm extends StatelessWidget {
         print('Login successful');
         print('Response data: ${response.body}');
 
-        // Save token to SharedPreferences
+        // Parse the response
         final jsonResponse = jsonDecode(response.body);
         final token = jsonResponse['data']['token'];
-        await saveToken(token);
+        final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
+        print('++++++++++++++${whatsappCode}+++++++++++++++');
 
-        // Navigate to main screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+        // Save token and WhatsApp code to SharedPreferences
+        await saveToken(token, whatsappCode ?? '');
 
-        // Show success toast
-        Fluttertoast.showToast(
-          msg: 'Login successful',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 3,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
+        // Navigate to the appropriate screen based on WhatsApp code
+        if (whatsappCode != null && whatsappCode.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WhatsAppCode()), // Replace with your WhatsApp screen widget
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MainScreen()), // Replace with your Main screen widget
+          );
+        }
+
+
+
+        ToastUtil.showToast(msg: "Login successful",
+            backgroundColor: Colors.green
         );
       } else {
         print('Failed to log in');
@@ -146,37 +153,30 @@ class LoginForm extends StatelessWidget {
         print('Response data: ${response.body}');
 
         // Show error toast
-        Fluttertoast.showToast(
-          msg: 'Failed to log in',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 3,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
+
+        ToastUtil.showToast(msg: "Failed to log in",
+            backgroundColor: Colors.red
         );
       }
     } catch (e) {
       print('Error occurred: $e');
 
-      // Show error toast
-      Fluttertoast.showToast(
-        msg: 'Error occurred: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+
+
     }
   }
 
-
-  Future<void> saveToken(String token) async {
+  Future<void> saveToken(String token, String whatsappCode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    print('Token saved to SharedPreferences: $token');
+    await prefs.setString('whatsAppCode', whatsappCode);
+    print('Token and WhatsApp code saved to SharedPreferences: $token, $whatsappCode');
+
+    print(token);
   }
+
+
+
+
 
 }

@@ -1,4 +1,3 @@
-// views/customers_list_view.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
@@ -7,6 +6,7 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../viewModel/CustomerList_vm.dart';
+import '../../viewModel/StatusDetails_viewModel.dart';
 import 'adding_customer.dart';
 import 'clientpage_screen.dart';
 
@@ -22,7 +22,11 @@ class CustomersList extends StatelessWidget {
       appBar: const HomeAppBar(),
       backgroundColor: AppColors.scaffoldColor,
       body: ChangeNotifierProvider(
-        create: (_) => CustomerViewModel(),
+        create: (_) {
+          final viewModel = CustomerViewModel();
+          viewModel.fetchCustomers();
+          return viewModel;
+        },
         child: Padding(
           padding: EdgeInsets.only(left: 8.w, right: 8.w),
           child: Column(
@@ -42,6 +46,7 @@ class CustomersList extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -104,7 +109,9 @@ class CustomersList extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (o) => ClientPage(),
+                                          builder: (o) => ClientPage(
+                                            customer:customer,
+                                          ),
                                         ),
                                       );
                                     },
@@ -117,6 +124,7 @@ class CustomersList extends StatelessWidget {
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
+                                                (customer.active==1)?
                                                 Container(
                                                   height: 20.h,
                                                   width: 65.w,
@@ -124,11 +132,29 @@ class CustomersList extends StatelessWidget {
                                                     borderRadius: BorderRadius.circular(20),
                                                     color: AppColors.statusContainerColor,
                                                   ),
-                                                  child: Center(child: Text(customer.status)),
-                                                ),
-                                                Text(
-                                                  "שם: ${customer.name}",
-                                                  style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                                                  child: Center(child: Text("Active")),
+                                                ) :
+                                                Container(
+                                                  height: 20.h,
+                                                  width: 65.w,
+
+
+                                                ) ,
+
+                                                Directionality(
+                                                  textDirection: TextDirection.rtl,
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "שם: ",
+                                                        style: AppConstantsTextStyle.kSmallButtonBoldWhiteTextStyle,
+                                                      ),
+                                                      Text(
+                                                        "${customer.name}",
+                                                        style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -148,6 +174,7 @@ class CustomersList extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       );
                     },
                   ),

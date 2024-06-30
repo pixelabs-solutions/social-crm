@@ -7,6 +7,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../utilis/ApiConstants.dart';
+import '../../utilis/Toast.dart';
+import '../screens/first_screen.dart';
+import '../screens/first_screen.dart';
 
 class SignUpForm extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
@@ -111,11 +114,20 @@ class SignUpForm extends StatelessWidget {
 
       print('Response status code: ${response.statusCode}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Registration successful');
         print('Response data: ${response.body}');
-        // Navigate to login or main screen after successful registration
+        ToastUtil.showToast(msg: "Register successful",
+            backgroundColor: Colors.green
+        );
+       Navigator.pushReplacement(context,
+           MaterialPageRoute(builder: (i)=>AuthScreen()));
+
+
       } else {
+        ToastUtil.showToast(msg: "Register successful",
+            backgroundColor: Colors.green
+        );
         print('Failed to register');
         print('Response code: ${response.statusCode}');
         print('Response data: ${response.body}');

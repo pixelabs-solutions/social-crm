@@ -107,7 +107,7 @@ class AddingCustomerDetails extends StatelessWidget {
                                 controller: MultiSelectController(),
                               ),
                             ),
-                            if (viewModel.selectedItems.isEmpty && !viewModel.isLoading) showErrorText('בחר לפחות עיסוק אחד'),
+
                             SizedBox(
                               height: 20.h,
                             ),
@@ -115,8 +115,9 @@ class AddingCustomerDetails extends StatelessWidget {
                                 ? Center(child: CircularProgressIndicator())
                                 : ConstantLargeButton(
                               text: 'הוסף לקוח →',
-                              onPressed: () {
-                                viewModel.addCustomer();
+                              onPressed: ()async {
+                               await viewModel.addCustomer(context);
+
                               },
                             ),
 

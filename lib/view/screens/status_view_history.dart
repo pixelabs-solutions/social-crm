@@ -1,4 +1,3 @@
-// views/status_history_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -6,8 +5,6 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
-
-
 import '../../viewModel/StatusDetails_viewModel.dart';
 
 class StatusHistoryView extends StatelessWidget {
@@ -52,7 +49,9 @@ class StatusHistoryView extends StatelessWidget {
                     if (viewModel.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (viewModel.statusHistory.isEmpty) {
-                      return const Center(child: Text('No status history available'));
+                      return const Center(child: Text('No status history available',style: TextStyle(
+                        color: Colors.white
+                      ),));
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.6,
@@ -70,10 +69,10 @@ class StatusHistoryView extends StatelessWidget {
                             return Column(
                               children: [
                                 StatusRow(
-                                  iconPath: status.iconPath,
-                                  views: status.views,
-                                  time: status.time,
-                                  rightIconPath: status.rightIconPath,
+                                  iconPath: 'assets/icons/dummy_icon.svg', // Replace with actual icon path
+                                  views: status.views.toString(),
+                                  time: status.scheduleTime, // assuming scheduleTime is a string
+                                  rightIconPath: 'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -145,7 +144,7 @@ class StatusRow extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 12.w),
-              Image.asset(
+              SvgPicture.asset(
                 rightIconPath,
                 height: 28.h,
               ),
