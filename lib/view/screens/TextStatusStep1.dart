@@ -9,10 +9,8 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../viewModel/Status_viewModel.dart';
 
-
-
 class TextStatusStep1Screen extends StatelessWidget {
-  const TextStatusStep1Screen({Key? key}) : super(key: key);
+  const TextStatusStep1Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class TextStatusStep1Screen extends StatelessWidget {
       create: (_) => TextStatusViewModel(),
       child: Scaffold(
         backgroundColor: AppColors.scaffoldColor,
-        appBar: HomeAppBar(),
+        appBar: const HomeAppBar(),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -28,14 +26,15 @@ class TextStatusStep1Screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: const CircleAvatar(
                           backgroundColor: AppColors.primaryColor,
-                          child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                          child: Icon(Icons.arrow_back_ios_outlined,
+                              color: Colors.white),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -60,7 +59,8 @@ class TextStatusStep1Screen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 14.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -71,18 +71,24 @@ class TextStatusStep1Screen extends StatelessWidget {
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: Color(int.parse(viewModel.textStatus.backgroundColorHex!.replaceFirst('#', '0xff'))),
-                                        borderRadius: BorderRadius.circular(18.0),
+                                        color: Color(int.parse(viewModel
+                                            .textStatus.backgroundColorHex!
+                                            .replaceFirst('#', '0xff'))),
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
                                       ),
                                       child: Center(
                                         child: Padding(
-                                          padding: EdgeInsets.only(left: 12.0.w, right: 10.w),
+                                          padding: EdgeInsets.only(
+                                              left: 12.0.w, right: 10.w),
                                           child: TextField(
-                                            controller: TextEditingController(text: viewModel.textStatus.text),
+                                            controller: TextEditingController(
+                                                text:
+                                                    viewModel.textStatus.text),
                                             onChanged: (text) {
                                               viewModel.setText(text);
                                             },
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "Noto Sans Hebrew",
                                               fontSize: 20.0,
                                               color: Colors.black,
@@ -90,7 +96,7 @@ class TextStatusStep1Screen extends StatelessWidget {
                                             ),
                                             maxLines: null,
                                             textAlign: TextAlign.center,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               hintText: 'הזן את הסטטוס שלך',
                                               border: InputBorder.none,
                                             ),
@@ -103,7 +109,8 @@ class TextStatusStep1Screen extends StatelessWidget {
                                       right: 5.w,
                                       left: 5.w,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Colors.red,
                                           Colors.blue,
@@ -115,15 +122,19 @@ class TextStatusStep1Screen extends StatelessWidget {
                                         ].map((color) {
                                           return GestureDetector(
                                             onTap: () {
-                                              viewModel.setBackgroundColor(color);
+                                              viewModel
+                                                  .setBackgroundColor(color);
                                             },
                                             child: Container(
                                               width: 35.w,
                                               height: 30.h,
                                               decoration: BoxDecoration(
                                                 color: color,
-                                                border: Border.all(color: AppColors.primaryColor),
-                                                borderRadius: BorderRadius.circular(12),
+                                                border: Border.all(
+                                                    color:
+                                                        AppColors.primaryColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                             ),
                                           );
@@ -140,7 +151,8 @@ class TextStatusStep1Screen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CalendarScreen(statusData: viewModel.textStatus),
+                                      builder: (context) => CalendarScreen(
+                                          statusData: viewModel.textStatus),
                                     ),
                                   );
                                 },

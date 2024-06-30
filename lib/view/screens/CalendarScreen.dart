@@ -9,13 +9,12 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../Model/Status.dart';
+import '../../Model/status.dart';
 
 class CalendarScreen extends StatefulWidget {
   final StatusData? statusData;
 
-  const CalendarScreen({Key? key, this.statusData}) : super(key: key);
-
+  const CalendarScreen({super.key, this.statusData});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -28,7 +27,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -42,7 +41,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   IconButton(
                     icon: const CircleAvatar(
                       backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                      child: Icon(Icons.arrow_back_ios_outlined,
+                          color: Colors.white),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -52,13 +52,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     'תזמון הסטטוס',
                     style: AppConstantsTextStyle.heading1Style,
                   ),
-
                 ],
               ),
             ),
             SizedBox(height: 10.h),
             Padding(
-              padding:  EdgeInsets.only(left:  12.0.w, right: 8),
+              padding: EdgeInsets.only(left: 12.0.w, right: 8),
               child: Container(
                 height: 400.h, // 70% of screen height
 
@@ -68,55 +67,71 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 20.h,),
-                    Text("בחירת יום ", style: AppConstantsTextStyle.heading2Style,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Text(
+                      "בחירת יום ",
+                      style: AppConstantsTextStyle.heading2Style,
+                    ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 16.w),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 1.0.h, horizontal: 16.w),
                       child: CalendarCarousel<Event>(
                         onDayPressed: (DateTime date, List<Event> events) {
                           setState(() {
                             _currentDate = date;
                           });
                         },
-                        weekendTextStyle: TextStyle(color: Colors.white),
+                        weekendTextStyle: const TextStyle(color: Colors.white),
                         thisMonthDayBorderColor: Colors.grey,
-                        headerTextStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                        headerTextStyle: const TextStyle(
+                            color: Colors.white, fontSize: 20.0),
                         selectedDateTime: _currentDate,
-                        daysTextStyle: TextStyle(color: Colors.white),
-                        weekdayTextStyle: TextStyle(color: Colors.white),
+                        daysTextStyle: const TextStyle(color: Colors.white),
+                        weekdayTextStyle: const TextStyle(color: Colors.white),
                         weekFormat: false,
                         height: 275.h,
                         selectedDayButtonColor: Colors.white,
-                        selectedDayTextStyle: TextStyle(color: AppColors.primaryColor),
+                        selectedDayTextStyle:
+                            const TextStyle(color: AppColors.primaryColor),
                         todayButtonColor: Colors.transparent,
-                        todayTextStyle: TextStyle(color: Colors.white),
+                        todayTextStyle: const TextStyle(color: Colors.white),
                         locale: 'en',
                         headerMargin: EdgeInsets.symmetric(vertical: 10.0.h),
-                        prevDaysTextStyle: TextStyle(color: Colors.white), // Previous month arrow color
-                        nextDaysTextStyle: TextStyle(color: Colors.white),
-                        iconColor: AppColors.orangeButtonColor,// Next month arrow color
+                        prevDaysTextStyle: const TextStyle(
+                            color: Colors.white), // Previous month arrow color
+                        nextDaysTextStyle: const TextStyle(color: Colors.white),
+                        iconColor: AppColors
+                            .orangeButtonColor, // Next month arrow color
                       ),
                     ),
-                    SizedBox(height: 20.h,),
-
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 15.0.w),
-                      child: ConstantLargeButton(text: "לבחירת שעה ←",
-                          onPressed:(){
-                            print('Selected Video at Calendar Scrren: ${widget.statusData?.videoPath}');
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (i)=>TimeSelection(
-                                  statusData: StatusData(
-                                    text: widget.statusData?.text,
-                                    backgroundColorHex: widget.statusData?.backgroundColorHex,
-                                    imagePaths: widget.statusData?.imagePaths,
-                                    videoPath: widget.statusData?.videoPath,
-                                    selectedDate: _currentDate,
-                                  ),
-                                ))
-                            );
-                          }
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                      child: ConstantLargeButton(
+                          text: "לבחירת שעה ←",
+                          onPressed: () {
+                            print(
+                                'Selected Video at Calendar Scrren: ${widget.statusData?.videoPath}');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (i) => TimeSelection(
+                                          statusData: StatusData(
+                                            text: widget.statusData?.text,
+                                            backgroundColorHex: widget
+                                                .statusData?.backgroundColorHex,
+                                            imagePaths:
+                                                widget.statusData?.imagePaths,
+                                            videoPath:
+                                                widget.statusData?.videoPath,
+                                            selectedDate: _currentDate,
+                                          ),
+                                        )));
+                          }),
                     )
                   ],
                 ),

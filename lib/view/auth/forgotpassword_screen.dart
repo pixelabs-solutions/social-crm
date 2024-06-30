@@ -21,7 +21,8 @@ class ForgotPasswordForm extends StatelessWidget {
   ForgotPasswordForm({super.key});
 
   Future<void> forgotPassword(BuildContext context) async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/auth/forgot-password';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/auth/forgot-password';
     final String phone = phoneController.text;
 
     try {
@@ -53,7 +54,10 @@ class ForgotPasswordForm extends StatelessWidget {
         // Navigate to verification code screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VerificationCodeForm(phoneNumber:phone,)),
+          MaterialPageRoute(
+              builder: (context) => VerificationCodeForm(
+                    phoneNumber: phone,
+                  )),
         );
       } else {
         print('Failed to request forgot password');
@@ -87,13 +91,12 @@ class ForgotPasswordForm extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: CustomAppBar(),
+        appBar: const CustomAppBar(),
         backgroundColor: AppColors.scaffoldColor,
         body: Padding(
           padding: EdgeInsets.all(14.h),
@@ -114,8 +117,7 @@ class ForgotPasswordForm extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      showText(
-                          'מספר טלפון שאיתו נרשמת במערכת'),
+                      showText('מספר טלפון שאיתו נרשמת במערכת'),
                       CustomTextField(
                         controller: phoneController,
                         height: MediaQuery.of(context).size.height * 0.06,
@@ -163,7 +165,8 @@ class VerificationCodeForm extends StatelessWidget {
   VerificationCodeForm({required this.phoneNumber, super.key});
 
   Future<void> verifyOtp(BuildContext context) async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/auth/verify-otp';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/auth/verify-otp';
     final String code = codeController.text;
 
     try {
@@ -196,8 +199,11 @@ class VerificationCodeForm extends StatelessWidget {
         // Navigate to new password screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => NewPasswordForm(
-            phoneNumber: phoneNumber, otp: code,)),
+          MaterialPageRoute(
+              builder: (context) => NewPasswordForm(
+                    phoneNumber: phoneNumber,
+                    otp: code,
+                  )),
         );
       } else {
         print('Failed to verify OTP');
@@ -236,7 +242,7 @@ class VerificationCodeForm extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: CustomAppBar(),
+        appBar: const CustomAppBar(),
         backgroundColor: AppColors.scaffoldColor,
         body: Padding(
           padding: EdgeInsets.all(14.h),
@@ -269,7 +275,7 @@ class VerificationCodeForm extends StatelessWidget {
                   SizedBox(height: 40.h),
                   ConstantLargeButton(
                     text: 'אמת את הקוד →',
-                    onPressed: ()async {
+                    onPressed: () async {
                       await verifyOtp(context);
                     },
                   ),
@@ -298,8 +304,6 @@ class VerificationCodeForm extends StatelessWidget {
   }
 }
 
-
-
 class NewPasswordForm extends StatelessWidget {
   final String phoneNumber; // Phone number from previous screen
   final String otp;
@@ -312,9 +316,9 @@ class NewPasswordForm extends StatelessWidget {
     super.key,
   });
 
-
   Future<void> setPassword(BuildContext context) async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/auth/reset-password';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/auth/reset-password';
     final String newPassword = passwordController.text;
     final String retryPassword = retryPasswordController.text;
 
@@ -352,7 +356,7 @@ class NewPasswordForm extends StatelessWidget {
         // Navigate to dialogue screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const DialougeSCreen ()),
+          MaterialPageRoute(builder: (context) => const DialougeSCreen()),
         );
       } else {
         print('Failed to set password');
@@ -382,7 +386,7 @@ class NewPasswordForm extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldColor,
-        appBar: CustomAppBar(),
+        appBar: const CustomAppBar(),
         body: Padding(
           padding: EdgeInsets.all(14.h),
           child: SingleChildScrollView(

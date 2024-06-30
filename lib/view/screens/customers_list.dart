@@ -1,3 +1,4 @@
+// views/customers_list_view.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
@@ -6,7 +7,6 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../viewModel/CustomerList_vm.dart';
-import '../../viewModel/StatusDetails_viewModel.dart';
 import 'adding_customer.dart';
 import 'clientpage_screen.dart';
 
@@ -22,11 +22,7 @@ class CustomersList extends StatelessWidget {
       appBar: const HomeAppBar(),
       backgroundColor: AppColors.scaffoldColor,
       body: ChangeNotifierProvider(
-        create: (_) {
-          final viewModel = CustomerViewModel();
-          viewModel.fetchCustomers();
-          return viewModel;
-        },
+        create: (_) => CustomerViewModel(),
         child: Padding(
           padding: EdgeInsets.only(left: 8.w, right: 8.w),
           child: Column(
@@ -46,7 +42,6 @@ class CustomersList extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -78,14 +73,16 @@ class CustomersList extends StatelessWidget {
                   child: Consumer<CustomerViewModel>(
                     builder: (context, viewModel, child) {
                       if (viewModel.isLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       return ScrollbarTheme(
                         data: ScrollbarThemeData(
-                          thumbColor: MaterialStateProperty.all(AppColors.orangeButtonColor),
-                          trackColor: MaterialStateProperty.all(AppColors.kWhiteColor40Opacity),
-                          thickness: MaterialStateProperty.all(8.w),
+                          thumbColor: WidgetStateProperty.all(
+                              AppColors.orangeButtonColor),
+                          trackColor: WidgetStateProperty.all(
+                              AppColors.kWhiteColor40Opacity),
+                          thickness: WidgetStateProperty.all(8.w),
                           radius: const Radius.circular(8),
                         ),
                         child: ClipRRect(
@@ -109,58 +106,48 @@ class CustomersList extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (o) => ClientPage(
-                                            customer:customer,
-                                          ),
+                                          builder: (o) => const ClientPage(),
                                         ),
                                       );
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5.w),
                                       child: Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 5.h),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.h),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                (customer.active==1)?
                                                 Container(
                                                   height: 20.h,
                                                   width: 65.w,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(20),
-                                                    color: AppColors.statusContainerColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: AppColors
+                                                        .statusContainerColor,
                                                   ),
-                                                  child: Center(child: Text("Active")),
-                                                ) :
-                                                Container(
-                                                  height: 20.h,
-                                                  width: 65.w,
-
-
-                                                ) ,
-
-                                                Directionality(
-                                                  textDirection: TextDirection.rtl,
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        "שם: ",
-                                                        style: AppConstantsTextStyle.kSmallButtonBoldWhiteTextStyle,
-                                                      ),
-                                                      Text(
-                                                        "${customer.name}",
-                                                        style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                          customer.status)),
+                                                ),
+                                                Text(
+                                                  "שם: ${customer.name}",
+                                                  style: AppConstantsTextStyle
+                                                      .kNormalWhiteNotoTextStyle,
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 2.w),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 2.w),
                                             child: const Divider(
                                               color: Colors.white,
                                             ),
@@ -174,7 +161,6 @@ class CustomersList extends StatelessWidget {
                             ),
                           ),
                         ),
-
                       );
                     },
                   ),
