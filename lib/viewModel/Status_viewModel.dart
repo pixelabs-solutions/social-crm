@@ -51,6 +51,7 @@ class TextStatusViewModel extends ChangeNotifier {
       String? caption, String? date, String? time) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    int? userID = prefs.getInt('userID');
     try {
       _isLoading = true;
       notifyListeners();
@@ -61,7 +62,8 @@ class TextStatusViewModel extends ChangeNotifier {
           "background_color": bgcolor,
           "caption_color": "#000000",
           "font_type": "Arial",
-          "caption": caption
+          "caption": caption,
+          "id": userID
         },
         "schedule_date": date?.substring(0, 10),
         "schedule_time": time?.substring(11, 19)
@@ -114,7 +116,8 @@ class TextStatusViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var token = SharedPrefernce.prefs?.getString('token');
-    var formData = dio.FormData();
+    int? userID = SharedPrefernce.prefs?.getInt('userID');
+    var formData = FormData();
 
     // Add non-null values to the FormData
     formData.fields.addAll([
@@ -122,6 +125,7 @@ class TextStatusViewModel extends ChangeNotifier {
       MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
       MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
       MapEntry('content[caption]', caption ?? ''), // Add caption to content
+      MapEntry('user_id', userID.toString()), // Add userID to formData
     ]);
 
     List<File> files = Variables.selectedImages;
@@ -138,7 +142,7 @@ class TextStatusViewModel extends ChangeNotifier {
 
         formData.files.add(MapEntry(
           'content[images][$i]',
-          await dio.MultipartFile.fromFile(
+          await MultipartFile.fromFile(
             files[i].path,
             filename: files[i].path.split('/').last,
             contentType: MediaType('application', contentType),
@@ -148,12 +152,11 @@ class TextStatusViewModel extends ChangeNotifier {
     }
 
     try {
-      final response = await dio.Dio().post(
+      final response = await Dio().post(
         '${ApiEndPointsConstants.baseUrl}/status/create', // Replace with your API endpoint
-        options: dio.Options(
+        options: Options(
           headers: {
-            'Authorization':
-                'Bearer $token', // Replace $token with your actual token
+            'Authorization': 'Bearer $token', // Replace $token with your actual token
           },
         ),
         data: formData,
@@ -165,7 +168,7 @@ class TextStatusViewModel extends ChangeNotifier {
           MaterialPageRoute(builder: (i) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
-          msg: 'Status Uploaded Sucessfully',
+          msg: 'Status Uploaded Successfully',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
@@ -185,8 +188,6 @@ class TextStatusViewModel extends ChangeNotifier {
           fontSize: 16.0,
         );
       }
-
-      // Handle success
     } catch (e) {
       log(e.toString());
     } finally {
@@ -195,6 +196,7 @@ class TextStatusViewModel extends ChangeNotifier {
     }
   }
 
+
   //** Post-Video */
 
   Future<void> postVideoStatus(
@@ -202,7 +204,8 @@ class TextStatusViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var token = SharedPrefernce.prefs?.getString('token');
-    var formData = dio.FormData();
+    int? userID = SharedPrefernce.prefs?.getInt('userID');
+    var formData = FormData();
 
     // Add non-null values to the FormData
     formData.fields.addAll([
@@ -210,6 +213,7 @@ class TextStatusViewModel extends ChangeNotifier {
       MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
       MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
       MapEntry('content[caption]', caption ?? ''), // Add caption to content
+      MapEntry('user_id', userID.toString()), // Add userID to formData
     ]);
 
     List<File> files = Variables.selectedImages;
@@ -220,7 +224,7 @@ class TextStatusViewModel extends ChangeNotifier {
 
         formData.files.add(MapEntry(
           'content[videos][$i]',
-          await dio.MultipartFile.fromFile(
+          await MultipartFile.fromFile(
             files[i].path,
             filename: files[i].path.split('/').last,
             contentType: MediaType('application', contentType),
@@ -230,12 +234,11 @@ class TextStatusViewModel extends ChangeNotifier {
     }
 
     try {
-      final response = await dio.Dio().post(
+      final response = await Dio().post(
         '${ApiEndPointsConstants.baseUrl}/status/create', // Replace with your API endpoint
-        options: dio.Options(
+        options: Options(
           headers: {
-            'Authorization':
-                'Bearer $token', // Replace $token with your actual token
+            'Authorization': 'Bearer $token', // Replace $token with your actual token
           },
         ),
         data: formData,
@@ -247,7 +250,7 @@ class TextStatusViewModel extends ChangeNotifier {
           MaterialPageRoute(builder: (i) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
-          msg: 'Status Uploaded Sucessfully',
+          msg: 'Status Uploaded Successfully',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
@@ -267,8 +270,6 @@ class TextStatusViewModel extends ChangeNotifier {
           fontSize: 16.0,
         );
       }
-
-      // Handle success
     } catch (e) {
       log(e.toString());
     } finally {

@@ -1,25 +1,29 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/Toast.dart';
+import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/auth/forgotpassword_screen.dart';
 import 'package:social_crm/view/auth/whatsappCode.dart';
 import 'package:social_crm/view/screens/NavigatonMain.dart';
 import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
-
 import 'package:http/http.dart' as http;
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  LoginForm({super.key});
+
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  LoginForm({super.key});
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +55,11 @@ class LoginForm extends StatelessWidget {
           ],
         ),
         SizedBox(height: 40.h),
-        ConstantLargeButton(
+        isLoading
+            ? CircularProgressIndicator(
+          color: AppColors.orangeButtonColor,
+        ) // Show circular progress indicator when loading
+            : ConstantLargeButton(
           text: 'כניסה לאפליקציה ->',
           onPressed: () async {
             await loginUser(context);
@@ -100,6 +108,10 @@ class LoginForm extends StatelessWidget {
     final String phone = phoneController.text;
     final String password = passwordController.text;
 
+    setState(() {
+      isLoading = true; // Start loading indicator
+    });
+
     try {
       final requestBody = jsonEncode(<String, String>{
         'phone_number': phone,
@@ -124,28 +136,28 @@ class LoginForm extends StatelessWidget {
         final jsonResponse = jsonDecode(response.body);
         final token = jsonResponse['data']['token'];
         final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
+        final userID = jsonResponse['data']['user']['id'];
         print('++++++++++++++${whatsappCode}+++++++++++++++');
 
         // Save token and WhatsApp code to SharedPreferences
-        await saveToken(token, whatsappCode ?? '');
+        await saveToken(token, userID, whatsappCode ?? '');
 
         // Navigate to the appropriate screen based on WhatsApp code
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WhatsAppCode()), // Replace with your WhatsApp screen widget
+            MaterialPageRoute(builder: (context) => WhatsAppCode()),
           );
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen()), // Replace with your Main screen widget
+            MaterialPageRoute(builder: (context) => MainScreen()),
           );
         }
 
-
-
-        ToastUtil.showToast(msg: "Login successful",
-            backgroundColor: Colors.green
+        ToastUtil.showToast(
+          msg: "Login successful",
+          backgroundColor: Colors.green,
         );
       } else {
         print('Failed to log in');
@@ -153,30 +165,27 @@ class LoginForm extends StatelessWidget {
         print('Response data: ${response.body}');
 
         // Show error toast
-
-        ToastUtil.showToast(msg: "Failed to log in",
-            backgroundColor: Colors.red
+        ToastUtil.showToast(
+          msg: "Failed to log in",
+          backgroundColor: Colors.red,
         );
       }
     } catch (e) {
       print('Error occurred: $e');
-
-
-
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading indicator
+      });
     }
   }
 
-  Future<void> saveToken(String token, String whatsappCode) async {
+  Future<void> saveToken(String token, int UserID, String whatsappCode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
+    await prefs.setInt('UserID', UserID);
     await prefs.setString('whatsAppCode', whatsappCode);
     print('Token and WhatsApp code saved to SharedPreferences: $token, $whatsappCode');
 
     print(token);
   }
-
-
-
-
-
 }

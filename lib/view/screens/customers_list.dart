@@ -55,11 +55,14 @@ class CustomersList extends StatelessWidget {
                         );
                       },
                     ),
-                    SizedBox(width: 13.w),
-                    Center(
-                      child: Text(
-                        'לקוחות',
-                        style: AppConstantsTextStyle.heading1Style,
+                    SizedBox(width: 8.w),
+                    Padding(
+                      padding:  EdgeInsets.only(right: 12.0.w),
+                      child: Center(
+                        child: Text(
+                          'לקוחות',
+                          style: AppConstantsTextStyle.heading1Style,
+                        ),
                       ),
                     ),
                   ],

@@ -8,6 +8,7 @@ class ApiEndPointsConstants {
   static String loginApiUrl = '$baseUrl/auth/login';
   static String RegisterApiUrl = '$baseUrl/auth/register';
   static String  GetUserProfile = '$baseUrl/auth/profile';
+  static String  Conatcts = '$baseUrl/contacts/list';
 
   //Customer Endpoints
 

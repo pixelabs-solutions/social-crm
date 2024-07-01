@@ -123,6 +123,7 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
               padding:  EdgeInsets.symmetric(horizontal:16.0.w),
               child: ConstantLargeButton(text: "Next",
                   onPressed: (){
+                    fetchData2();
                     fetchData();
                   }
               ),
@@ -167,6 +168,42 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
          );
         } else {
           ToastUtil.showToast(msg: "Failed to fetch data");
+        }
+      }
+    } catch (e) {
+      // Handle exception
+      print('Error occurred: $e');
+      ToastUtil.showToast(msg: "Error occurred: $e");
+    }
+  }
+  Future<void> fetchData2() async {
+    final String apiUrl = ApiEndPointsConstants.Conatcts; // Replace with your API URL
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('Response status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+
+        final jsonResponse = jsonDecode(response.body);
+        print('Response body: ${response.body}');
+
+      } else {
+        // Handle error response
+        print('Response body: ${response.body}');
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status'] == 'error') {
+
+        } else {
+
         }
       }
     } catch (e) {

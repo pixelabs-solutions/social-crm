@@ -25,15 +25,7 @@ class StatusHistoryView extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8.w, right: 8.w),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const CircleAvatar(
-                        backgroundColor: AppColors.primaryColor,
-                        child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+
                     Center(
                       child: Text(
                         'הסטוריית סטטוסים ( 24 שעות )',

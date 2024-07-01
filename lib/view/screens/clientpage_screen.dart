@@ -28,6 +28,13 @@ class _ClientPageState extends State<ClientPage> {
   CustomerViewModel customerViewModel= CustomerViewModel();
 
   @override
+  void initState() {
+    super.initState();
+    final customerViewModel = Provider.of<CustomerViewModel>(context, listen: false);
+    customerViewModel.setCustomer(widget.customer);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -251,7 +258,7 @@ class _ClientPageState extends State<ClientPage> {
 
   Widget _customRow(String email, String status) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () async {
@@ -281,7 +288,36 @@ class _ClientPageState extends State<ClientPage> {
             },
           ),
         ),
+        SizedBox(width: 6.w,),
+        GestureDetector(
+          onTap: () async {
+            int newStatus = widget.customer.active == 1 ? 0 : 1;
+            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
+          },
+          child: Consumer<CustomerViewModel>(
+            builder: (context, viewModel, child) {
+              // Determine the active status based on the view model state
 
+
+              return Container(
+                height: 20.h,
+                width: 65.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: ( widget.customer.active == 1)
+                      ? AppColors.offstatusContainerColor
+                      : AppColors.statusContainerColor,
+                ),
+                child: Center(
+                  child: Text(
+                    widget.customer.active == 1  ? "כבוי" : "פעיל",
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        Spacer(),
         Padding(
           padding: EdgeInsets.only(top: 7.h),
           child: Text(

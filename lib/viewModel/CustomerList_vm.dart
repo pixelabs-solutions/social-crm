@@ -19,6 +19,7 @@ class CustomerViewModel extends ChangeNotifier {
   bool _isLoading = true;
   List<CustomerData> customers = [];
   List<ValueItem> selectedItems = [];
+  CustomerData? customer;
 
   bool get isLoading => _isLoading;
 
@@ -65,7 +66,7 @@ class CustomerViewModel extends ChangeNotifier {
               .map((data) => CustomerData.fromJson(data))
               .toList();
           customers = customerList;
-          ToastUtil.showToast(msg: 'Customers loaded successfully', backgroundColor: Colors.green);
+
         } else {
           throw Exception('Invalid response format');
         }
@@ -83,8 +84,6 @@ class CustomerViewModel extends ChangeNotifier {
 
     }
   }
-
-
 
 
   Future<void> addCustomer(BuildContext context) async {
@@ -126,11 +125,13 @@ class CustomerViewModel extends ChangeNotifier {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
+        await fetchCustomers();
         ToastUtil.showToast(msg: 'לקוח נוסף בהצלחה',
             backgroundColor: Colors.green
         );
-        fetchCustomers();
         Navigator.pop(context);
+
+
 
         clearForm();
       } else {
@@ -286,6 +287,11 @@ class CustomerViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void setCustomer(CustomerData customerData) {
+    customer = customerData;
+    notifyListeners();
   }
 
 
