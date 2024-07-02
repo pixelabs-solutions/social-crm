@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
+import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/utilis/variables.dart';
@@ -169,9 +170,21 @@ class _TimeSelectionState extends State<TimeSelection> {
                           Text("זמנים תפוסים",
                               style: AppConstantsTextStyle.heading2Style),
                           SizedBox(height: 10.0.h),
-                          Column(
-                            children: _buildTimeRows(),
-                          ),
+                          Consumer<TextStatusViewModel>(
+                              builder: (context, viewModel, child) {
+                            if (viewModel.statusIsLoading) {
+                              return const Expanded(
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  backgroundColor: AppColors.orangeButtonColor,
+                                )),
+                              );
+                            }
+                            return Column(
+                              children: _buildTimeRows(
+                                  viewModel.statusList!.data!.statuses),
+                            );
+                          }),
                           SizedBox(height: 20.0.h),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
@@ -184,27 +197,52 @@ class _TimeSelectionState extends State<TimeSelection> {
                               return ConstantLargeButton(
                                 text: "לפרסום הסטטוס ←",
                                 onPressed: () {
-                                  if (widget.statusData?.imagePaths != null) {
-                                    viewModel.postImageStatus(
-                                      context,
-                                      widget.statusData?.text,
-                                      widget.statusData?.selectedDate
-                                          .toString(),
-                                      widget.statusData?.selectedTime
-                                          .toString(),
-                                    );
+                                  if (widget.statusData?.isEditApi == true) {
+                                    if (widget.statusData?.contentType ==
+                                        "text") {
+                                      viewModel.postTextEditStatus(
+                                          context,
+                                          widget.statusData?.statusId,
+                                          widget.statusData?.backgroundColorHex,
+                                          widget.statusData?.text,
+                                          widget.statusData?.selectedDate
+                                              .toString(),
+                                          widget.statusData?.selectedTime
+                                              .toString());
+                                    } else if (widget.statusData?.contentType ==
+                                        "image") {
+                                      viewModel.postImageEditStatus(
+                                        context,
+                                        widget.statusData?.statusId,
+                                        widget.statusData?.text,
+                                        widget.statusData?.selectedDate
+                                            .toString(),
+                                        widget.statusData?.selectedTime
+                                            .toString(),
+                                      );
+                                    } else {}
                                   } else {
-                                    viewModel.postTextStatus(
-                                      context,
-                                      widget.statusData?.backgroundColorHex,
-                                      widget.statusData?.text,
-                                      widget.statusData?.selectedDate
-                                          .toString(),
-                                      widget.statusData?.selectedTime
-                                          .toString(),
-                                    );
+                                    if (widget.statusData?.imagePaths != null) {
+                                      viewModel.postImageStatus(
+                                        context,
+                                        widget.statusData?.text,
+                                        widget.statusData?.selectedDate
+                                            .toString(),
+                                        widget.statusData?.selectedTime
+                                            .toString(),
+                                      );
+                                    } else {
+                                      viewModel.postTextStatus(
+                                        context,
+                                        widget.statusData?.backgroundColorHex,
+                                        widget.statusData?.text,
+                                        widget.statusData?.selectedDate
+                                            .toString(),
+                                        widget.statusData?.selectedTime
+                                            .toString(),
+                                      );
+                                    }
                                   }
-
                                   print(
                                       'Selected Text: ${widget.statusData?.text}');
                                   print(
@@ -230,10 +268,10 @@ class _TimeSelectionState extends State<TimeSelection> {
         ));
   }
 
-  List<Widget> _buildTimeRows() {
+  List<Widget> _buildTimeRows(List<Statuses>? statuses) {
     List<Widget> rows = [];
 
-    for (int i = 0; i < times.length; i += 3) {
+    for (int i = 0; i < statuses!.length; i += 3) {
       List<Widget> rowChildren = [];
 
       for (int j = i; j < i + 3 && j < times.length; j++) {

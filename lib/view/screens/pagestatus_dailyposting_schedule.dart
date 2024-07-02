@@ -1,18 +1,31 @@
 // views/status_history_view.dart
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:resize/resize.dart';
+import 'package:social_crm/Model/status.dart';
+import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/screens/CalendarScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
+import 'video_image.dart';
 
-class DailyPostingSchedule extends StatelessWidget {
-  const DailyPostingSchedule({super.key});
+class DailyPostingSchedule extends StatefulWidget {
+  const DailyPostingSchedule({super.key, required this.statusData});
 
+  final Statuses statusData;
+
+  @override
+  State<DailyPostingSchedule> createState() => _DailyPostingScheduleState();
+}
+
+class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,25 +119,88 @@ class DailyPostingSchedule extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 8.h),
                           child: Text(
                             "תצוגה מקדימה",
-                            style: AppConstantsTextStyle.kNormalOrangeNotoTextStyle,
+                            style: AppConstantsTextStyle
+                                .kNormalOrangeNotoTextStyle,
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            statusContainer("assets/mobileImage.png"),
-                            statusContainer("assets/mobileImage.png"),
-                            statusContainer("assets/mobileImage.png")
-                          ],
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
+
+                        if (widget.statusData.statusType == "image") ...[
+                          Container(
+                            height: 80.h,
+                            width: double.maxFinite,
+                            margin: EdgeInsets.only(bottom: 25.h),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              reverse: true,
+                              child: Row(
+                                  children: List.generate(
+                                      getUrlFromJson(widget.statusData.content)
+                                          .length, (index) {
+                                return Container(
+                                    height: 80.h,
+                                    width: 80.w,
+                                    margin: const EdgeInsets.only(
+                                        top: 8, bottom: 8, left: 5, right: 5),
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(getUrlFromJson(
+                                                widget.statusData
+                                                    .content)[index])),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          getUrlFromJson(getUrlFromJson(
+                                                  widget.statusData.content)
+                                              .removeAt(index));
+                                        });
+                                      },
+                                      child: const Align(
+                                        alignment: Alignment.topRight,
+                                        child: Icon(
+                                          CupertinoIcons.delete_solid,
+                                          color: Colors.red,
+                                          size: 22,
+                                        ),
+                                      ),
+                                    ));
+                              })),
+                            ),
+                          )
+                        ] else ...[
+                          Container(
+                              color: Colors.white,
+                              child: const VideoImage(
+                                videoUrl: "",
+                              ))
+                        ],
+
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     statusContainer("assets/mobileImage.png"),
+                        //     statusContainer("assets/mobileImage.png"),
+                        //     statusContainer("assets/mobileImage.png")
+                        //   ],
+                        // ),
+
                         ConstantLargeButton(
                           text: "לשנות את זמני הפרסום →",
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (i) => CalendarScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (i) => CalendarScreen(
+                                            statusData: StatusData(
+                                          statusId: widget.statusData.id,
+                                          contentType:
+                                              widget.statusData.statusType,
+                                          isEditApi: true,
+                                          // videoPath: widget.statusData.statusType != "image"?,
+                                          imagePaths: getUrlFromJson(
+                                              widget.statusData.content),
+                                        ))));
                           },
                         )
                       ],
@@ -135,6 +211,12 @@ class DailyPostingSchedule extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<String> getUrlFromJson(String? jsonString) {
+    Map<String, dynamic> jsonObject = jsonDecode(jsonString!);
+    List<dynamic> images = jsonObject['images'];
+    return images.map((image) => image['url'] as String).toList();
   }
 
   Widget statusContainer(String icon) {

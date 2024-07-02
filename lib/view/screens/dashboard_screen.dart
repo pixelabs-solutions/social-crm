@@ -10,7 +10,7 @@ import '../../viewModel/dashboard_viewModel.dart';
 import 'StatusUploadScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class DashboardScreen extends StatelessWidget {
         appBar: const HomeAppBar(),
         backgroundColor: AppColors.scaffoldColor,
         body: Padding(
-          padding: EdgeInsets.all(14),
+          padding: const EdgeInsets.all(14),
           child: Consumer<DashboardViewModel>(
             builder: (context, model, _) {
               return Column(
@@ -41,10 +41,12 @@ class DashboardScreen extends StatelessWidget {
                                 height: 33,
                                 width: 33,
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
-                                model.isLoading ? 'Loading...' : '${model.pendingAds}',
-                                style: TextStyle(
+                                model.isLoading
+                                    ? 'Loading...'
+                                    : '${model.pendingAds}',
+                                style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -58,7 +60,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -71,12 +73,14 @@ class DashboardScreen extends StatelessWidget {
                                 height: 32,
                                 width: 32,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 3,
                               ),
                               Text(
-                                model.isLoading ? 'Loading...' : '${model.totalCustomers}',
-                                style: TextStyle(
+                                model.isLoading
+                                    ? 'Loading...'
+                                    : '${model.totalCustomers}',
+                                style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -120,34 +124,36 @@ class DashboardScreen extends StatelessWidget {
                         bottom: 0,
                         child: Center(
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 Text(
                                   "מספר הצופים הגבוה ביותר",
                                   style: AppConstantsTextStyle.paragraph1Style,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
-                                  model.isLoading ? 'Loading...' : '${model.highestViewers}',
-                                  style: TextStyle(
+                                  model.isLoading
+                                      ? 'Loading...'
+                                      : '${model.highestViewers}',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 26,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(height: 14),
+                                const SizedBox(height: 14),
                                 GestureDetector(
                                   onTap: () {
                                     // Handle button tap
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         vertical: 10, horizontal: 22),
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -156,7 +162,7 @@ class DashboardScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(25),
                                       color: Colors.transparent,
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       'פרסם לי את זה בסטטוס ←',
                                       style: TextStyle(
                                         color: Colors.white,
@@ -183,7 +189,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 14),
+                  const SizedBox(height: 14),
                   GestureDetector(
                     onTap: () {
                       model.fetchUpcomingStatus();
@@ -203,16 +209,15 @@ class DashboardScreen extends StatelessWidget {
                                 'הסטטוס הקרוב ב ',
                                 style: AppConstantsTextStyle.heading2Style,
                               ),
-                              SizedBox(height: 3),
-
+                              const SizedBox(height: 3),
                               Text(
-                                '${model.scheduleDate ?? "No Upcoming Status"} ${model.scheduleTime ?? ""}'.trim(),
+                                '${model.scheduleDate ?? "No Upcoming Status"} ${model.scheduleTime ?? ""}'
+                                    .trim(),
                                 style: AppConstantsTextStyle.paragraph2Style,
                               )
-
                             ],
                           ),
-                          SizedBox(width: 13),
+                          const SizedBox(width: 13),
                           SvgPicture.asset(
                             "assets/faMobile.svg",
                             height: 40,
@@ -221,7 +226,6 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
                   ),
                 ],
               );
@@ -242,7 +246,7 @@ class RoundedContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:  EdgeInsets.all(14.h),
+      padding: EdgeInsets.all(14.h),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(16),

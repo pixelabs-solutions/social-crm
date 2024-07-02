@@ -13,17 +13,21 @@ import 'viewModel/StatusDetails_viewModel.dart'; // Add this import
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPrefernce.prefs = await SharedPreferences.getInstance();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     var isTokenExist = SharedPrefernce.prefs?.get('token');
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
-        ChangeNotifierProvider(create: (_)=> StatusHistoryViewModel())// Add your CustomerViewModel provider
+        ChangeNotifierProvider(
+            create: (_) =>
+                StatusHistoryViewModel()) // Add your CustomerViewModel provider
       ],
       child: Resize(
         builder: () {
@@ -31,14 +35,13 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Social CRM',
             theme: ThemeData(),
-            home:  isTokenExist != null ? const MainScreen() : const AuthScreen(),
+            home:
+                isTokenExist != null ? const MainScreen() : const AuthScreen(),
           );
         },
       ),
     );
   }
-
-
 }
 
 //

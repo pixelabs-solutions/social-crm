@@ -15,7 +15,7 @@ import '../../viewModel/CustomerList_vm.dart';
 class EditingCustomerDetails extends StatelessWidget {
   final CustomerData customer;
 
-  EditingCustomerDetails({required this.customer, super.key});
+  const EditingCustomerDetails({required this.customer, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,12 @@ class EditingCustomerDetails extends StatelessWidget {
     viewModel.mailController.text = customer.email!;
     viewModel.phoneController.text = customer.phoneNumber!;
     viewModel.selectedItems = customer.occupation != null
-        ? [ValueItem(
-        label: '${customer.occupation!}', value: customer.occupation!,)]
+        ? [
+            ValueItem(
+              label: customer.occupation!,
+              value: customer.occupation!,
+            )
+          ]
         : [];
 
     return Scaffold(
@@ -108,13 +112,13 @@ class EditingCustomerDetails extends StatelessWidget {
                         ),
                         SizedBox(height: 40.h),
                         viewModel.isLoading
-                            ? Center(child: CircularProgressIndicator())
+                            ? const Center(child: CircularProgressIndicator())
                             : ConstantLargeButton(
-                          text: 'לעדכן פרטי לקוח →',
-                          onPressed: () {
-                            viewModel.editCustomer(customer.id!);
-                          },
-                        ),
+                                text: 'לעדכן פרטי לקוח →',
+                                onPressed: () {
+                                  viewModel.editCustomer(customer.id!);
+                                },
+                              ),
                       ],
                     ),
                   ),
@@ -129,7 +133,7 @@ class EditingCustomerDetails extends StatelessWidget {
 
   Widget showText(String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7.h,horizontal: 12.w),
+      padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 12.w),
       child: Text(
         text,
         style: AppConstantsTextStyle.kNormalTextWeight800TextStyle,
@@ -138,11 +142,11 @@ class EditingCustomerDetails extends StatelessWidget {
   }
 
   Widget _buildFormField(
-      BuildContext context,
-      String labelText,
-      TextEditingController controller,
-      TextInputType keyboardType,
-      ) {
+    BuildContext context,
+    String labelText,
+    TextEditingController controller,
+    TextInputType keyboardType,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

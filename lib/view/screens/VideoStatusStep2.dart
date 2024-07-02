@@ -11,9 +11,9 @@ import 'videoStatusStep3.dart';
 // Import your next screen
 
 class VideoUploadStep2Screen extends StatefulWidget {
-  final StatusData? statusData;
+  final StatusData statusData;
 
-  const VideoUploadStep2Screen({super.key, this.statusData});
+  const VideoUploadStep2Screen({super.key, required this.statusData});
   @override
   _VideoUploadStep2ScreenState createState() => _VideoUploadStep2ScreenState();
 }

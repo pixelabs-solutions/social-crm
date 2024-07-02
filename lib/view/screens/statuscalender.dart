@@ -36,7 +36,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
             date: dateTime,
             dot: Container(
               margin: const EdgeInsets.symmetric(horizontal: 1.0),
-              color: Colors.red,
+              color: Colors.orange,
               height: 5.0,
               width: 5.0,
             ),
@@ -44,8 +44,6 @@ class _StatusCalendarState extends State<StatusCalendar> {
         );
       }
     }
-
-    log(_markedDates.events.length.toString());
   }
 
   @override
@@ -65,16 +63,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(
-                          icon: const CircleAvatar(
-                            backgroundColor: AppColors.primaryColor,
-                            child: Icon(Icons.arrow_back_ios_outlined,
-                                color: Colors.white),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+                        const SizedBox(width: 2),
                         Text(
                           'לוח פרסומים  ',
                           style: AppConstantsTextStyle.heading1Style,
@@ -86,14 +75,14 @@ class _StatusCalendarState extends State<StatusCalendar> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: Container(
-                        height: 305.h, // 70% of screen height
+                        height: 310.h, // 70% of screen height
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                         child: Consumer<TextStatusViewModel>(
                             builder: (context, viewModel, child) {
-                          if (viewModel.isLoading) {
+                          if (viewModel.statusIsLoading) {
                             return const Center(
                                 child: CircularProgressIndicator(
                               backgroundColor: AppColors.orangeButtonColor,
@@ -108,14 +97,11 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                 child: CalendarCarousel<Event>(
                                   weekendTextStyle:
                                       const TextStyle(color: Colors.white),
-
                                   thisMonthDayBorderColor: Colors.grey,
                                   headerTextStyle: const TextStyle(
                                       color: Colors.white, fontSize: 20.0),
-
                                   daysTextStyle:
                                       const TextStyle(color: Colors.white),
-
                                   weekdayTextStyle:
                                       const TextStyle(color: Colors.white),
                                   weekFormat: false,
@@ -124,7 +110,6 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                   selectedDayTextStyle: const TextStyle(
                                       color: AppColors.primaryColor),
                                   todayButtonColor: Colors.transparent,
-
                                   locale: 'en',
                                   headerMargin:
                                       EdgeInsets.symmetric(vertical: 10.0.h),
@@ -140,9 +125,20 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                       RoundedRectangleBorder(
                                     side: const BorderSide(
                                         color: AppColors.orangeButtonColor),
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  inactiveDaysTextStyle: const TextStyle(
+                                    backgroundColor: Colors.orange,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  markedDateMoreCustomDecoration:
+                                      const BoxDecoration(
+                                    color: Colors.orange,
                                   ),
                                   markedDateCustomTextStyle: const TextStyle(
+                                    backgroundColor: Colors.orange,
+                                    color: Colors.orange,
                                     fontWeight: FontWeight.bold,
                                   ),
 
@@ -154,7 +150,10 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               StatusScheduleMonthView(
-                                                  selectedDate: date),
+                                            selectedDate: date,
+                                            status: viewModel
+                                                .statusList?.data?.statuses,
+                                          ),
                                         ),
                                       );
                                     }
@@ -194,7 +193,8 @@ class _StatusCalendarState extends State<StatusCalendar> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (o) => AddingCustomerDetails()));
+                                      builder: (o) =>
+                                          const AddingCustomerDetails()));
                             })
                           ],
                         ),
