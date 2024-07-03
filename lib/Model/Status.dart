@@ -1,5 +1,8 @@
 class StatusData {
+  final int? statusId;
   final String? text;
+  final String? contentType;
+  final bool? isEditApi;
   final String? backgroundColorHex;
   final List<String>? imagePaths;
   final String? videoPath;
@@ -8,6 +11,9 @@ class StatusData {
 
   StatusData(
       {this.text,
+      this.statusId,
+      this.contentType,
+      this.isEditApi,
       this.backgroundColorHex,
       this.imagePaths,
       this.selectedDate,
@@ -15,14 +21,12 @@ class StatusData {
       this.videoPath});
 }
 
-
 class StatusDetails {
   final String highestViewers;
   final String nextStatusTime;
   final String nextStatusDate;
   final int pendingAds;
   final int clients;
-
 
   StatusDetails({
     required this.highestViewers,
@@ -42,5 +46,3 @@ class StatusDetails {
     );
   }
 }
-
-

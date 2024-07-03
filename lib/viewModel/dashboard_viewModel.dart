@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
 
-
 import '../Model/Status.dart';
 import '../Model/statusDetails.dart';
 
@@ -27,8 +26,10 @@ class DashboardViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
   Future<void> fetchUpcomingStatus() async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/status/list';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/status/list';
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -44,7 +45,8 @@ class DashboardViewModel extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
       DateTime now = DateTime.now();
-      String formattedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+      String formattedDate =
+          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
 
       var request = http.Request('GET', Uri.parse(apiUrl));
       request.body = json.encode({
@@ -84,8 +86,10 @@ class DashboardViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> fetchPendingStatusCount() async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/status/list';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/status/list';
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -161,8 +165,10 @@ class DashboardViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> fetchHighestViewers() async {
-    final String apiUrl = 'https://scrm-apis.woo-management.com/api/status/highest-views';
+    const String apiUrl =
+        'https://scrm-apis.woo-management.com/api/status/highest-views';
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -199,11 +205,4 @@ class DashboardViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
 }
-
-
-
-
-

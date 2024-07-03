@@ -14,10 +14,12 @@ import 'package:jwt_decoder/jwt_decoder.dart'; // Import jwt_decoder package for
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPrefernce.prefs = await SharedPreferences.getInstance();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     bool shouldNavigateToMainScreen = checkTokenValidity();
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
+        ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()), // Add your CustomerViewModel provider
         ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()),
         // Add other providers as needed
       ],
@@ -49,8 +52,6 @@ class MyApp extends StatelessWidget {
     }
 
     bool isTokenExpired = isTokenExpiredFunction(token);
-
-
     return token.isNotEmpty && !isTokenExpired;
   }
 

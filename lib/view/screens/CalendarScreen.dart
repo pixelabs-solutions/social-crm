@@ -6,7 +6,6 @@ import 'package:social_crm/view/screens/TimeSelectionScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../Model/status.dart';
@@ -121,7 +120,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 MaterialPageRoute(
                                     builder: (i) => TimeSelection(
                                           statusData: StatusData(
+                                            statusId:
+                                                widget.statusData?.statusId,
                                             text: widget.statusData?.text,
+                                            isEditApi:
+                                                widget.statusData?.isEditApi,
+                                            contentType:
+                                                widget.statusData?.contentType,
                                             backgroundColorHex: widget
                                                 .statusData?.backgroundColorHex,
                                             imagePaths:

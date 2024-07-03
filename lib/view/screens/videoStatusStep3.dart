@@ -9,6 +9,8 @@ import 'dart:async';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 class VideoUploadStep3Screen extends StatefulWidget {
+  const VideoUploadStep3Screen({super.key});
+
   @override
   _VideoUploadStep3ScreenState createState() => _VideoUploadStep3ScreenState();
 }
@@ -18,7 +20,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -32,7 +34,8 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
                   IconButton(
                     icon: const CircleAvatar(
                       backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                      child: Icon(Icons.arrow_back_ios_outlined,
+                          color: Colors.white),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -49,26 +52,36 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
             ),
             SizedBox(height: 20.h),
             Padding(
-              padding:  EdgeInsets.only(left: 16.0.w, right: 8.w),
+              padding: EdgeInsets.only(left: 16.0.w, right: 8.w),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.5, // 70% of screen height
+                height: MediaQuery.of(context).size.height *
+                    0.5, // 70% of screen height
                 width: MediaQuery.of(context).size.width * 0.7,
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(18.0),
                 ),
                 child: Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 8.0.w),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                   child: Column(
                     children: [
-                      SizedBox(height: 20.h,),
-                      Text("הסרטון נחתך בהצלחה!", style: AppConstantsTextStyle.heading2Style,),
-                      SizedBox(height: 10.h,),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Text(
+                        "הסרטון נחתך בהצלחה!",
+                        style: AppConstantsTextStyle.heading2Style,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.0.h, horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 15.0.h, horizontal: 16.w),
                         child: GridView.builder(
                           shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 16.0,
                             mainAxisSpacing: 16.0,
@@ -82,13 +95,14 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
                         ),
                       ),
                       Padding(
-                        padding:  EdgeInsets.all(16.0),
-                        child: ConstantLargeButton(text: "לתזמון הסטטוס ←",
-                            onPressed: (){
-                          
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (i)=>CalendarScreen()));
-
+                        padding: const EdgeInsets.all(16.0),
+                        child: ConstantLargeButton(
+                            text: "לתזמון הסטטוס ←",
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (i) => const CalendarScreen()));
                             }),
                       )
                     ],
@@ -107,7 +121,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 3.0,
@@ -126,7 +140,7 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
               fit: BoxFit.cover,
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 8.0,
             left: 8.0,
             child: Icon(Icons.delete, color: Colors.red, size: 24.0),
@@ -135,5 +149,4 @@ class _VideoUploadStep3ScreenState extends State<VideoUploadStep3Screen> {
       ),
     );
   }
-
 }

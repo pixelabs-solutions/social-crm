@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../Model/customer.dart';
 import '../utilis/ApiConstants.dart';
 import '../utilis/Toast.dart';
@@ -23,8 +22,7 @@ class CustomerViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-
-  List<ValueItem> _items = [
+  final List<ValueItem> _items = [
     const ValueItem(label: 'Influencer', value: 'Influencer'),
     const ValueItem(label: 'Doctor', value: 'Doctor'),
     // Add more items as needed
@@ -45,8 +43,6 @@ class CustomerViewModel extends ChangeNotifier {
         throw Exception('No token found');
       }
 
-
-
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -61,12 +57,12 @@ class CustomerViewModel extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        if (responseData['status'] == 'success' && responseData['data'] is List) {
+        if (responseData['status'] == 'success' &&
+            responseData['data'] is List) {
           List<CustomerData> customerList = (responseData['data'] as List)
               .map((data) => CustomerData.fromJson(data))
               .toList();
           customers = customerList;
-
         } else {
           throw Exception('Invalid response format');
         }
@@ -75,16 +71,15 @@ class CustomerViewModel extends ChangeNotifier {
       }
     } catch (error) {
       print('Error fetching customers: $error');
-      ToastUtil.showToast(msg: 'Error loading customers', backgroundColor: Colors.red);
+      ToastUtil.showToast(
+          msg: 'Error loading customers', backgroundColor: Colors.red);
     } finally {
-      if(_isLoading){
+      if (_isLoading) {
         _isLoading = false;
         notifyListeners();
       }
-
     }
   }
-
 
   Future<void> addCustomer(BuildContext context) async {
     final String apiUrl = ApiEndPointsConstants.CreateCustomers;
@@ -126,12 +121,9 @@ class CustomerViewModel extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         await fetchCustomers();
-        ToastUtil.showToast(msg: 'לקוח נוסף בהצלחה',
-            backgroundColor: Colors.green
-        );
+        ToastUtil.showToast(
+            msg: 'לקוח נוסף בהצלחה', backgroundColor: Colors.green);
         Navigator.pop(context);
-
-
 
         clearForm();
       } else {
@@ -139,9 +131,8 @@ class CustomerViewModel extends ChangeNotifier {
       }
     } catch (error) {
       print('Error adding customer: $error');
-      ToastUtil.showToast(msg: 'שגיאה בהוספת לקוח',
-          backgroundColor: Colors.red
-      );
+      ToastUtil.showToast(
+          msg: 'שגיאה בהוספת לקוח', backgroundColor: Colors.red);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -254,7 +245,7 @@ class CustomerViewModel extends ChangeNotifier {
       }
 
       final response = await http.put(
-        Uri.parse('$apiUrl'),
+        Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -276,13 +267,15 @@ class CustomerViewModel extends ChangeNotifier {
           customers[customerIndex].active = activeStatus;
         }
         notifyListeners();
-        ToastUtil.showToast(msg: 'Status updated successfully', backgroundColor: Colors.green);
+        ToastUtil.showToast(
+            msg: 'Status updated successfully', backgroundColor: Colors.green);
       } else {
         throw Exception('Failed to update status');
       }
     } catch (error) {
       print('Error updating status: $error');
-      ToastUtil.showToast(msg: 'Error updating status', backgroundColor: Colors.red);
+      ToastUtil.showToast(
+          msg: 'Error updating status', backgroundColor: Colors.red);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -293,8 +286,6 @@ class CustomerViewModel extends ChangeNotifier {
     customer = customerData;
     notifyListeners();
   }
-
-
 
   bool validateForm() {
     bool isValid = true;

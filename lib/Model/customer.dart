@@ -31,7 +31,7 @@ class CustomerData {
   String? phoneNumber;
   String? occupation;
   int? userId;
-  int active=0;
+  int active = 0;
 
   CustomerData({
     this.id,
@@ -50,7 +50,7 @@ class CustomerData {
     phoneNumber = json['phone_number'];
     occupation = json['occupation'];
     userId = json['user_id'];
-    active = json ['active'];
+    active = json['active'];
   }
 
   Map<String, dynamic> toJson() {
