@@ -9,9 +9,16 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../viewModel/Status_viewModel.dart';
 
-class TextStatusStep1Screen extends StatelessWidget {
+class TextStatusStep1Screen extends StatefulWidget {
   const TextStatusStep1Screen({super.key});
 
+  @override
+  State<TextStatusStep1Screen> createState() => _TextStatusStep1ScreenState();
+}
+
+class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
+
+  bool isRtl = true;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -62,9 +69,29 @@ class TextStatusStep1Screen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 14.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10.h),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Transform.scale(
+                                    scale: 0.75,
+                                    child: Switch(
+                                      activeColor: AppColors.orangeButtonColor,
+                                      value: isRtl,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isRtl = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Text('שנה כיוון טקסט:',
+                                    style: AppConstantsTextStyle.paragraph2Style,),
+
+                                ],
+                              ),
+                              SizedBox(height: 2.h),
                               // Text editing canvas
                               Expanded(
                                 child: Stack(

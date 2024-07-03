@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
@@ -15,12 +16,15 @@ import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/variables.dart';
 import '../Model/status.dart';
 import '../Model/statuslist.dart';
+import '../utilis/Toast.dart';
 import '../utilis/shared_prefes.dart';
 import '../view/screens/publishSuccesScreen.dart';
 import 'package:path/path.dart' as path;
 
 class TextStatusViewModel extends ChangeNotifier {
   StatusData _textStatus = StatusData(text: '', backgroundColorHex: '#FFFFFF');
+
+  int statusSpecificCount=0;
   StatusData get textStatus => _textStatus;
 
   StatusList? _statusList;
@@ -35,6 +39,7 @@ class TextStatusViewModel extends ChangeNotifier {
 
   TextStatusViewModel() {
     getAllStatus();
+    getMonthAllStatus();
   }
 
   void setText(String text) {
@@ -331,6 +336,51 @@ class TextStatusViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> getMonthAllStatus() async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    isSpecficLoading = true;
+    notifyListeners();
+
+    try {
+      // Get the current month's start and end dates
+      DateTime now = DateTime.now();
+      DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
+      DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+
+      // Format dates in 'yyyy-MM-dd' format as required by your API
+      String startDate = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+      String endDate = DateFormat('yyyy-MM-dd').format(lastDayOfMonth);
+
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        queryParameters: {
+          "start_date": startDate,
+          "posted": 0,
+          "end_date": endDate,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        statusSpecificList = StatusList.fromJson(response.data);
+
+        // Extract the count variable and save it to viewModel
+        statusSpecificCount = response.data['data']['count'];
+        print("...................................................");
+        print(statusSpecificCount);
+      }
+    } catch (e) {
+      print('Error getting month status: $e');
+    } finally {
+      isSpecficLoading = false;
+      notifyListeners();
+    }
+  }
 
   //** Post-EditText -Status*/
   Future<void> postTextEditStatus(BuildContext context, int? statusId,
@@ -457,4 +507,6 @@ class TextStatusViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+
 }

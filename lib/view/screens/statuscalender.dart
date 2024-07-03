@@ -26,6 +26,7 @@ class StatusCalendar extends StatefulWidget {
 class _StatusCalendarState extends State<StatusCalendar> {
   final EventList<Event> _markedDates = EventList<Event>(events: {});
 
+
   void _markFridays(List<Statuses>? statuses) {
     if (statuses!.isNotEmpty) {
       for (int i = 0; i < statuses.length; i++) {
@@ -36,8 +37,8 @@ class _StatusCalendarState extends State<StatusCalendar> {
             date: dateTime,
             dot: Container(
               margin: const EdgeInsets.symmetric(horizontal: 1.0),
-              color: Colors.orange,
-              height: 5.0,
+              color: Colors.red,
+              height: 2.0,
               width: 5.0,
             ),
           ),
@@ -48,6 +49,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<TextStatusViewModel>(context);
     return Scaffold(
         backgroundColor: AppColors.scaffoldColor,
         appBar: const HomeAppBar(),
@@ -122,10 +124,10 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                   markedDatesMap: _markedDates,
                                   markedDateShowIcon: true,
                                   markedDateCustomShapeBorder:
-                                      RoundedRectangleBorder(
+                                  RoundedRectangleBorder(
                                     side: const BorderSide(
                                         color: AppColors.orangeButtonColor),
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(20.0),
                                   ),
                                   inactiveDaysTextStyle: const TextStyle(
                                     backgroundColor: Colors.orange,
@@ -137,7 +139,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                     color: Colors.orange,
                                   ),
                                   markedDateCustomTextStyle: const TextStyle(
-                                    backgroundColor: Colors.orange,
+
                                     color: Colors.orange,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -217,7 +219,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                     .kNormalWhiteNotoTextStyle,
                               ),
                               Text(
-                                "174",
+                                "${viewModel.statusSpecificCount}",
                                 style: AppConstantsTextStyle
                                     .kNormalOrangeNotoTextStyle,
                               ),

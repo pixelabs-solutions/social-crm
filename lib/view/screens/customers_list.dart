@@ -52,7 +52,10 @@ class CustomersList extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (o) => AddingCustomerDetails(),
                           ),
-                        );
+                        ).then((_) {
+                          // Fetch customers again after adding a new customer
+                          Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
+                        });
                       },
                     ),
                     SizedBox(width: 8.w),
@@ -81,7 +84,9 @@ class CustomersList extends StatelessWidget {
                   child: Consumer<CustomerViewModel>(
                     builder: (context, viewModel, child) {
                       if (viewModel.isLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: CircularProgressIndicator(
+                          color: AppColors.orangeButtonColor,
+                        ));
                       }
 
                       return ScrollbarTheme(
@@ -113,10 +118,13 @@ class CustomersList extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (o) => ClientPage(
-                                            customer:customer,
+                                            customer: customer,
                                           ),
                                         ),
-                                      );
+                                      ).then((_) {
+                                        // Refresh customers list after returning from ClientPage
+                                        Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
+                                      });
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 5.w),

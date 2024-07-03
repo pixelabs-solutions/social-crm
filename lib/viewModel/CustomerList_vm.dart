@@ -139,8 +139,8 @@ class CustomerViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteCustomer(String customerId) async {
-    final String apiUrl = ApiEndPointsConstants.DeleteCustomers;
+  Future<void> deleteCustomer(int customerId) async {
+    final String apiUrl = '${ApiEndPointsConstants.DeleteCustomers}/$customerId';
     _isLoading = true;
     notifyListeners();
 
@@ -184,9 +184,9 @@ class CustomerViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> editCustomer(int customerId) async {
-    if (!validateForm()) return;
-    final String apiUrl = ApiEndPointsConstants.EditCustomers;
+  Future<void> editCustomer(int customerId, String name, String email, String phone) async {
+    print("Edit Method Called");
+    final String apiUrl = '${ApiEndPointsConstants.EditCustomers}/$customerId';
 
     _isLoading = true;
     notifyListeners();
@@ -198,28 +198,35 @@ class CustomerViewModel extends ChangeNotifier {
       if (token == null) {
         throw Exception('No token found');
       }
+
       final occupation = selectedItems.map((item) => item.value).join(',');
 
+      final Map<String, dynamic> requestBody = {
+        'name': name,
+        'phone': phone,
+        'email': email,
+        'occupation': occupation,
+      };
+
+      final String requestBodyJson = json.encode(requestBody);
+
       final response = await http.put(
-        Uri.parse('$apiUrl/$customerId'),
+        Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: json.encode({
-          'name': nameController.text,
-          'phone': phoneController.text,
-          'email': mailController.text,
-          'occupation': occupation
-        }),
+        body: requestBodyJson,
       );
 
-      print('Request: ${response.request}');
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('Request URL: ${response.request?.url}');
+      print('Request Headers: ${response.request?.headers}');
+      print('Request Body: $requestBodyJson');
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        // Handle successful edit (if needed)
+        ToastUtil.showToast(msg: "Updated Successfully", backgroundColor: Colors.green);
       } else {
         throw Exception('Failed to edit customer: ${response.statusCode}');
       }
@@ -230,6 +237,7 @@ class CustomerViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 
   Future<void> setActiveStatus(int customerId, int activeStatus) async {
     final String apiUrl = ApiEndPointsConstants.EditCustomersStatus;

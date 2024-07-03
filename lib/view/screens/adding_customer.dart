@@ -174,7 +174,7 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showText(labelText),
-          CustomTextField(
+          CustomTextFields(
             backgroundColor: AppColors.kWhiteColor40Opacity,
             controller: controller,
             height: MediaQuery.of(context).size.height * 0.06,

@@ -24,6 +24,7 @@ class ApiEndPointsConstants {
   static String UpcomingSatus = '$baseUrl/status/list';
   static String FetchStatus = '$baseUrl/status/list';
   static String FetchStatusViews = '$baseUrl/status/list/';
+  static String DeleteSatus = '$baseUrl/status/delete';
 
 
 

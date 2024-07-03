@@ -128,7 +128,9 @@ class _ClientPageState extends State<ClientPage> {
                       ),
                       _customIconRow("assets/deleteIcon.svg", "מקצוע",
                           onTap: () {
-
+                            showDeleteDialog(context,customerViewModel,
+                            widget.customer.id!
+                            );
                           }),
                       showText("${widget.customer.occupation}"),
                       SizedBox(
@@ -166,7 +168,7 @@ class _ClientPageState extends State<ClientPage> {
   }
 
   void showDeleteDialog(BuildContext context,
-      CustomerViewModel viewModel, String customerId) {
+      CustomerViewModel viewModel, int customerId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -185,7 +187,8 @@ class _ClientPageState extends State<ClientPage> {
               onPressed: () {
                 viewModel.deleteCustomer(customerId).then((_) {
                   Navigator.of(context).pop(); // Close dialog
-                  Navigator.of(context).pop(); // Navigate back to previous screen
+                  Navigator.of(context).pop();
+                  viewModel.fetchCustomers();// Navigate back to previous screen
                 });
               },
             ),

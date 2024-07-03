@@ -173,7 +173,7 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
             TextButton(
               child: const Text('מחק'),
               onPressed: () {
-                viewModel.deleteCustomer(customerId).then((_) {
+                viewModel.deleteCustomer(customerId as int).then((_) {
                   Navigator.of(context).pop(); // Close dialog
                   Navigator.of(context).pop(); // Navigate back to previous screen
                 });
