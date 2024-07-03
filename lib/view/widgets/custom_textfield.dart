@@ -5,49 +5,87 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 
-class CustomTextField extends StatelessWidget {
-  double height;
-  TextEditingController controller;
-  String? hintText = "";
-  TextInputType keyboardType; // Add keyboardType parameter
-  bool showBorder; // New parameter to control border visibility
-  Color backgroundColor;
-  CustomTextField(
-      {super.key,
-      required this.height,
-      required this.controller,
-      this.hintText,
-      required this.keyboardType, // Make keyboardType required
-      this.showBorder = false, // Default value for showBorder
-      this.backgroundColor = AppColors.kWhiteColor, required TextDirection textDirection});
+class CustomTextField extends StatefulWidget {
+  final double height;
+  final TextEditingController controller;
+  final String? hintText;
+  final TextInputType keyboardType;
+  final bool showBorder;
+  final Color backgroundColor;
+  final TextDirection textDirection;
+  final String? prefixText;
+
+  CustomTextField({
+    super.key,
+    required this.height,
+    required this.controller,
+    this.hintText,
+    required this.keyboardType,
+    this.showBorder = false,
+    this.backgroundColor = AppColors.kWhiteColor,
+    required this.textDirection,
+    this.prefixText,
+  });
+
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  @override
+  void initState() {
+    super.initState();
+    // Prepend the prefix text to the controller's initial text if it doesn't already start with it
+    if (widget.prefixText != null && !widget.controller.text.startsWith(widget.prefixText!)) {
+      widget.controller.text = '${widget.prefixText}${widget.controller.text}';
+    }
+
+    // Add listener to handle changes
+    widget.controller.addListener(_handleTextChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_handleTextChanged);
+    super.dispose();
+  }
+
+  void _handleTextChanged() {
+    // Ensure the text always starts with the prefix text
+    if (widget.prefixText != null && !widget.controller.text.startsWith(widget.prefixText!)) {
+      widget.controller.text = '${widget.prefixText}${widget.controller.text}';
+      widget.controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: widget.controller.text.length),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: widget.height,
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius:
-            BorderRadius.circular(25), // Nullify border if showBorder is false
+        color: widget.backgroundColor,
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.05,
-            vertical: 0.1.h),
+          horizontal: MediaQuery.of(context).size.width * 0.05,
+          vertical: 0.1.h,
+        ),
         child: Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: widget.textDirection,
           child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
+            controller: widget.controller,
+            keyboardType: widget.keyboardType,
             maxLines: null,
             cursorColor: AppColors.cursorColor,
             style: AppConstantsTextStyle.kTextFieldTextStyle,
             decoration: InputDecoration(
               hintStyle: AppConstantsTextStyle.kTextFieldTextStyle,
-              hintText: hintText,
+              hintText: widget.hintText,
 
-              border:
-                  showBorder ? null : InputBorder.none, // Remove default border
+              border: widget.showBorder ? null : InputBorder.none,
             ),
           ),
         ),
@@ -55,6 +93,7 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
 
 class CustomPasswordTextField extends StatefulWidget {
   String? hintText = "";
