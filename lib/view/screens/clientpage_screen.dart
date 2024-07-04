@@ -1,31 +1,29 @@
-// views/status_history_view.dart
-// ignore_for_file: must_be_immutable
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:resize/resize.dart';
+import 'package:resize/resize.dart'; // Assuming this is your custom package
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../Model/customer.dart';
 import '../../viewModel/CustomerList_vm.dart';
+import '../widgets/custom_appbar.dart';
 import 'editing_customerdetails_screen.dart';
 
 class ClientPage extends StatefulWidget {
-
   final CustomerData customer;
 
-
-  const ClientPage({required this.customer, super.key});
+  const ClientPage({required this.customer, Key? key}) : super(key: key);
 
   @override
   State<ClientPage> createState() => _ClientPageState();
 }
 
 class _ClientPageState extends State<ClientPage> {
-  CustomerViewModel customerViewModel= CustomerViewModel();
+  CustomerViewModel customerViewModel = CustomerViewModel();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -36,139 +34,131 @@ class _ClientPageState extends State<ClientPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: const HomeAppBar(),
-      backgroundColor: AppColors.scaffoldColor,
-      body: Padding(
-        padding: EdgeInsets.only(left: 8.w, right: 8.w),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 8.w, right: 8.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const CircleAvatar(
-                      backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined,
-                          color: Colors.white),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(
-                    width: 13.w,
-                  ),
-                  Center(
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Row(
-                        children: [
-                          Text(
-                            'פרטי לקוח:',
-                            style: AppConstantsTextStyle.heading2Style,
-                          ),
-                          Text(
-                            ' ${widget.customer.name}',
-                            style: AppConstantsTextStyle.heading2Style,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                width: double.infinity,
-                margin: const EdgeInsets.all(12.0),
-                padding: EdgeInsets.only(top: 12.0.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: const HomeAppBar(),
+          backgroundColor: AppColors.scaffoldColor,
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(height: 10.h,),
-                      _customRow("דוא\"ל", "פעיל"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-
-
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "${widget.customer.email}",
-                              style: AppConstantsTextStyle
-                                  .kNormalWhiteNotoTextStyle,
-                            ),
-                          )
-                        ],
+                      IconButton(
+                        icon: const CircleAvatar(
+                          backgroundColor: AppColors.primaryColor,
+                          child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      SizedBox(
-                        height: 5.h,
+                      SizedBox(width: 13.w),
+                      Center(
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            children: [
+                              Text(
+                                'פרטי לקוח:',
+                                style: AppConstantsTextStyle.heading2Style,
+                              ),
+                              Text(
+                                ' ${widget.customer.name}',
+                                style: AppConstantsTextStyle.heading2Style,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (o)=>EditingCustomerDetails(
-                              customer: widget.customer,))
-                        );
-                      }),
-                      showText("${widget.customer.phoneNumber}"),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      _customIconRow("assets/deleteIcon.svg", "מקצוע",
-                          onTap: () {
-                            showDeleteDialog(context,customerViewModel,
-                            widget.customer.id!
-                            );
-                          }),
-                      showText("${widget.customer.occupation}"),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Container(
-                        height: 35.h,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: AppColors.kWhiteColor23pacity,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                            child: Text(
-                              "היסטוריית פרסומים",
-                              style:
-                              AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-                            )),
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      statusRow("14,500", "24/06/15", "סטטוס וידאו",
-                          "assets/vedioStatusIcon.svg"),
-                      statusRow(
-                          "14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
-                      statusRow("14,500", "24/06/15", "סטטוס תמונה",
-                          "assets/photoStatusIcon.svg"),
                     ],
                   ),
-                )),
-          ],
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.only(top: 12.0.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(height: 10.h),
+                        _customRow("דוא\"ל", "פעיל"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.h),
+                              child: Text(
+                                "${widget.customer.email}",
+                                style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 5.h),
+                        _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (o) => EditingCustomerDetails(customer: widget.customer)),
+                          );
+                        }),
+                        showText("${widget.customer.phoneNumber}"),
+                        SizedBox(height: 5.h),
+                        _customIconRow("assets/deleteIcon.svg", "מקצוע", onTap: () {
+                          showDeleteDialog(context, customerViewModel, widget.customer.id!);
+                        }),
+                        showText("${widget.customer.occupation}"),
+                        SizedBox(height: 40.h),
+                        Container(
+                          height: 35.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColors.kWhiteColor23pacity,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "היסטוריית פרסומים",
+                              style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+                        statusRow("14,500", "24/06/15", "סטטוס וידאו", "assets/vedioStatusIcon.svg"),
+                        statusRow("14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
+                        statusRow("14,500", "24/06/15", "סטטוס תמונה", "assets/photoStatusIcon.svg"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
+        if (isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5), // Adjust the opacity as needed
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 
-  void showDeleteDialog(BuildContext context,
-      CustomerViewModel viewModel, int customerId) {
+  void showDeleteDialog(BuildContext context, CustomerViewModel viewModel, int customerId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -187,8 +177,8 @@ class _ClientPageState extends State<ClientPage> {
               onPressed: () {
                 viewModel.deleteCustomer(customerId).then((_) {
                   Navigator.of(context).pop(); // Close dialog
-                  Navigator.of(context).pop();
-                  viewModel.fetchCustomers();// Navigate back to previous screen
+                  Navigator.of(context).pop(); // Navigate back to previous screen
+                  viewModel.fetchCustomers(); // Optionally, fetch updated data
                 });
               },
             ),
@@ -207,43 +197,21 @@ class _ClientPageState extends State<ClientPage> {
             SizedBox(
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    "assets/eyeIcon.svg",
-                    width: 12.w,
-                    height: 12.h,
-                  ),
-                  SizedBox(
-                    width: 3.w,
-                  ),
                   Text(
                     views,
                     style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle,
-                  )
+                  ),
+                  SizedBox(width: 3.w),
                 ],
               ),
             ),
-            SizedBox(
-              width: 60.w,
-              child: Text(
-                date,
-                style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle,
-              ),
-            ),
+            SizedBox(width: 60.w, child: Text(date, style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle)),
             SizedBox(
               child: Row(
                 children: [
-                  Text(
-                    title,
-                    style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle,
-                  ),
-                  SizedBox(
-                    width: 5.w,
-                  ),
-                  SvgPicture.asset(
-                    icon,
-                    width: 12.w,
-                    height: 12.h,
-                  ),
+                  Text(title, style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle),
+                  SizedBox(width: 5.w),
+                  SvgPicture.asset(icon, width: 12.w, height: 12.h),
                 ],
               ),
             ),
@@ -251,88 +219,125 @@ class _ClientPageState extends State<ClientPage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 2.w),
-          child: const Divider(
-            color: Colors.white,
-          ),
+          child: const Divider(color: Colors.white),
         ),
       ],
     );
   }
 
   Widget _customRow(String email, String status) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () async {
-            int newStatus = widget.customer.active == 1 ? 0 : 1;
-            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
-          },
-          child: Consumer<CustomerViewModel>(
-            builder: (context, viewModel, child) {
-              // Determine the active status based on the view model state
+    bool isLoading = false; // Local state to manage loading state
 
+    return Consumer<CustomerViewModel>(
+      builder: (context, viewModel, child) {
+        return Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    if (!isLoading) {
+                      setState(() {
+                        isLoading = true;
+                      });
 
-              return Container(
-                height: 20.h,
-                width: 65.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: ( widget.customer.active == 0)
-                      ? AppColors.offstatusContainerColor
-                      : AppColors.statusContainerColor,
-                ),
-                child: Center(
-                  child: Text(
-                    widget.customer.active == 0  ? "כבוי" : "פעיל",
+                      int newStatus = widget.customer.active == 1 ? 0 : 1;
+                      await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
+
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Container(
+                    height: 20.h,
+                    width: 65.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: (widget.customer.active == 0) ? AppColors.offstatusContainerColor : AppColors.statusContainerColor,
+                    ),
+                    child: Center(
+                      child: Text(widget.customer.active == 0 ? "כבוי" : "פעיל"),
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        SizedBox(width: 6.w,),
-        GestureDetector(
-          onTap: () async {
-            int newStatus = widget.customer.active == 1 ? 0 : 1;
-            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
-          },
-          child: Consumer<CustomerViewModel>(
-            builder: (context, viewModel, child) {
-              // Determine the active status based on the view model state
+                SizedBox(width: 6.w),
+                GestureDetector(
+                  onTap: () async {
+                    if (!isLoading) {
+                      setState(() {
+                        isLoading = true;
+                      });
 
+                      int newStatus = widget.customer.active == 1 ? 0 : 1;
+                      await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
 
-              return Container(
-                height: 20.h,
-                width: 65.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: ( widget.customer.active == 1)
-                      ? AppColors.offstatusContainerColor
-                      : AppColors.statusContainerColor,
-                ),
-                child: Center(
-                  child: Text(
-                    widget.customer.active == 1  ? "כבוי" : "פעיל",
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Container(
+                    height: 20.h,
+                    width: 65.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: (widget.customer.active == 1) ? AppColors.offstatusContainerColor : AppColors.statusContainerColor,
+                    ),
+                    child: Center(
+                      child: Text(widget.customer.active == 1 ? "כבוי" : "פעיל"),
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        Spacer(),
-        Padding(
-          padding: EdgeInsets.only(top: 7.h),
-          child: Text(
-            email,
-            style: AppConstantsTextStyle.kNormalWhiteTextStyle,
-          ),
-        )
-      ],
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(top: 7.h),
+                  child: Text(
+                    email,
+                    style: AppConstantsTextStyle.kNormalWhiteTextStyle,
+                  ),
+                ),
+              ],
+            ),
+            if (isLoading)
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: AppColors.orangeButtonColor,
+                        ),
+                        SizedBox(height: 10.h),
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Text(
+                            'משנה סטטוס',
+                            style: AppConstantsTextStyle.kNormalWhiteTextStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _customIconRow(String icon, String text,{ required VoidCallback onTap}) {
+
+
+
+  Widget _customIconRow(String icon, String text, {required VoidCallback onTap}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Row(
@@ -352,7 +357,7 @@ class _ClientPageState extends State<ClientPage> {
               text,
               style: AppConstantsTextStyle.kNormalWhiteTextStyle,
             ),
-          )
+          ),
         ],
       ),
     );

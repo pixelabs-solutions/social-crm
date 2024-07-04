@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
-        ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()), // Add your CustomerViewModel provider
+
         ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()),
         ChangeNotifierProvider(create: (_)=>TextStatusViewModel())
         // Add other providers as needed

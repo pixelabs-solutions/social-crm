@@ -37,7 +37,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
             date: dateTime,
             dot: Container(
               margin: const EdgeInsets.symmetric(horizontal: 1.0),
-              color: Colors.red,
+              color: Colors.orange,
               height: 2.0,
               width: 5.0,
             ),
@@ -123,6 +123,8 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                   iconColor: AppColors.orangeButtonColor,
                                   markedDatesMap: _markedDates,
                                   markedDateShowIcon: true,
+
+
                                   markedDateCustomShapeBorder:
                                   RoundedRectangleBorder(
                                     side: const BorderSide(

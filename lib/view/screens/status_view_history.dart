@@ -35,14 +35,17 @@ class StatusHistoryView extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
+              SizedBox(
+                height:MediaQuery.of(context).size.height * 0.6 ,
                 child: Consumer<StatusHistoryViewModel>(
                   builder: (context, viewModel, child) {
                     if (viewModel.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(
+                        color: AppColors.orangeButtonColor,
+                      ));
                     } else if (viewModel.statusHistory.isEmpty) {
                       return const Center(child: Text('No status history available',style: TextStyle(
-                        color: Colors.white
+                          color: Colors.white
                       ),));
                     } else {
                       return Container(
@@ -53,7 +56,10 @@ class StatusHistoryView extends StatelessWidget {
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(25.0),
                         ),
-                        child: ListView.builder(
+                        child:
+                
+                
+                        ListView.builder(
                           shrinkWrap: true,
                           itemCount: viewModel.statusHistory.length,
                           itemBuilder: (context, index) {

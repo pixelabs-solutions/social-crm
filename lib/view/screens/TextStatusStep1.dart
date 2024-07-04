@@ -71,26 +71,7 @@ class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Transform.scale(
-                                    scale: 0.75,
-                                    child: Switch(
-                                      activeColor: AppColors.orangeButtonColor,
-                                      value: isRtl,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isRtl = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Text('שנה כיוון טקסט:',
-                                    style: AppConstantsTextStyle.paragraph2Style,),
 
-                                ],
-                              ),
                               SizedBox(height: 2.h),
                               // Text editing canvas
                               Expanded(

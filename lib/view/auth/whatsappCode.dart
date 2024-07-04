@@ -49,12 +49,12 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
 
           children: [
 
@@ -72,10 +72,10 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
                   padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      SizedBox(height: 15.h,),
+                      Image.asset("assets/logo.png"),
                       Container(
                       
                         decoration: BoxDecoration(

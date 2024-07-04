@@ -119,15 +119,23 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
                               height: 20.h,
                             ),
                             isLoading
-                                ? CircularProgressIndicator(
-                              color: AppColors.orangeButtonColor,
-                            ) // Show circular progress indicator when loading
+                                ? const Center(
+                                  child: CircularProgressIndicator(
+                                                                color: AppColors.orangeButtonColor,
+                                                              ),
+                                ) // Show circular progress indicator when loading
                                 :
                             ConstantLargeButton(
                               text: 'הוסף לקוח →',
-                              onPressed: ()async {
+                              onPressed: () async {
+                                setState(() {
+                                  isLoading = true;
+                                });
                                 await viewModel.addCustomer(context);
-
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                viewModel.fetchCustomers();
                               },
                             ),
 

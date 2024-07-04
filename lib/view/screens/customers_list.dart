@@ -7,13 +7,29 @@ import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../viewModel/CustomerList_vm.dart';
 import '../../viewModel/StatusDetails_viewModel.dart';
+import '../auth/confirmationScreen.dart';
 import 'adding_customer.dart';
 import 'clientpage_screen.dart';
 
-class CustomersList extends StatelessWidget {
+class CustomersList extends StatefulWidget {
   CustomersList({super.key});
+
+  @override
+  State<CustomersList> createState() => _CustomersListState();
+}
+
+class _CustomersListState extends State<CustomersList> {
   final TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch customers when the widget is first built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +38,7 @@ class CustomersList extends StatelessWidget {
       appBar: const HomeAppBar(),
       backgroundColor: AppColors.scaffoldColor,
       body: ChangeNotifierProvider(
-        create: (_) {
-          final viewModel = CustomerViewModel();
-          viewModel.fetchCustomers();
-          return viewModel;
-        },
+        create: (_) => CustomerViewModel()..fetchCustomers(),
         child: Padding(
           padding: EdgeInsets.only(left: 8.w, right: 8.w),
           child: Column(
@@ -46,11 +58,10 @@ class CustomersList extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (o) => AddingCustomerDetails(),
+                            builder: (o) => RegistrationSuccess(),
                           ),
                         ).then((_) {
                           // Fetch customers again after adding a new customer
@@ -60,7 +71,7 @@ class CustomersList extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w),
                     Padding(
-                      padding:  EdgeInsets.only(right: 12.0.w),
+                      padding: EdgeInsets.only(right: 12.0.w),
                       child: Center(
                         child: Text(
                           'לקוחות',
@@ -84,9 +95,11 @@ class CustomersList extends StatelessWidget {
                   child: Consumer<CustomerViewModel>(
                     builder: (context, viewModel, child) {
                       if (viewModel.isLoading) {
-                        return Center(child: CircularProgressIndicator(
-                          color: AppColors.orangeButtonColor,
-                        ));
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.orangeButtonColor,
+                          ),
+                        );
                       }
 
                       return ScrollbarTheme(
@@ -135,8 +148,8 @@ class CustomersList extends StatelessWidget {
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                (customer.active==1)?
-                                                Container(
+                                                (customer.active == 1)
+                                                    ? Container(
                                                   height: 20.h,
                                                   width: 65.w,
                                                   decoration: BoxDecoration(
@@ -144,14 +157,11 @@ class CustomersList extends StatelessWidget {
                                                     color: AppColors.statusContainerColor,
                                                   ),
                                                   child: Center(child: Text("Active")),
-                                                ) :
-                                                Container(
+                                                )
+                                                    : Container(
                                                   height: 20.h,
                                                   width: 65.w,
-
-
-                                                ) ,
-
+                                                ),
                                                 Directionality(
                                                   textDirection: TextDirection.rtl,
                                                   child: Row(
@@ -185,7 +195,6 @@ class CustomersList extends StatelessWidget {
                             ),
                           ),
                         ),
-
                       );
                     },
                   ),

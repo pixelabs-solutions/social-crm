@@ -32,8 +32,8 @@ class CustomerViewModel extends ChangeNotifier {
 
   Future<void> fetchCustomers() async {
     final String apiUrl = ApiEndPointsConstants.listCustomers;
-    // _isLoading = true;
-    // notifyListeners();
+    _isLoading = true;
+    notifyListeners();
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

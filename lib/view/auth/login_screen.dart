@@ -13,6 +13,8 @@ import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
 
+import 'confirmationScreen.dart';
+
 class LoginForm extends StatefulWidget {
   LoginForm({super.key});
 
@@ -138,6 +140,7 @@ class _LoginFormState extends State<LoginForm> {
         final token = jsonResponse['data']['token'];
         final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
         final userID = jsonResponse['data']['user']['id'];
+        final isApproved = jsonResponse['data']['user']['is_approved'];
         print('++++++++++++++${whatsappCode}+++++++++++++++');
 
         // Save token and WhatsApp code to SharedPreferences
@@ -149,8 +152,17 @@ class _LoginFormState extends State<LoginForm> {
             context,
             MaterialPageRoute(builder: (context) => WhatsAppCode()),
           );
-        } else {
-          Navigator.push(
+        }
+        else if(isApproved==0){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationSuccess()),
+          );
+
+        }
+
+        else {
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainScreen()),
           );
