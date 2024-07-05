@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -263,16 +261,6 @@ class _TimeSelectionState extends State<TimeSelection> {
                                       );
                                     }
                                   }
-                                  print(
-                                      'Selected Text: ${widget.statusData?.text}');
-                                  print(
-                                      'Selected Background Color: ${widget.statusData?.backgroundColorHex}');
-                                  print(
-                                      'Selected Image Path: ${widget.statusData?.imagePaths}');
-                                  print(
-                                      'Selected Date: ${widget.statusData?.selectedDate}');
-                                  print(
-                                      'Selected Time: ${widget.statusData?.selectedTime}');
                                 },
                               );
                             }),

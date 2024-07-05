@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../Model/customer.dart';
 import '../../viewModel/CustomerList_vm.dart';
-import 'editing_customerdetails_screen.dart';
 
 class TextStatusScheduled extends StatefulWidget {
   const TextStatusScheduled({super.key});
@@ -51,10 +48,9 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                       child: Row(
                         children: [
                           Text(
-                          'Text Status Schedule',
+                            'Text Status Schedule',
                             style: AppConstantsTextStyle.heading2Style,
                           ),
-
                         ],
                       ),
                     ),
@@ -88,8 +84,7 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               "שם הלקוח:",
-                              style:
-                              AppConstantsTextStyle.heading1Style,
+                              style: AppConstantsTextStyle.heading1Style,
                             ),
                           ),
                           Padding(
@@ -97,8 +92,8 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                             child: Text(
                               // "${"widget.customer.phoneNumber"}",
                               "Junaid",
-                              style:
-                              AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                              style: AppConstantsTextStyle
+                                  .kNormalWhiteNotoTextStyle,
                             ),
                           ),
                         ],
@@ -114,8 +109,7 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               "מספר טלפון:",
-                              style:
-                              AppConstantsTextStyle.heading1Style,
+                              style: AppConstantsTextStyle.heading1Style,
                             ),
                           ),
                           Padding(
@@ -123,8 +117,8 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                             child: Text(
                               // "${"widget.customer.phoneNumber"}",
                               "09876543",
-                              style:
-                              AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
+                              style: AppConstantsTextStyle
+                                  .kNormalWhiteNotoTextStyle,
                             ),
                           ),
                         ],
@@ -132,19 +126,17 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
                     ),
                     SizedBox(height: 10.h),
                     Container(
-                      height: 200.h, width: 200.w,
+                      height: 200.h,
+                      width: 200.w,
                       decoration: BoxDecoration(
-                        color: AppColors.statusContainerColor,
-                        borderRadius: BorderRadius.circular(15)
-                      ),
-                      child: Center(
+                          color: AppColors.statusContainerColor,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: const Center(
                         child: Text("How R You ?"),
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    ConstantLargeButton(text: "Chnage",
-                        onPressed: (){}
-                    )
+                    ConstantLargeButton(text: "Chnage", onPressed: () {})
                   ],
                 ),
               ),
@@ -175,7 +167,8 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
               onPressed: () {
                 viewModel.deleteCustomer(customerId).then((_) {
                   Navigator.of(context).pop(); // Close dialog
-                  Navigator.of(context).pop(); // Navigate back to previous screen
+                  Navigator.of(context)
+                      .pop(); // Navigate back to previous screen
                 });
               },
             ),
@@ -185,7 +178,8 @@ class _TextStatusScheduledState extends State<TextStatusScheduled> {
     );
   }
 
-  Widget _customIconRow(String icon, String text, {required VoidCallback onTap}) {
+  Widget _customIconRow(String icon, String text,
+      {required VoidCallback onTap}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Row(

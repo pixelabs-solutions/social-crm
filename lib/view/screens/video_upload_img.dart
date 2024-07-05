@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 
 import 'video_view_screen.dart';
 
+// ignore: must_be_immutable
 class VideoUploadImage extends StatefulWidget {
   VideoUploadImage(
       {super.key,

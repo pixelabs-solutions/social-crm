@@ -173,14 +173,7 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
                           VideoThumbtitle(statusData: widget.statusData)
                         ],
 
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     statusContainer("assets/mobileImage.png"),
-                        //     statusContainer("assets/mobileImage.png"),
-                        //     statusContainer("assets/mobileImage.png")
-                        //   ],
-                        // ),
+                      
 
                         ConstantLargeButton(
                           text: "לשנות את זמני הפרסום →",
