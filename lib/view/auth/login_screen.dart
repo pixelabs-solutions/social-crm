@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 
 import 'confirmationScreen.dart';
 
+
 class LoginForm extends StatefulWidget {
   LoginForm({super.key});
 
@@ -143,25 +144,28 @@ class _LoginFormState extends State<LoginForm> {
         final isApproved = jsonResponse['data']['user']['is_approved'];
         print('++++++++++++++${whatsappCode}+++++++++++++++');
 
-        // Save token and WhatsApp code to SharedPreferences
-        await saveToken(token, userID, whatsappCode ?? '');
+        // Save token, userID, and whatsappCode in shared preferences
 
-        // Navigate to the appropriate screen based on WhatsApp code
+
+        // Navigate to the appropriate screen based on WhatsApp code and isApproved
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WhatsAppCode()),
+            MaterialPageRoute(builder: (context) => WhatsAppCode(isApproved: isApproved)),
           );
-        }
-        else if(isApproved==0){
+        } else if (isApproved == 0) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => RegistrationSuccess()),
+            MaterialPageRoute(builder: (context) =>
+                RegistrationSuccess()
+            ),
           );
 
-        }
 
-        else {
+
+
+        } else {
+          await saveToken(token, userID, whatsappCode ?? '');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => MainScreen()),
@@ -202,6 +206,9 @@ class _LoginFormState extends State<LoginForm> {
       });
     }
   }
+
+
+
 
 
   Future<void> saveToken(String token, int UserID, String whatsappCode) async {

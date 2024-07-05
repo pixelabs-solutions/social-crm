@@ -1,13 +1,16 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart'; // Assuming this is your custom package
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 
 import '../../Model/customer.dart';
+import '../../utilis/shared_prefes.dart';
 import '../../viewModel/CustomerList_vm.dart';
 import '../widgets/custom_appbar.dart';
 import 'editing_customerdetails_screen.dart';
@@ -24,13 +27,86 @@ class ClientPage extends StatefulWidget {
 class _ClientPageState extends State<ClientPage> {
   CustomerViewModel customerViewModel = CustomerViewModel();
   bool isLoading = false;
+  List<int> viewsList = [];
+  List<String> scheduleDates = [];
+  List<String> statusTypes = [];
+
 
   @override
   void initState() {
     super.initState();
+
     final customerViewModel = Provider.of<CustomerViewModel>(context, listen: false);
     customerViewModel.setCustomer(widget.customer);
+    getClientStatus();
   }
+
+  Future<void> getClientStatus() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Dio dio = Dio();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    int? id = widget.customer.id;
+
+    print("Requesting status for customer_id: $id");
+
+    try {
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        queryParameters: {"customer_id": id},
+      );
+
+      print("Status code: ${response.statusCode}");
+      print("Response data: ${response.data}");
+
+      if (response.statusCode == 200) {
+        var responseData = response.data;
+        var statuses = responseData['data']['statuses'];
+
+        viewsList.clear();
+        scheduleDates.clear();
+        statusTypes.clear();
+
+        for (var status in statuses) {
+          viewsList.add(status['views'].length);
+          scheduleDates.add(status['schedule_date']);
+          statusTypes.add(status['status_type']);
+        }
+
+        // Print the extracted data to verify
+        print("Views: $viewsList");
+        print("Schedule Dates: $scheduleDates");
+        print("Status Types: $statusTypes");
+      }
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+  String getStatusIcon(String statusType) {
+    switch (statusType) {
+      case "text":
+        return "assets/A.svg";
+      case "image":
+        return "assets/photoStatusIcon.svg";
+      case "video":
+        return "assets/vedioStatusIcon.svg";
+      default:
+        return "assets/defaultStatusIcon.svg";
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +212,20 @@ class _ClientPageState extends State<ClientPage> {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        statusRow("14,500", "24/06/15", "סטטוס וידאו", "assets/vedioStatusIcon.svg"),
-                        statusRow("14,500", "24/06/15", "סטטוס טקסט", "assets/A.svg"),
-                        statusRow("14,500", "24/06/15", "סטטוס תמונה", "assets/photoStatusIcon.svg"),
+                        if(!isLoading)
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: viewsList.length,
+                              itemBuilder: (context, index) {
+                                return statusRow(
+                                  viewsList[index].toString(),
+                                  scheduleDates[index],
+                                  statusTypes[index],
+                                  getStatusIcon(statusTypes[index]),
+                                );
+                              },
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -150,8 +237,10 @@ class _ClientPageState extends State<ClientPage> {
         if (isLoading)
           Container(
             color: Colors.black.withOpacity(0.5), // Adjust the opacity as needed
-            child: Center(
-              child: CircularProgressIndicator(),
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.orangeButtonColor,
+              ),
             ),
           ),
       ],
@@ -197,6 +286,7 @@ class _ClientPageState extends State<ClientPage> {
             SizedBox(
               child: Row(
                 children: [
+                  SizedBox(width: 3.w),
                   Text(
                     views,
                     style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle,
@@ -205,12 +295,13 @@ class _ClientPageState extends State<ClientPage> {
                 ],
               ),
             ),
-            SizedBox(width: 60.w, child: Text(date, style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle)),
+            SizedBox( child: Text(date, style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle)),
             SizedBox(
+              height: 20.h,
               child: Row(
                 children: [
                   Text(title, style: AppConstantsTextStyle.kNormalWhiteNotoSmallTextStyle),
-                  SizedBox(width: 5.w),
+                  SizedBox(width: 10.w),
                   SvgPicture.asset(icon, width: 12.w, height: 12.h),
                 ],
               ),

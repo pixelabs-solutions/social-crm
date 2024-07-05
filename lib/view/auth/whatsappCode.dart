@@ -10,13 +10,18 @@ import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/Toast.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/view/auth/confirmationScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
 import '../screens/NavigatonMain.dart';
+import '../screens/first_screen.dart';
 
 class WhatsAppCode extends StatefulWidget {
-  const WhatsAppCode({Key? key}) : super(key: key);
+  final int isApproved;
+  const WhatsAppCode({Key? key,
+  required this.isApproved
+  }) : super(key: key);
 
   @override
   State<WhatsAppCode> createState() => _WhatsAppCodeState();
@@ -154,10 +159,17 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
         // Handle successful response
         final jsonResponse = jsonDecode(response.body);
         print('Response body: ${response.body}');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+        if(widget.isApproved==0){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationSuccess()),
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AuthScreen()),
+          );
+        }
       } else {
         // Handle error response
         print('Response body: ${response.body}');

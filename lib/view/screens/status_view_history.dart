@@ -70,7 +70,7 @@ class StatusHistoryView extends StatelessWidget {
                                   iconPath: 'assets/eyeIcon.svg', // Replace with actual icon path
                                   views: status.views.toString(),
                                   time: status.scheduleTime, // assuming scheduleTime is a string
-                                  rightIconPath: 'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
+                                  rightIconPath: 'assets/e6.png', // Replace with actual icon path
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -142,9 +142,9 @@ class StatusRow extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 12.w),
-              SvgPicture.asset(
+              Image.asset(
                 rightIconPath,
-                height: 28.h,
+                height: 25.h,
               ),
             ],
           ),
