@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/screens/TimeSelectionScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
-
 import '../../Model/status.dart';
+import 'time_selection_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   final StatusData? statusData;

@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/screens/CalendarScreen.dart';
+import 'package:social_crm/view/screens/calendar_screen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../viewModel/Status_viewModel.dart';
+import '../../viewModel/status_viewmodel.dart';
 
 class TextStatusStep1Screen extends StatelessWidget {
   const TextStatusStep1Screen({super.key});

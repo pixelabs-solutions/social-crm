@@ -7,14 +7,14 @@ import 'package:social_crm/utilis/Toast.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/auth/forgotpassword_screen.dart';
-import 'package:social_crm/view/auth/whatsappCode.dart';
-import 'package:social_crm/view/screens/NavigatonMain.dart';
+import 'package:social_crm/view/auth/whatsapp_code.dart';
+import 'package:social_crm/view/screens/navigaton_main.dart';
 import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
 
 class LoginForm extends StatefulWidget {
-  LoginForm({super.key});
+  const LoginForm({super.key});
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -56,15 +56,15 @@ class _LoginFormState extends State<LoginForm> {
         ),
         SizedBox(height: 40.h),
         isLoading
-            ? CircularProgressIndicator(
-          color: AppColors.orangeButtonColor,
-        ) // Show circular progress indicator when loading
+            ? const CircularProgressIndicator(
+                color: AppColors.orangeButtonColor,
+              ) // Show circular progress indicator when loading
             : ConstantLargeButton(
-          text: 'כניסה לאפליקציה ->',
-          onPressed: () async {
-            await loginUser(context);
-          },
-        ),
+                text: 'כניסה לאפליקציה ->',
+                onPressed: () async {
+                  await loginUser(context);
+                },
+              ),
         SizedBox(height: 5.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.h),
@@ -137,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
         final token = jsonResponse['data']['token'];
         final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
         final userID = jsonResponse['data']['user']['id'];
-        print('++++++++++++++${whatsappCode}+++++++++++++++');
+        print('++++++++++++++$whatsappCode+++++++++++++++');
 
         // Save token and WhatsApp code to SharedPreferences
         await saveToken(token, userID, whatsappCode ?? '');
@@ -146,12 +146,12 @@ class _LoginFormState extends State<LoginForm> {
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WhatsAppCode()),
+            MaterialPageRoute(builder: (context) => const WhatsAppCode()),
           );
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         }
 
@@ -184,7 +184,8 @@ class _LoginFormState extends State<LoginForm> {
     await prefs.setString('token', token);
     await prefs.setInt('UserID', UserID);
     await prefs.setString('whatsAppCode', whatsappCode);
-    print('Token and WhatsApp code saved to SharedPreferences: $token, $whatsappCode');
+    print(
+        'Token and WhatsApp code saved to SharedPreferences: $token, $whatsappCode');
 
     print(token);
   }

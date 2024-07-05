@@ -5,7 +5,7 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
-import '../../viewModel/StatusDetails_viewModel.dart';
+import '../../viewModel/statusDetails_viewModel.dart';
 
 class StatusHistoryView extends StatelessWidget {
   const StatusHistoryView({super.key});
@@ -25,7 +25,6 @@ class StatusHistoryView extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8.w, right: 8.w),
                 child: Row(
                   children: [
-
                     Center(
                       child: Text(
                         'הסטוריית סטטוסים ( 24 שעות )',
@@ -41,9 +40,11 @@ class StatusHistoryView extends StatelessWidget {
                     if (viewModel.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (viewModel.statusHistory.isEmpty) {
-                      return const Center(child: Text('No status history available',style: TextStyle(
-                        color: Colors.white
-                      ),));
+                      return const Center(
+                          child: Text(
+                        'No status history available',
+                        style: TextStyle(color: Colors.white),
+                      ));
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.6,
@@ -61,13 +62,17 @@ class StatusHistoryView extends StatelessWidget {
                             return Column(
                               children: [
                                 StatusRow(
-                                  iconPath: 'assets/eyeIcon.svg', // Replace with actual icon path
+                                  iconPath:
+                                      'assets/eyeIcon.svg', // Replace with actual icon path
                                   views: status.views.toString(),
-                                  time: status.scheduleTime, // assuming scheduleTime is a string
-                                  rightIconPath: 'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
+                                  time: status
+                                      .scheduleTime, // assuming scheduleTime is a string
+                                  rightIconPath:
+                                      'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
                                   child: const Divider(
                                     color: Colors.white,
                                   ),

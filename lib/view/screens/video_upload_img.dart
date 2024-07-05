@@ -1,17 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_crm/utilis/variables.dart';
 import 'package:video_player/video_player.dart';
 
 import 'video_view_screen.dart';
 
-class VideoImage extends StatefulWidget {
-  const VideoImage({super.key, required this.videoUrl});
+class VideoUploadImage extends StatefulWidget {
+  VideoUploadImage(
+      {super.key,
+      required this.videoUrl,
+      required this.isSeletedValue,
+      required this.videoId});
   final String videoUrl;
+  final String videoId;
+  bool isSeletedValue;
   @override
-  State<VideoImage> createState() => _VideoImageState();
+  State<VideoUploadImage> createState() => _VideoUploadImageState();
 }
 
-class _VideoImageState extends State<VideoImage> {
+class _VideoUploadImageState extends State<VideoUploadImage> {
   late VideoPlayerController videoPlayerController;
   @override
   void initState() {
@@ -20,7 +27,18 @@ class _VideoImageState extends State<VideoImage> {
           ..initialize().then((_) {
             setState(() {});
           });
+    Variables.selectedVideoUrl.add(widget.videoId);
     super.initState();
+  }
+
+  void _onCheckboxChanged(bool? newValue) {
+    setState(() {
+      if (widget.isSeletedValue) {
+        Variables.selectedVideoUrl.add(widget.videoId);
+      } else {
+        Variables.selectedVideoUrl.remove(widget.videoId);
+      }
+    });
   }
 
   @override
@@ -52,6 +70,17 @@ class _VideoImageState extends State<VideoImage> {
                         ),
                       ),
                     ),
+                    Positioned(
+                      left: 37,
+                      bottom: 35,
+                      child: Checkbox(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        value: widget.isSeletedValue,
+                        onChanged: _onCheckboxChanged,
+                      ),
+                    )
                   ],
                 )),
           )

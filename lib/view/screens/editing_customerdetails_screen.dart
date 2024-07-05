@@ -10,7 +10,7 @@ import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../Model/customer.dart';
-import '../../viewModel/CustomerList_vm.dart';
+import '../../viewModel/customerList_vm.dart';
 
 class EditingCustomerDetails extends StatelessWidget {
   final CustomerData customer;

@@ -11,7 +11,7 @@ import 'package:social_crm/view/widgets/custom_singledropdown_button.dart';
 import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../viewModel/CustomerList_vm.dart';
+import '../../viewModel/customerList_vm.dart';
 
 class AddingCustomerDetails extends StatefulWidget {
   const AddingCustomerDetails({super.key});
@@ -85,27 +85,37 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
                               'שם הלקוח',
                               viewModel.nameController,
                               TextInputType.name,
-                              viewModel.nameController.text.isEmpty && !viewModel.isLoading ? 'שדה שם הלקוח הוא חובה' : null,
+                              viewModel.nameController.text.isEmpty &&
+                                      !viewModel.isLoading
+                                  ? 'שדה שם הלקוח הוא חובה'
+                                  : null,
                             ),
                             _buildFormField(
                               context,
                               'כתובת דואר אלקטרוני',
                               viewModel.mailController,
                               TextInputType.emailAddress,
-                              viewModel.mailController.text.isEmpty && !viewModel.isLoading ? 'שדה כתובת הדואר האלקטרוני הוא חובה' : null,
+                              viewModel.mailController.text.isEmpty &&
+                                      !viewModel.isLoading
+                                  ? 'שדה כתובת הדואר האלקטרוני הוא חובה'
+                                  : null,
                             ),
                             _buildFormField(
                               context,
                               'מספר טלפון',
                               viewModel.phoneController,
                               TextInputType.number,
-                              viewModel.phoneController.text.isEmpty && !viewModel.isLoading ? 'שדה מספר הטלפון הוא חובה' : null,
+                              viewModel.phoneController.text.isEmpty &&
+                                      !viewModel.isLoading
+                                  ? 'שדה מספר הטלפון הוא חובה'
+                                  : null,
                             ),
                             showText('תעסוקה'),
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: CustomDropdownButton(
-                                fieldBackgroundColor: AppColors.kWhiteColor40Opacity,
+                                fieldBackgroundColor:
+                                    AppColors.kWhiteColor40Opacity,
                                 options: viewModel.items,
                                 selectedItem: viewModel.selectedItems,
                                 onOptionSelected: (options) {
@@ -114,23 +124,19 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
                                 controller: MultiSelectController(),
                               ),
                             ),
-
                             SizedBox(
                               height: 20.h,
                             ),
                             isLoading
-                                ? CircularProgressIndicator(
-                              color: AppColors.orangeButtonColor,
-                            ) // Show circular progress indicator when loading
-                                :
-                            ConstantLargeButton(
-                              text: 'הוסף לקוח →',
-                              onPressed: ()async {
-                                await viewModel.addCustomer(context);
-
-                              },
-                            ),
-
+                                ? const CircularProgressIndicator(
+                                    color: AppColors.orangeButtonColor,
+                                  ) // Show circular progress indicator when loading
+                                : ConstantLargeButton(
+                                    text: 'הוסף לקוח →',
+                                    onPressed: () async {
+                                      await viewModel.addCustomer(context);
+                                    },
+                                  ),
                             SizedBox(
                               height: 15.h,
                             ),
@@ -162,12 +168,12 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
   }
 
   Widget _buildFormField(
-      BuildContext context,
-      String labelText,
-      TextEditingController controller,
-      TextInputType keyboardType,
-      String? errorText,
-      ) {
+    BuildContext context,
+    String labelText,
+    TextEditingController controller,
+    TextInputType keyboardType,
+    String? errorText,
+  ) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Column(
@@ -181,8 +187,7 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
             keyboardType: keyboardType,
             textDirection: TextDirection.rtl,
           ),
-          if (errorText != null)
-            showErrorText(errorText),
+          if (errorText != null) showErrorText(errorText),
         ],
       ),
     );
@@ -201,4 +206,3 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
     );
   }
 }
-

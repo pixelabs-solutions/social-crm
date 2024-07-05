@@ -10,13 +10,11 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../Model/customer.dart';
-import '../../viewModel/CustomerList_vm.dart';
+import '../../viewModel/customerList_vm.dart';
 import 'editing_customerdetails_screen.dart';
 
 class ClientPage extends StatefulWidget {
-
   final CustomerData customer;
-
 
   const ClientPage({required this.customer, super.key});
 
@@ -25,12 +23,13 @@ class ClientPage extends StatefulWidget {
 }
 
 class _ClientPageState extends State<ClientPage> {
-  CustomerViewModel customerViewModel= CustomerViewModel();
+  CustomerViewModel customerViewModel = CustomerViewModel();
 
   @override
   void initState() {
     super.initState();
-    final customerViewModel = Provider.of<CustomerViewModel>(context, listen: false);
+    final customerViewModel =
+        Provider.of<CustomerViewModel>(context, listen: false);
     customerViewModel.setCustomer(widget.customer);
   }
 
@@ -96,13 +95,13 @@ class _ClientPageState extends State<ClientPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(height: 10.h,),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                       _customRow("דוא\"ל", "פעיל"),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-
-
                           Padding(
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
@@ -117,19 +116,19 @@ class _ClientPageState extends State<ClientPage> {
                         height: 5.h,
                       ),
                       _customIconRow("assets/editIcon.svg", "טלפון", onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (o)=>EditingCustomerDetails(
-                              customer: widget.customer,))
-                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (o) => EditingCustomerDetails(
+                                      customer: widget.customer,
+                                    )));
                       }),
                       showText("${widget.customer.phoneNumber}"),
                       SizedBox(
                         height: 5.h,
                       ),
                       _customIconRow("assets/deleteIcon.svg", "מקצוע",
-                          onTap: () {
-
-                          }),
+                          onTap: () {}),
                       showText("${widget.customer.occupation}"),
                       SizedBox(
                         height: 40.h,
@@ -142,10 +141,10 @@ class _ClientPageState extends State<ClientPage> {
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                             child: Text(
-                              "היסטוריית פרסומים",
-                              style:
+                          "היסטוריית פרסומים",
+                          style:
                               AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-                            )),
+                        )),
                       ),
                       SizedBox(
                         height: 20.h,
@@ -165,8 +164,8 @@ class _ClientPageState extends State<ClientPage> {
     );
   }
 
-  void showDeleteDialog(BuildContext context,
-      CustomerViewModel viewModel, String customerId) {
+  void showDeleteDialog(
+      BuildContext context, CustomerViewModel viewModel, String customerId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -185,7 +184,8 @@ class _ClientPageState extends State<ClientPage> {
               onPressed: () {
                 viewModel.deleteCustomer(customerId).then((_) {
                   Navigator.of(context).pop(); // Close dialog
-                  Navigator.of(context).pop(); // Navigate back to previous screen
+                  Navigator.of(context)
+                      .pop(); // Navigate back to previous screen
                 });
               },
             ),
@@ -263,61 +263,63 @@ class _ClientPageState extends State<ClientPage> {
         GestureDetector(
           onTap: () async {
             int newStatus = widget.customer.active == 1 ? 0 : 1;
-            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
+            await customerViewModel.setActiveStatus(
+                widget.customer.id!, newStatus);
           },
           child: Consumer<CustomerViewModel>(
             builder: (context, viewModel, child) {
               // Determine the active status based on the view model state
-
 
               return Container(
                 height: 20.h,
                 width: 65.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: ( widget.customer.active == 0)
+                  color: (widget.customer.active == 0)
                       ? AppColors.offstatusContainerColor
                       : AppColors.statusContainerColor,
                 ),
                 child: Center(
                   child: Text(
-                    widget.customer.active == 0  ? "כבוי" : "פעיל",
+                    widget.customer.active == 0 ? "כבוי" : "פעיל",
                   ),
                 ),
               );
             },
           ),
         ),
-        SizedBox(width: 6.w,),
+        SizedBox(
+          width: 6.w,
+        ),
         GestureDetector(
           onTap: () async {
             int newStatus = widget.customer.active == 1 ? 0 : 1;
-            await customerViewModel.setActiveStatus(widget.customer.id!, newStatus);
+            await customerViewModel.setActiveStatus(
+                widget.customer.id!, newStatus);
           },
           child: Consumer<CustomerViewModel>(
             builder: (context, viewModel, child) {
               // Determine the active status based on the view model state
-
 
               return Container(
                 height: 20.h,
                 width: 65.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: ( widget.customer.active == 1)
+                  color: (widget.customer.active == 1)
                       ? AppColors.offstatusContainerColor
                       : AppColors.statusContainerColor,
                 ),
                 child: Center(
                   child: Text(
-                    widget.customer.active == 1  ? "כבוי" : "פעיל",
+                    widget.customer.active == 1 ? "כבוי" : "פעיל",
                   ),
                 ),
               );
             },
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Padding(
           padding: EdgeInsets.only(top: 7.h),
           child: Text(
@@ -329,7 +331,8 @@ class _ClientPageState extends State<ClientPage> {
     );
   }
 
-  Widget _customIconRow(String icon, String text,{ required VoidCallback onTap}) {
+  Widget _customIconRow(String icon, String text,
+      {required VoidCallback onTap}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Row(

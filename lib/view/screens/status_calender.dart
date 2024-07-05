@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
@@ -11,10 +11,10 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
-import '../../viewModel/Status_viewModel.dart';
-import 'StatusUploadScreen.dart';
+import '../../viewModel/status_viewmodel.dart';
+import 'status_schedule_month_view.dart';
+import 'status_upload_screen.dart';
 import 'adding_customer.dart';
-import 'statusScheduleMonthView.dart';
 
 class StatusCalendar extends StatefulWidget {
   const StatusCalendar({super.key});
@@ -32,15 +32,14 @@ class _StatusCalendarState extends State<StatusCalendar> {
         DateTime dateTime = DateTime.parse("${statuses[i].scheduleDate}");
         _markedDates.add(
           dateTime,
-          Event(
-            date: dateTime,
-            dot: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 1.0),
-              color: Colors.orange,
-              height: 5.0,
-              width: 5.0,
-            ),
-          ),
+          Event(date: dateTime, title: "$i", id: i
+              // dot: Container(
+              //   margin: const EdgeInsets.symmetric(horizontal: 1.0),
+              //   color: Colors.orange,
+              //   height: 5.0,
+              //   width: 5.0,
+              // ),
+              ),
         );
       }
     }
@@ -106,16 +105,16 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                       const TextStyle(color: Colors.white),
                                   weekFormat: false,
                                   height: 280.h,
-                                  selectedDayButtonColor: Colors.white,
+                                  inactiveDaysTextStyle:
+                                      const TextStyle(color: Colors.white),
                                   selectedDayTextStyle: const TextStyle(
                                       color: AppColors.primaryColor),
                                   todayButtonColor: Colors.transparent,
                                   locale: 'en',
                                   headerMargin:
                                       EdgeInsets.symmetric(vertical: 10.0.h),
-                                  prevDaysTextStyle: const TextStyle(
-                                      color: Colors
-                                          .white), // Previous month arrow color
+                                  prevDaysTextStyle:
+                                      const TextStyle(color: Colors.white),
                                   nextDaysTextStyle:
                                       const TextStyle(color: Colors.white),
                                   iconColor: AppColors.orangeButtonColor,
@@ -127,21 +126,11 @@ class _StatusCalendarState extends State<StatusCalendar> {
                                         color: AppColors.orangeButtonColor),
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  inactiveDaysTextStyle: const TextStyle(
-                                    backgroundColor: Colors.orange,
-                                    color: Colors.orange,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  markedDateMoreCustomDecoration:
-                                      const BoxDecoration(
-                                    color: Colors.orange,
-                                  ),
                                   markedDateCustomTextStyle: const TextStyle(
-                                    backgroundColor: Colors.orange,
+                                    decorationColor: Colors.orange,
                                     color: Colors.orange,
                                     fontWeight: FontWeight.bold,
                                   ),
-
                                   onDayPressed:
                                       (DateTime date, List<Event> events) {
                                     if (events.isNotEmpty) {
@@ -179,7 +168,8 @@ class _StatusCalendarState extends State<StatusCalendar> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (o) => StatusUploadScreen()));
+                                      builder: (o) =>
+                                          const StatusUploadScreen()));
                             }),
                             SizedBox(
                               height: 17.h,

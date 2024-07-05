@@ -9,7 +9,6 @@ import 'dart:convert';
 import '../../utilis/ApiConstants.dart';
 import '../../utilis/Toast.dart';
 import '../screens/first_screen.dart';
-import '../screens/first_screen.dart';
 
 class SignUpForm extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
@@ -29,12 +28,20 @@ class SignUpForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 5.h),
-          buildFormField(context, "שם פרטי", firstNameController, TextInputType.text),
-          buildFormField(context, "שם משפחה", lastNameController, TextInputType.text),
-          buildFormField(context, "כתובת מייל", emailController, TextInputType.emailAddress),
-          buildFormField(context, "מספר טלפון", phoneController, TextInputType.number),
-          buildFormField(context, "סיסמה", passwordController, TextInputType.visiblePassword, isPassword: true),
-          buildFormField(context, "חזור על הסיסמה", retryPassword, TextInputType.visiblePassword, isPassword: true),
+          buildFormField(
+              context, "שם פרטי", firstNameController, TextInputType.text),
+          buildFormField(
+              context, "שם משפחה", lastNameController, TextInputType.text),
+          buildFormField(context, "כתובת מייל", emailController,
+              TextInputType.emailAddress),
+          buildFormField(
+              context, "מספר טלפון", phoneController, TextInputType.number),
+          buildFormField(context, "סיסמה", passwordController,
+              TextInputType.visiblePassword,
+              isPassword: true),
+          buildFormField(context, "חזור על הסיסמה", retryPassword,
+              TextInputType.visiblePassword,
+              isPassword: true),
           SizedBox(height: 40.h),
           ConstantLargeButton(
             text: 'הרשמה לאפליקציה ->',
@@ -48,12 +55,15 @@ class SignUpForm extends StatelessWidget {
     );
   }
 
-  Widget buildFormField(BuildContext context, String labelText, TextEditingController controller, TextInputType keyboardType, {bool isPassword = false}) {
+  Widget buildFormField(BuildContext context, String labelText,
+      TextEditingController controller, TextInputType keyboardType,
+      {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 15.h, right: 15.h, top: 7.h, bottom: 2),
+          padding:
+              EdgeInsets.only(left: 15.h, right: 15.h, top: 7.h, bottom: 2),
           child: Text(
             labelText,
             style: AppConstantsTextStyle.kNormalWhiteTextStyle,
@@ -64,10 +74,11 @@ class SignUpForm extends StatelessWidget {
           child: isPassword
               ? CustomPasswordTextField(controller: controller)
               : CustomTextField(
-            controller: controller,
-            height: MediaQuery.of(context).size.height * 0.06,
-            keyboardType: keyboardType, textDirection: TextDirection.rtl,
-          ),
+                  controller: controller,
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  keyboardType: keyboardType,
+                  textDirection: TextDirection.rtl,
+                ),
         ),
       ],
     );
@@ -91,12 +102,12 @@ class SignUpForm extends StatelessWidget {
     try {
       print('Sending request to $apiUrl');
       print('Request body: ${jsonEncode(<String, String>{
-        'phone_number': phone,
-        'password': password,
-        'first_name': firstName,
-        'last_name': lastName,
-        'email': email,
-      })}');
+            'phone_number': phone,
+            'password': password,
+            'first_name': firstName,
+            'last_name': lastName,
+            'email': email,
+          })}');
 
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -117,17 +128,13 @@ class SignUpForm extends StatelessWidget {
       if (response.statusCode == 201) {
         print('Registration successful');
         print('Response data: ${response.body}');
-        ToastUtil.showToast(msg: "Register successful",
-            backgroundColor: Colors.green
-        );
-       Navigator.pushReplacement(context,
-           MaterialPageRoute(builder: (i)=>AuthScreen()));
-
-
+        ToastUtil.showToast(
+            msg: "Register successful", backgroundColor: Colors.green);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (i) => const AuthScreen()));
       } else {
-        ToastUtil.showToast(msg: "Register successful",
-            backgroundColor: Colors.green
-        );
+        ToastUtil.showToast(
+            msg: "Register successful", backgroundColor: Colors.green);
         print('Failed to register');
         print('Response code: ${response.statusCode}');
         print('Response data: ${response.body}');

@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/screens/CalendarScreen.dart';
+import 'package:social_crm/view/screens/calendar_screen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'dart:async';
 
 import '../../Model/status.dart';
-import 'videoStatusStep3.dart';
 // Import your next screen
 
 class VideoUploadStep2Screen extends StatefulWidget {
   final StatusData statusData;
 
   const VideoUploadStep2Screen({super.key, required this.statusData});
+
   @override
-  _VideoUploadStep2ScreenState createState() => _VideoUploadStep2ScreenState();
+  State<VideoUploadStep2Screen> createState() => _VideoUploadStep2ScreenState();
 }
 
 class _VideoUploadStep2ScreenState extends State<VideoUploadStep2Screen> {

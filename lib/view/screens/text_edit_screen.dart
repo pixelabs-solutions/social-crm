@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/Model/status.dart';
 import 'package:social_crm/Model/statuslist.dart';
@@ -11,10 +10,8 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-import '../../Model/customer.dart';
-import '../../viewModel/CustomerList_vm.dart';
-import 'CalendarScreen.dart';
-import 'editing_customerdetails_screen.dart';
+import '../../viewModel/customerList_vm.dart';
+import 'calendar_screen.dart';
 
 class TextEditScreen extends StatelessWidget {
   const TextEditScreen({super.key, required this.statusData});
