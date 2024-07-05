@@ -42,6 +42,7 @@ class _LoginFormState extends State<LoginForm> {
                 height: MediaQuery.of(context).size.height * 0.06,
                 keyboardType: TextInputType.number,
                 textDirection: TextDirection.rtl,
+                prefixText: '+',
               ),
             ),
             SizedBox(height: 5.h),
@@ -164,14 +165,25 @@ class _LoginFormState extends State<LoginForm> {
         print('Response code: ${response.statusCode}');
         print('Response data: ${response.body}');
 
-        // Show error toast
-        ToastUtil.showToast(
-          msg: "Failed to log in",
-          backgroundColor: Colors.red,
+        final jsonResponse = jsonDecode(response.body);
+        final errorMessage = jsonResponse['message'];
+
+        // Show error SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(child: Text(errorMessage)),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
       print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occurred. Please try again later.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       setState(() {
         isLoading = false; // Stop loading indicator
