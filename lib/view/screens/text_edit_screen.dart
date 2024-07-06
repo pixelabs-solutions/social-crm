@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/Model/status.dart';
@@ -9,10 +11,15 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
+
 import '../../Model/statuslist.dart';
 import '../../utilis/ApiConstants.dart';
 import '../../utilis/Toast.dart';
-import 'CalendarScreen.dart';
+
+
+import '../../viewModel/customerList_vm.dart';
+import 'calendar_screen.dart';
+
 
 class TextEditScreen extends StatefulWidget {
   const TextEditScreen({super.key, required this.statusData});
@@ -88,53 +95,7 @@ class _TextEditScreenState extends State<TextEditScreen> {
                         onTap: () {
                           showDeleteDialog(context, widget.statusData.statusIds!);
                         }),
-                    // Directionality(
-                    //   textDirection: TextDirection.rtl,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.start,
-                    //     children: [
-                    //       Padding(
-                    //         padding: EdgeInsets.only(top: 5.h),
-                    //         child: Text(
-                    //           "שם הלקוח:",
-                    //           style: AppConstantsTextStyle.heading1Style,
-                    //         ),
-                    //       ),
-                    //       Padding(
-                    //         padding: EdgeInsets.only(top: 5.h),
-                    //         child: Text(
-                    //           "Junaid",
-                    //           style: AppConstantsTextStyle
-                    //               .kNormalWhiteNotoTextStyle,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(height: 10.h),
-                    // Directionality(
-                    //   textDirection: TextDirection.rtl,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.start,
-                    //     children: [
-                    //       Padding(
-                    //         padding: EdgeInsets.only(top: 5.h),
-                    //         child: Text(
-                    //           "מספר טלפון:",
-                    //           style: AppConstantsTextStyle.heading1Style,
-                    //         ),
-                    //       ),
-                    //       Padding(
-                    //         padding: EdgeInsets.only(top: 5.h),
-                    //         child: Text(
-                    //           "09876543",
-                    //           style: AppConstantsTextStyle
-                    //               .kNormalWhiteNotoTextStyle,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+
                     SizedBox(height: 10.h),
                     Container(
                       height: 200.h,

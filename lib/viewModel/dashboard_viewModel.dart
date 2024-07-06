@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
 
 import '../Model/Status.dart';
-import '../Model/statusDetails.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   StatusDetails? statusDeatils;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
@@ -7,7 +6,7 @@ import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 class PublishSuccess extends StatefulWidget {
-  const PublishSuccess({Key? key}) : super(key: key);
+  const PublishSuccess({super.key});
 
   @override
   State<PublishSuccess> createState() => _PublishSuccessState();
@@ -18,29 +17,33 @@ class _PublishSuccessState extends State<PublishSuccess> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 12.0, right: 12.0),
+              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: const CircleAvatar(
                       backgroundColor: AppColors.primaryColor,
-                      child: Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
+                      child: Icon(Icons.arrow_back_ios_outlined,
+                          color: Colors.white),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  Text(
+                  const Text(
                     'משהו חדש מחכה לעוקבים שלך',
-                    style: AppConstantsTextStyle.heading2Style,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   // Optionally add arrows for month navigation here
                 ],
@@ -48,7 +51,7 @@ class _PublishSuccessState extends State<PublishSuccess> {
             ),
             SizedBox(height: 10.0.h),
             Padding(
-              padding:  EdgeInsets.only(left: 14.w, right: 8.w, top: 9.h),
+              padding: EdgeInsets.only(left: 14.w, right: 8.w, top: 9.h),
               child: Container(
                 height: 300.0.h, // Adjust height as needed
                 decoration: BoxDecoration(
@@ -56,9 +59,9 @@ class _PublishSuccessState extends State<PublishSuccess> {
                   borderRadius: BorderRadius.circular(18.0),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 1.0, horizontal: 1.0),
                   child: Stack(
-
                     children: [
                       // Image centered and covering the container
                       Center(
@@ -83,10 +86,8 @@ class _PublishSuccessState extends State<PublishSuccess> {
                         child: Center(
                           child: Directionality(
                             textDirection: TextDirection.rtl,
-                            child: Text(
-                              "הסטטוס פורסם בהצלחה!",
-                              style: AppConstantsTextStyle.heading2Style
-                            ),
+                            child: Text("הסטטוס פורסם בהצלחה!",
+                                style: AppConstantsTextStyle.heading2Style),
                           ),
                         ),
                       ),
@@ -102,7 +103,6 @@ class _PublishSuccessState extends State<PublishSuccess> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
             )
-
           ],
         ),
       ),

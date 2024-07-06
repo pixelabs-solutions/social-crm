@@ -56,5 +56,4 @@ class StatusHistoryViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

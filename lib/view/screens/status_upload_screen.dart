@@ -7,32 +7,31 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
-
-import 'TextStatusStep1.dart';
+import 'text_status_step1.dart';
 import 'imgUploadStep1.dart';
-import 'statuscalender.dart';
-import 'videoStatusStep1.dart';
+import 'status_calender.dart';
+import 'video_status_step1.dart';
 
 class StatusUploadScreen extends StatefulWidget {
+  const StatusUploadScreen({super.key});
+
   @override
   State<StatusUploadScreen> createState() => _StatusUploadScreenState();
 }
 
 class _StatusUploadScreenState extends State<StatusUploadScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      appBar: HomeAppBar(),
-
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Column(
             children: [
               Padding(
-                padding:  EdgeInsets.only(left: 12.w, right: 12.w),
+                padding: EdgeInsets.only(left: 12.w, right: 12.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -46,7 +45,6 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                         Navigator.pop(context);
                       },
                     ),
-
                     Center(
                       child: Text(
                         'העלאת סטטוס ',
@@ -56,21 +54,24 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 10.w,),
+              SizedBox(
+                height: 10.w,
+              ),
               Padding(
-                padding:  EdgeInsets.only(left: 14.0.w, right: 10.w, top: 10.h),
+                padding: EdgeInsets.only(left: 14.0.w, right: 10.w, top: 10.h),
                 child: Container(
                   height: 370.h,
-
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(18.0),
-
                   ),
-                  child:  Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("סוג הסטטוס", style: AppConstantsTextStyle.heading2Style,),
+                      Text(
+                        "סוג הסטטוס",
+                        style: AppConstantsTextStyle.heading2Style,
+                      ),
                       _buildStatusItem(
                         context,
                         'מודעת טקסט',
@@ -79,15 +80,18 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Color(0xFFFF9D00).withOpacity(0.4),
-                            Color(0xFFFFFFFF).withOpacity(0.38),
+                            const Color(0xFFFF9D00).withOpacity(0.4),
+                            const Color(0xFFFFFFFF).withOpacity(0.38),
                           ],
-                          stops: [0.033, 0.973],
-                        ), onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (i)=>TextStatusStep1Screen())
-                        );
-                      },
+                          stops: const [0.033, 0.973],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (i) =>
+                                      const TextStatusStep1Screen()));
+                        },
                       ),
                       _buildStatusItem(
                         context,
@@ -97,17 +101,18 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Color(0xFFFF9D00).withOpacity(0.4),
-                            Color(0xFFFFFFFF).withOpacity(0.38),
+                            const Color(0xFFFF9D00).withOpacity(0.4),
+                            const Color(0xFFFFFFFF).withOpacity(0.38),
                           ],
-                          stops: [0.033, 0.973],
-                        ), onTap: () {
-
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (i)=>ImageUploadStep1Screen())
-                          );
-
-                      },
+                          stops: const [0.033, 0.973],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (i) =>
+                                      const ImageUploadStep1Screen()));
+                        },
                       ),
                       _buildStatusItem(
                         context,
@@ -116,28 +121,30 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-
                           colors: [
-                            Color(0xFFFF9D00).withOpacity(0.4),
-                            Color(0xFFFFFFFF).withOpacity(0.38),
-
+                            const Color(0xFFFF9D00).withOpacity(0.4),
+                            const Color(0xFFFFFFFF).withOpacity(0.38),
                           ],
-                          stops: [0.033, 0.973],
-                        ), onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (i)=>VideoUploadStep1Screen())
-                        );
-                      },
+                          stops: const [0.033, 0.973],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (i) =>
+                                      const VideoUploadStep1Screen()));
+                        },
                       ),
-
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 5),
                         child: ConstantLargeButton(
                             text: "לשלב הבא ←",
-                            onPressed: (){
-                                 Navigator.push(context,
-                                    MaterialPageRoute(builder: (o)=>StatusCalendar())
-                                 );
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (o) => const StatusCalendar()));
                             }),
                       )
                     ],
@@ -151,19 +158,14 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
     );
   }
 
-  Widget _buildStatusItem(BuildContext context,
-      String title,
-      String iconPath, {
-        required VoidCallback onTap,
-    required Gradient gradient}) {
+  Widget _buildStatusItem(BuildContext context, String title, String iconPath,
+      {required VoidCallback onTap, required Gradient gradient}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: GestureDetector(
         onTap: onTap,
-
         child: Container(
-
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
             gradient: gradient,
@@ -176,11 +178,8 @@ class _StatusUploadScreenState extends State<StatusUploadScreen> {
                 height: 35.0.h,
                 width: 30.0.w,
               ),
-              SizedBox(width: 16.0),
-              Text(
-                  title,
-                  style: AppConstantsTextStyle.heading2Style
-              ),
+              const SizedBox(width: 16.0),
+              Text(title, style: AppConstantsTextStyle.heading2Style),
             ],
           ),
         ),

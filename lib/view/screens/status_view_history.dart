@@ -57,8 +57,8 @@ class StatusHistoryView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         child:
-                
-                
+
+
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: viewModel.statusHistory.length,

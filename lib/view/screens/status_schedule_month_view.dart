@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +9,7 @@ import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/utilis/variables.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
-import '../../viewModel/Status_viewModel.dart';
+import '../../viewModel/status_viewmodel.dart';
 import 'pagestatus_dailyposting_schedule.dart';
 import 'text_edit_screen.dart';
 
@@ -239,8 +240,18 @@ class _StatusScheduleMonthViewState extends State<StatusScheduleMonthView> {
                                                                         FontWeight
                                                                             .bold),
                                                               )
-                                                            : SvgPicture.asset(
-                                                                "assets/smalImgIcon.svg"),
+                                                            : hourStatuses[statusIndex]
+                                                                        .statusType ==
+                                                                    "video"
+                                                                ? Icon(
+                                                                    CupertinoIcons
+                                                                        .videocam_circle,
+                                                                    color: Colors
+                                                                            .purple[
+                                                                        100],
+                                                                  )
+                                                                : SvgPicture.asset(
+                                                                    "assets/smalImgIcon.svg"),
                                                         const SizedBox(
                                                             width: 10),
                                                         Text(

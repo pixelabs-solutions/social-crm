@@ -2,6 +2,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:social_crm/Model/status.dart';
 import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/screens/CalendarScreen.dart';
+import 'package:social_crm/view/screens/calendar_screen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'video_image.dart';
@@ -169,21 +170,10 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
                             ),
                           )
                         ] else ...[
-                          Container(
-                              color: Colors.white,
-                              child: const VideoImage(
-                                videoUrl: "",
-                              ))
+                          VideoThumbtitle(statusData: widget.statusData)
                         ],
 
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     statusContainer("assets/mobileImage.png"),
-                        //     statusContainer("assets/mobileImage.png"),
-                        //     statusContainer("assets/mobileImage.png")
-                        //   ],
-                        // ),
+                      
 
                         ConstantLargeButton(
                           text: "לשנות את זמני הפרסום →",
@@ -192,15 +182,20 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (i) => CalendarScreen(
-                                            statusData: StatusData(
-                                          statusId: widget.statusData.id,
-                                          contentType:
-                                              widget.statusData.statusType,
-                                          isEditApi: true,
-                                          // videoPath: widget.statusData.statusType != "image"?,
-                                          imagePaths: getUrlFromJson(
-                                              widget.statusData.content),
-                                        ))));
+                                        statusData: StatusData(
+                                            statusId: widget.statusData.id,
+                                            contentType:
+                                                widget.statusData.statusType,
+                                            isEditApi: true,
+                                            // videoPath: widget.statusData.statusType != "image"?,
+                                            imagePaths: widget.statusData
+                                                        .statusType ==
+                                                    "image"
+                                                ? getUrlFromJson(
+                                                    widget.statusData.content)
+                                                : extractUrlsFromJsonString(
+                                                    widget.statusData
+                                                        .content)))));
                           },
                         )
                       ],
@@ -287,4 +282,46 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
       style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
     );
   }
+}
+
+class VideoThumbtitle extends StatelessWidget {
+  final Statuses statusData; // Replace with your actual data type
+
+  const VideoThumbtitle({super.key, required this.statusData});
+
+  @override
+  Widget build(BuildContext context) {
+    // Extract URLs from JSON string
+    List<String> videoUrls = extractUrlsFromJsonString(statusData.content);
+
+    return Container(
+      height: 80.h,
+      width: double.maxFinite,
+      margin: EdgeInsets.only(bottom: 25.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        reverse: true,
+        child: Row(
+          children: List.generate(videoUrls.length, (index) {
+            return Container(
+              height: 80.h,
+              width: 80.w,
+              margin:
+                  const EdgeInsets.only(top: 8, bottom: 8, left: 5, right: 5),
+              child: GestureDetector(
+                onTap: () {},
+                child: VideoImage(videoUrl: videoUrls[index]),
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+List<String> extractUrlsFromJsonString(String? jsonString) {
+  Map<String, dynamic> json = jsonDecode(jsonString!);
+  List<dynamic> videos = json['videos'];
+  return videos.map((video) => video['url'] as String).toList();
 }

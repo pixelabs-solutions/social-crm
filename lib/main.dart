@@ -1,19 +1,21 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_crm/utilis/http.dart';
 import 'package:social_crm/utilis/shared_prefes.dart';
-import 'package:social_crm/view/auth/login_screen.dart';
-import 'package:social_crm/view/screens/NavigatonMain.dart';
+import 'package:social_crm/view/screens/navigaton_main.dart';
 import 'package:social_crm/view/screens/first_screen.dart';
 import 'package:social_crm/viewModel/Status_viewModel.dart';
 
 import 'viewModel/CustomerList_vm.dart';
 import 'viewModel/StatusDetails_viewModel.dart';
-import 'package:jwt_decoder/jwt_decoder.dart'; // Import jwt_decoder package for token decoding
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   SharedPrefernce.prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
@@ -29,9 +31,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
 
+
         ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()),
         ChangeNotifierProvider(create: (_)=>TextStatusViewModel())
-        // Add other providers as needed
+
+
+
       ],
       child: Resize(
         builder: () {
@@ -39,7 +44,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Social CRM',
             theme: ThemeData(),
-            home: shouldNavigateToMainScreen ? MainScreen() : AuthScreen(),
+            home: shouldNavigateToMainScreen
+                ? const MainScreen()
+                : const AuthScreen(),
           );
         },
       ),
@@ -62,8 +69,9 @@ class MyApp extends StatelessWidget {
 
     if (decodedToken['exp'] != null) {
       int expiryTimeInSeconds = decodedToken['exp'];
-      DateTime expiryDateTime = DateTime.fromMillisecondsSinceEpoch(expiryTimeInSeconds * 1000);
-      print("Token Expiry Date: ${expiryDateTime}" );
+      DateTime expiryDateTime =
+          DateTime.fromMillisecondsSinceEpoch(expiryTimeInSeconds * 1000);
+      print("Token Expiry Date: $expiryDateTime");
       return expiryDateTime.isBefore(DateTime.now());
     } else {
       return true; // If 'exp' claim is missing, consider token as expired

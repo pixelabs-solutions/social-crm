@@ -11,9 +11,11 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../viewModel/Status_viewModel.dart';
-import 'StatusUploadScreen.dart';
+
 import 'adding_customer.dart';
-import 'statusScheduleMonthView.dart';
+
+import 'status_schedule_month_view.dart';
+import 'status_upload_screen.dart';
 
 class StatusCalendar extends StatefulWidget {
   const StatusCalendar({super.key});

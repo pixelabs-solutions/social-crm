@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/view/screens/CalendarScreen.dart';
+import 'package:social_crm/view/screens/calendar_screen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
@@ -140,7 +141,20 @@ class _ImageUploadStep1ScreenState extends State<ImageUploadStep1Screen> {
                         child: ConstantLargeButton(
                           text: "לתזמון הסטטוס ←",
                           onPressed: () {
-                            _nextToCalendarScreen(); // Navigate to CalendarScreen
+                            if (Variables.selectedImages.isNotEmpty) {
+                              _nextToCalendarScreen();
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: 'Please Select Image',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 3,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                            }
+                            // Navigate to CalendarScreen
                           },
                         ),
                       ),

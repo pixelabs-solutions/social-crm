@@ -34,7 +34,8 @@ class Variables {
     "22",
     "23"
   ];
-  //** Is-Check-Edit-APi */
 
-  static bool isEditAPi = false;
+  //** Get-Selected-id */
+
+  static List<String> selectedVideoUrl = [];
 }

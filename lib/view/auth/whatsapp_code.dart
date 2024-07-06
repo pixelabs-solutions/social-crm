@@ -3,24 +3,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/Toast.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
-import 'package:social_crm/utilis/constant_textstyles.dart';
+
 import 'package:social_crm/view/auth/confirmationScreen.dart';
-import 'package:social_crm/view/widgets/custom_appbar.dart';
+
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
-import '../screens/NavigatonMain.dart';
+
 import '../screens/first_screen.dart';
 
 class WhatsAppCode extends StatefulWidget {
   final int isApproved;
   const WhatsAppCode({Key? key,
-  required this.isApproved
+    required this.isApproved
   }) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
     if (whatsAppCode != null) {
       Clipboard.setData(ClipboardData(text: whatsAppCode!));
       ToastUtil.showToast(msg: "Code Copied Successfully",
-      backgroundColor: Colors.green
+          backgroundColor: Colors.green
       );
     }
   }
@@ -74,51 +74,51 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
                   borderRadius: BorderRadius.circular(18.0),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: [
-                      Image.asset("assets/logo.png"),
-                      Container(
-                      
-                        decoration: BoxDecoration(
-                          color: AppColors.orangeButtonColor,
-                          borderRadius: BorderRadius.circular(12)
+                      children: [
+                        Image.asset("assets/logo.png"),
+                        Container(
 
-                        ),
-
-                          child: Padding(
-                            padding:  EdgeInsets.symmetric(
-                                horizontal: 18.w, vertical: 16.h),
-                            child: SvgPicture.asset("assets/faWhatsapp.svg",
-
-                              height: 60.h,
-                              color: AppColors.primaryColor,
+                            decoration: BoxDecoration(
+                                color: AppColors.orangeButtonColor,
+                                borderRadius: BorderRadius.circular(12)
 
                             ),
-                          )),
-                      SizedBox(height: 20.h,),
-                      Text( whatsAppCode!,
-                      style: TextStyle(
-                        color: AppColors.orangeButtonColor, fontSize: 20.sp,
-                        fontWeight: FontWeight.bold
-                      ),
-                      ),
-                      SizedBox(height: 20.h,),
 
-                     Padding(
-                       padding:  EdgeInsets.symmetric(
-                           horizontal: 14.w,
-                           vertical: 8.0.h),
-                       child: ConstantLargeButton(text: "Copy Code",
-                           onPressed: (){
-                         _copyCode();
-                           }),
-                     )
-                    ],
-                  )
+                            child: Padding(
+                              padding:  EdgeInsets.symmetric(
+                                  horizontal: 18.w, vertical: 16.h),
+                              child: SvgPicture.asset("assets/faWhatsapp.svg",
+
+                                height: 60.h,
+                                color: AppColors.primaryColor,
+
+                              ),
+                            )),
+                        SizedBox(height: 20.h,),
+                        Text( whatsAppCode!,
+                          style: TextStyle(
+                              color: AppColors.orangeButtonColor, fontSize: 20.sp,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        SizedBox(height: 20.h,),
+
+                        Padding(
+                          padding:  EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 8.0.h),
+                          child: ConstantLargeButton(text: "Copy Code",
+                              onPressed: (){
+                                _copyCode();
+                              }),
+                        )
+                      ],
+                    )
                 ),
               ),
 
@@ -175,9 +175,9 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
         print('Response body: ${response.body}');
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == 'error') {
-         ToastUtil.showToast(msg: "Please authenticate first to login",
-           backgroundColor: Colors.red
-         );
+          ToastUtil.showToast(msg: "Please authenticate first to login",
+              backgroundColor: Colors.red
+          );
         } else {
           ToastUtil.showToast(msg: "Failed to fetch data");
         }

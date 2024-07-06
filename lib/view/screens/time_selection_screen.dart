@@ -5,14 +5,12 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
-import 'package:social_crm/utilis/variables.dart';
-import 'package:social_crm/view/screens/publishSuccesScreen.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:intl/intl.dart';
 
 import '../../Model/status.dart';
-import '../../viewModel/Status_viewModel.dart';
+import '../../viewModel/status_viewmodel.dart';
 
 class TimeSelection extends StatefulWidget {
   final StatusData? statusData;
@@ -212,18 +210,38 @@ class _TimeSelectionState extends State<TimeSelection> {
                                     } else if (widget.statusData?.contentType ==
                                         "image") {
                                       viewModel.postImageEditStatus(
+                                          context,
+                                          widget.statusData?.statusId,
+                                          widget.statusData?.text,
+                                          widget.statusData?.selectedDate
+                                              .toString(),
+                                          widget.statusData?.selectedTime
+                                              .toString(),
+                                          widget.statusData?.imagePaths);
+                                    } else {
+                                      viewModel.postEditVideoStatus(
+                                          context,
+                                          widget.statusData?.statusId,
+                                          widget.statusData?.text,
+                                          widget.statusData?.selectedDate
+                                              .toString(),
+                                          widget.statusData?.selectedTime
+                                              .toString(),
+                                          widget.statusData?.imagePaths);
+                                    }
+                                  } else {
+                                    if (widget.statusData?.imagePaths != null) {
+                                      viewModel.postImageStatus(
                                         context,
-                                        widget.statusData?.statusId,
                                         widget.statusData?.text,
                                         widget.statusData?.selectedDate
                                             .toString(),
                                         widget.statusData?.selectedTime
                                             .toString(),
                                       );
-                                    } else {}
-                                  } else {
-                                    if (widget.statusData?.imagePaths != null) {
-                                      viewModel.postImageStatus(
+                                    } else if (widget.statusData?.contentType ==
+                                        "video") {
+                                      viewModel.postVideoStatus(
                                         context,
                                         widget.statusData?.text,
                                         widget.statusData?.selectedDate
@@ -243,16 +261,6 @@ class _TimeSelectionState extends State<TimeSelection> {
                                       );
                                     }
                                   }
-                                  print(
-                                      'Selected Text: ${widget.statusData?.text}');
-                                  print(
-                                      'Selected Background Color: ${widget.statusData?.backgroundColorHex}');
-                                  print(
-                                      'Selected Image Path: ${widget.statusData?.imagePaths}');
-                                  print(
-                                      'Selected Date: ${widget.statusData?.selectedDate}');
-                                  print(
-                                      'Selected Time: ${widget.statusData?.selectedTime}');
                                 },
                               );
                             }),
