@@ -141,41 +141,31 @@ class _LoginFormState extends State<LoginForm> {
         final token = jsonResponse['data']['token'];
         final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
         final userID = jsonResponse['data']['user']['id'];
-
         final isApproved = jsonResponse['data']['user']['is_approved'];
         print('++++++++++++++${whatsappCode}+++++++++++++++');
-
-
-        // Save token, userID, and whatsappCode in shared preferences
-
 
         // Navigate to the appropriate screen based on WhatsApp code and isApproved
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
           Navigator.push(
             context,
-
             MaterialPageRoute(builder: (context) => WhatsAppCode(isApproved: isApproved)),
-
-
-
           );
         } else if (isApproved == 0) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) =>
-                RegistrationSuccess()
-            ),
+            MaterialPageRoute(builder: (context) => RegistrationSuccess()),
           );
-
-
-
-
-        } else {
+        } else if (isApproved == 1) {
           await saveToken(token, userID, whatsappCode ?? '');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
           );
+        } else {
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const AdminScreen()),
+          // );
         }
 
         ToastUtil.showToast(
@@ -212,6 +202,7 @@ class _LoginFormState extends State<LoginForm> {
       });
     }
   }
+
 
 
   Future<void> saveToken(String token, int UserID, String whatsappCode) async {

@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:resize/resize.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/Toast.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
-
+import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/auth/confirmationScreen.dart';
-
+import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
-
+import '../screens/navigaton_main.dart';
 import '../screens/first_screen.dart';
 
 class WhatsAppCode extends StatefulWidget {

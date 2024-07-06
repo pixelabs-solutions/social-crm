@@ -61,7 +61,7 @@ class _CustomersListState extends State<CustomersList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (o) => RegistrationSuccess(),
+                            builder: (o) => AddingCustomerDetails(),
                           ),
                         ).then((_) {
                           // Fetch customers again after adding a new customer
