@@ -121,9 +121,14 @@ class CustomerViewModel extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         await fetchCustomers();
+        notifyListeners();
         ToastUtil.showToast(
             msg: 'לקוח נוסף בהצלחה', backgroundColor: Colors.green);
-        Navigator.pop(context);
+
+
+
+
+
 
         clearForm();
       } else {

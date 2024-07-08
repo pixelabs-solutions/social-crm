@@ -30,6 +30,19 @@ class _CustomersListState extends State<CustomersList> {
       Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
     });
   }
+  void _navigateToAddCustomer(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddingCustomerDetails()),
+    );
+
+    if (result == true) {
+      // Refresh the customer list
+      setState(() {
+        Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +71,7 @@ class _CustomersListState extends State<CustomersList> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (o) => AddingCustomerDetails(),
-                          ),
-                        ).then((_) {
-                          // Fetch customers again after adding a new customer
-                          Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
-                        });
+                        _navigateToAddCustomer(context);
                       },
                     ),
                     SizedBox(width: 8.w),

@@ -288,11 +288,16 @@ class TextStatusViewModel extends ChangeNotifier {
 //** Post-Video-Status */
   Future<void> postVideoStatus(
       BuildContext context, String? caption, String? date, String? time) async {
-    _isLoading = true;
+    bool _isLoading = true;
     notifyListeners();
-    var token = SharedPrefernce.prefs?.getString('token');
-    int? userID = SharedPrefernce.prefs?.getInt('userID');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    int? userID = prefs.getInt('userID');
     var formData = FormData();
+
+    // Remove duplicates from selectedVideoUrl
+    Variables.selectedVideoUrl = Variables.selectedVideoUrl.toSet().toList();
 
     // Add non-null values to the FormData
     formData.fields.addAll([
@@ -300,23 +305,22 @@ class TextStatusViewModel extends ChangeNotifier {
       MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
       MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
       MapEntry('content[caption]', caption ?? ''),
-
       MapEntry('user_id', userID.toString()), // Add userID to formData
+      MapEntry('content[videos][]', Variables.selectedVideoUrl.join(',')), // Comma-separated video URLs
     ]);
 
-    // Add selected video URLs to FormData
-    for (int i = 0; i < Variables.selectedVideoUrl.length; i++) {
-      formData.fields
-          .add(MapEntry('content[videos][$i]', Variables.selectedVideoUrl[i]));
-    }
+    // Print out the request parameters
+    print('Request Parameters:');
+    formData.fields.forEach((entry) {
+      print('${entry.key}: ${entry.value}');
+    });
 
     try {
       final response = await Dio().post(
         '${ApiEndPointsConstants.baseUrl}/status/create', // Replace with your API endpoint
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer $token', // Replace $token with your actual token
+            'Authorization': 'Bearer $token', // Replace $token with your actual token
           },
         ),
         data: formData,
@@ -325,7 +329,7 @@ class TextStatusViewModel extends ChangeNotifier {
       if (response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (i) => const PublishSuccess()),
+          MaterialPageRoute(builder: (context) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
           msg: 'Status Uploaded Successfully',
@@ -348,11 +352,24 @@ class TextStatusViewModel extends ChangeNotifier {
           fontSize: 16.0,
         );
       }
+    } catch (e) {
+      // Handle any Dio errors or exceptions here
+      print('Error uploading status: $e');
+      Fluttertoast.showToast(
+        msg: 'An error occurred. Please try again later.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+
 
   ///** Get_All-Status */
 
@@ -615,6 +632,7 @@ class TextStatusViewModel extends ChangeNotifier {
 
     if (videoPaths != null && videoPaths.isNotEmpty) {
       for (var imageUrl in videoPaths) {
+        print("............Video Paths....${imageUrl}");
         formData.fields.add(MapEntry('content[images][]', imageUrl));
       }
     }
@@ -630,6 +648,7 @@ class TextStatusViewModel extends ChangeNotifier {
         ),
         data: formData,
       );
+
 
       if (response.statusCode == 201) {
         Navigator.push(

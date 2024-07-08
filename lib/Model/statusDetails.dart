@@ -65,9 +65,7 @@ class Status {
       userId: json['user_id'],
       statusIds: json['status_ids'] ?? '',
       posted: json['posted'],
-      views: (json['views'] is Map<String, dynamic>)
-          ? json['views']['number_of_views'] ?? 0
-          : json['views'] ?? 0,
+      views: (json['views'] is List) ? json['views'].length : json['views'] ?? 0,
     );
   }
 }

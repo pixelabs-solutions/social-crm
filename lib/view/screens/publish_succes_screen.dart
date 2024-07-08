@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/view/screens/navigaton_main.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
@@ -100,7 +101,9 @@ class _PublishSuccessState extends State<PublishSuccess> {
             ConstantLargeButton(
               text: "בוצע",
               onPressed: () {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (i)=>MainScreen())
+                );
               },
             )
           ],

@@ -146,6 +146,7 @@ class _LoginFormState extends State<LoginForm> {
 
         // Navigate to the appropriate screen based on WhatsApp code and isApproved
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
+          await saveToken(token, userID, whatsappCode ?? '');
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WhatsAppCode(isApproved: isApproved)),
@@ -162,10 +163,10 @@ class _LoginFormState extends State<LoginForm> {
             MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         } else {
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const AdminScreen()),
-          // );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+          );
         }
 
         ToastUtil.showToast(

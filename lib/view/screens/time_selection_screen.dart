@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 import '../../Model/status.dart';
 import '../../viewModel/status_viewmodel.dart';
 
@@ -22,6 +25,11 @@ class TimeSelection extends StatefulWidget {
 
 class _TimeSelectionState extends State<TimeSelection> {
   DateTime _selectedTime = DateTime.now();
+  List<Statuses> statuses = [];
+
+  String? scheduleDate;
+  String? scheduleTime;
+  bool isLoading = false;
 
   // Sample list of times
   List<String> times = [
@@ -35,6 +43,12 @@ class _TimeSelectionState extends State<TimeSelection> {
     '05:00',
     '06:00',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUpcomingStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,21 +182,29 @@ class _TimeSelectionState extends State<TimeSelection> {
                           Text("זמנים תפוסים",
                               style: AppConstantsTextStyle.heading2Style),
                           SizedBox(height: 10.0.h),
-                          Consumer<TextStatusViewModel>(
+                          Expanded(
+                            child: Consumer<TextStatusViewModel>(
                               builder: (context, viewModel, child) {
-                            if (viewModel.statusIsLoading) {
-                              return const Expanded(
-                                child: Center(
+                                if (viewModel.statusIsLoading) {
+                                  return const Center(
                                     child: CircularProgressIndicator(
-                                  backgroundColor: AppColors.orangeButtonColor,
-                                )),
-                              );
-                            }
-                            return Column(
-                              children: _buildTimeRows(
-                                  viewModel.statusList!.data!.statuses),
-                            );
-                          }),
+                                      backgroundColor: AppColors.orangeButtonColor,
+                                    ),
+                                  );
+                                }
+                                if (viewModel.statusList == null || viewModel.statusList!.data == null || viewModel.statusList!.data!.statuses!.isEmpty) {
+                                  return Center(
+                                    child: Text("No statuses available"),
+                                  );
+                                }
+                                return Column(
+                                  children: _buildTimeRows(viewModel.statusList!.data!.statuses),
+                                );
+                              },
+                            ),
+                          ),
+
+
                           SizedBox(height: 20.0.h),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
@@ -279,11 +301,15 @@ class _TimeSelectionState extends State<TimeSelection> {
   List<Widget> _buildTimeRows(List<Statuses>? statuses) {
     List<Widget> rows = [];
 
-    for (int i = 0; i < statuses!.length; i += 3) {
+    if (statuses == null) {
+      return rows; // Return empty list if statuses is null
+    }
+
+    for (int i = 0; i < statuses.length; i += 3) {
       List<Widget> rowChildren = [];
 
-      for (int j = i; j < i + 3 && j < times.length; j++) {
-        rowChildren.add(Expanded(child: _buildTimeContainer(j)));
+      for (int j = i; j < i + 3 && j < statuses.length; j++) {
+        rowChildren.add(Expanded(child: _buildTimeContainer(statuses[j])));
       }
 
       rows.add(
@@ -300,8 +326,10 @@ class _TimeSelectionState extends State<TimeSelection> {
     return rows;
   }
 
-  Widget _buildTimeContainer(int index) {
+
+  Widget _buildTimeContainer(Statuses status) {
     String svgAsset = 'assets/smalImgIcon.svg';
+    String formattedTime = status.scheduleTime!.substring(0, 5);
 
     return Container(
       margin: EdgeInsets.only(left: 2.w, right: 2.w),
@@ -329,11 +357,61 @@ class _TimeSelectionState extends State<TimeSelection> {
           ),
           SizedBox(width: 8.w),
           Text(
-            times[index],
+            formattedTime,
             style: AppConstantsTextStyle.paragraph2Style,
           ),
         ],
       ),
     );
+  }
+
+  Future<void> fetchUpcomingStatus() async {
+    const String apiUrl = 'https://scrm-apis.woo-management.com/api/status/list';
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token == null) {
+        print('Token not found in SharedPreferences');
+        return;
+      }
+
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      var request = http.Request('GET', Uri.parse(apiUrl));
+      request.body = json.encode({"posted": 0});
+      request.headers.addAll(headers);
+
+      setState(() {
+        isLoading = true;
+      });
+
+      final http.StreamedResponse response = await request.send();
+      print("Response From Upcoming Status Api: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final jsonResponse = await response.stream.bytesToString();
+        final parsedResponse = jsonDecode(jsonResponse);
+        print(parsedResponse);
+
+        final data = parsedResponse['data'];
+        if (data != null) {
+          final statusesJson = data['statuses'] as List;
+          statuses = statusesJson.map((json) => Statuses.fromJson(json)).toList();
+        }
+      } else {
+        print('Failed: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

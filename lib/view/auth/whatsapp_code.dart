@@ -59,9 +59,10 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
 
           children: [
+            Image.asset("assets/logo.png"),
 
             SizedBox(height: 10.0.h),
             Padding(
@@ -77,10 +78,10 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
                     padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
 
                       children: [
-                        Image.asset("assets/logo.png"),
+
                         Container(
 
                             decoration: BoxDecoration(
