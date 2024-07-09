@@ -5,12 +5,16 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_crm/utilis/ApiConstants.dart';
 import 'package:social_crm/utilis/variables.dart';
 import '../Model/status.dart';
 import '../Model/statuslist.dart';
+
+import '../utilis/Toast.dart';
+
 import '../Model/video.dart';
 
 import '../utilis/shared_prefes.dart';
@@ -19,12 +23,15 @@ import '../view/screens/video_status_step3.dart';
 
 class TextStatusViewModel extends ChangeNotifier {
   StatusData _textStatus = StatusData(text: '', backgroundColorHex: '#FFFFFF');
+
+  int statusSpecificCount=0;
   StatusData get textStatus => _textStatus;
 
   StatusList? _statusList;
   StatusList? get statusList => _statusList;
 
   StatusList? statusSpecificList;
+  StatusList? statusTodayList;
   bool statusIsLoading = false;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -35,7 +42,9 @@ class TextStatusViewModel extends ChangeNotifier {
 
   TextStatusViewModel() {
     getAllStatus();
+    getMonthAllStatus();
   }
+
 
   void setText(String text) {
     _textStatus = StatusData(
@@ -281,11 +290,16 @@ class TextStatusViewModel extends ChangeNotifier {
 //** Post-Video-Status */
   Future<void> postVideoStatus(
       BuildContext context, String? caption, String? date, String? time) async {
-    _isLoading = true;
+    bool _isLoading = true;
     notifyListeners();
-    var token = SharedPrefernce.prefs?.getString('token');
-    int? userID = SharedPrefernce.prefs?.getInt('userID');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    int? userID = prefs.getInt('userID');
     var formData = FormData();
+
+    // Remove duplicates from selectedVideoUrl
+    Variables.selectedVideoUrl = Variables.selectedVideoUrl.toSet().toList();
 
     // Add non-null values to the FormData
     formData.fields.addAll([
@@ -293,23 +307,22 @@ class TextStatusViewModel extends ChangeNotifier {
       MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
       MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
       MapEntry('content[caption]', caption ?? ''),
-
       MapEntry('user_id', userID.toString()), // Add userID to formData
+      MapEntry('content[videos][]', Variables.selectedVideoUrl.join(',')), // Comma-separated video URLs
     ]);
 
-    // Add selected video URLs to FormData
-    for (int i = 0; i < Variables.selectedVideoUrl.length; i++) {
-      formData.fields
-          .add(MapEntry('content[videos][$i]', Variables.selectedVideoUrl[i]));
-    }
+    // Print out the request parameters
+    print('Request Parameters:');
+    formData.fields.forEach((entry) {
+      print('${entry.key}: ${entry.value}');
+    });
 
     try {
       final response = await Dio().post(
         '${ApiEndPointsConstants.baseUrl}/status/create', // Replace with your API endpoint
         options: Options(
           headers: {
-            'Authorization':
-                'Bearer $token', // Replace $token with your actual token
+            'Authorization': 'Bearer $token', // Replace $token with your actual token
           },
         ),
         data: formData,
@@ -318,7 +331,7 @@ class TextStatusViewModel extends ChangeNotifier {
       if (response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (i) => const PublishSuccess()),
+          MaterialPageRoute(builder: (context) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
           msg: 'Status Uploaded Successfully',
@@ -341,11 +354,24 @@ class TextStatusViewModel extends ChangeNotifier {
           fontSize: 16.0,
         );
       }
+    } catch (e) {
+      // Handle any Dio errors or exceptions here
+      print('Error uploading status: $e');
+      Fluttertoast.showToast(
+        msg: 'An error occurred. Please try again later.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+
 
   ///** Get_All-Status */
 
@@ -371,6 +397,7 @@ class TextStatusViewModel extends ChangeNotifier {
     }
   }
 
+
   ///** Get_All-Status */
 
   Future<void> getSpecficStatus(String dateTime) async {
@@ -394,6 +421,51 @@ class TextStatusViewModel extends ChangeNotifier {
       if (response.statusCode == 200) {
         statusSpecificList = StatusList.fromJson(response.data);
       }
+    } finally {
+      isSpecficLoading = false;
+      notifyListeners();
+    }
+  }
+  Future<void> getMonthAllStatus() async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    isSpecficLoading = true;
+    notifyListeners();
+
+    try {
+      // Get the current month's start and end dates
+      DateTime now = DateTime.now();
+      DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
+      DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+
+      // Format dates in 'yyyy-MM-dd' format as required by your API
+      String startDate = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+      String endDate = DateFormat('yyyy-MM-dd').format(lastDayOfMonth);
+
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        queryParameters: {
+          "start_date": startDate,
+          "posted": 0,
+          "end_date": endDate,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        statusSpecificList = StatusList.fromJson(response.data);
+
+        // Extract the count variable and save it to viewModel
+        statusSpecificCount = response.data['data']['count'];
+        print("...................................................");
+        print(statusSpecificCount);
+      }
+    } catch (e) {
+      print('Error getting month status: $e');
     } finally {
       isSpecficLoading = false;
       notifyListeners();
@@ -531,6 +603,7 @@ class TextStatusViewModel extends ChangeNotifier {
     }
   }
 
+
 //** Edit-Video-Status */
   Future<void> postEditVideoStatus(
     BuildContext context,
@@ -555,11 +628,13 @@ class TextStatusViewModel extends ChangeNotifier {
     //   // MapEntry('user_id', userID.toString()), // Add userID to formData
     // ]);
 
+
     // // if (videoPaths != null && videoPaths.isNotEmpty) {
     // //   for (var imageUrl in videoPaths) {
     // //     formData.fields.add(MapEntry('content[images][]', imageUrl));
     // //   }
     // // }
+
 
     try {
       final response = await Dio().put(
@@ -576,7 +651,11 @@ class TextStatusViewModel extends ChangeNotifier {
         },
       );
 
+
       if (response.statusCode == 200) {
+
+
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (i) => const PublishSuccess()),
@@ -607,4 +686,5 @@ class TextStatusViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 }

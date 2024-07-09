@@ -13,6 +13,9 @@ import 'package:social_crm/view/widgets/custom_textfield.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:http/http.dart' as http;
 
+import 'confirmationScreen.dart';
+
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -138,19 +141,30 @@ class _LoginFormState extends State<LoginForm> {
         final token = jsonResponse['data']['token'];
         final whatsappCode = jsonResponse['data']['user']['whatsapp_code'];
         final userID = jsonResponse['data']['user']['id'];
-        print('++++++++++++++$whatsappCode+++++++++++++++');
+        final isApproved = jsonResponse['data']['user']['is_approved'];
+        print('++++++++++++++${whatsappCode}+++++++++++++++');
+        print('++++++++++++++${userID}+++++++++++++++');
 
-        // Save token and WhatsApp code to SharedPreferences
-        await saveToken(token, userID, whatsappCode ?? '');
-
-        // Navigate to the appropriate screen based on WhatsApp code
+        // Navigate to the appropriate screen based on WhatsApp code and isApproved
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
+          await saveToken(token, userID, whatsappCode ?? '');
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const WhatsAppCode()),
+            MaterialPageRoute(builder: (context) => WhatsAppCode(isApproved: isApproved)),
+          );
+        } else if (isApproved == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationSuccess()),
+          );
+        } else if (isApproved == 1) {
+          await saveToken(token, userID, whatsappCode ?? '');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         } else {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
           );
@@ -190,6 +204,8 @@ class _LoginFormState extends State<LoginForm> {
       });
     }
   }
+
+
 
   Future<void> saveToken(String token, int UserID, String whatsappCode) async {
     final prefs = await SharedPreferences.getInstance();

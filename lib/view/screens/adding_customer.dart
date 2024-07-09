@@ -79,7 +79,7 @@ class AddingCustomerDetails extends StatelessWidget {
                               viewModel.nameController,
                               TextInputType.name,
                               viewModel.nameController.text.isEmpty &&
-                                      !viewModel.isLoading
+                                  !viewModel.isLoading
                                   ? 'שדה שם הלקוח הוא חובה'
                                   : null,
                             ),
@@ -89,7 +89,7 @@ class AddingCustomerDetails extends StatelessWidget {
                               viewModel.mailController,
                               TextInputType.emailAddress,
                               viewModel.mailController.text.isEmpty &&
-                                      !viewModel.isLoading
+                                  !viewModel.isLoading
                                   ? 'שדה כתובת הדואר האלקטרוני הוא חובה'
                                   : null,
                             ),
@@ -99,7 +99,7 @@ class AddingCustomerDetails extends StatelessWidget {
                               viewModel.phoneController,
                               TextInputType.number,
                               viewModel.phoneController.text.isEmpty &&
-                                      !viewModel.isLoading
+                                  !viewModel.isLoading
                                   ? 'שדה מספר הטלפון הוא חובה'
                                   : null,
                             ),
@@ -108,7 +108,7 @@ class AddingCustomerDetails extends StatelessWidget {
                               textDirection: TextDirection.rtl,
                               child: CustomDropdownButton(
                                 fieldBackgroundColor:
-                                    AppColors.kWhiteColor40Opacity,
+                                AppColors.kWhiteColor40Opacity,
                                 options: viewModel.items,
                                 selectedItem: viewModel.selectedItems,
                                 onOptionSelected: (options) {
@@ -122,17 +122,17 @@ class AddingCustomerDetails extends StatelessWidget {
                             ),
                             viewModel.isAddCusLoading
                                 ? const Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.orangeButtonColor,
-                                    ),
-                                  ) // Show circular progress indicator when loading
+                              child: CircularProgressIndicator(
+                                color: AppColors.orangeButtonColor,
+                              ),
+                            ) // Show circular progress indicator when loading
                                 : ConstantLargeButton(
-                                    text: 'הוסף לקוח →',
-                                    onPressed: () async {
-                                      await viewModel.addCustomer(
-                                          context, viewModl);
-                                    },
-                                  ),
+                              text: 'הוסף לקוח →',
+                              onPressed: () async {
+                                await viewModel.addCustomer(
+                                    context, viewModl);
+                              },
+                            ),
                             SizedBox(
                               height: 15.h,
                             ),
@@ -164,19 +164,19 @@ class AddingCustomerDetails extends StatelessWidget {
   }
 
   Widget _buildFormField(
-    BuildContext context,
-    String labelText,
-    TextEditingController controller,
-    TextInputType keyboardType,
-    String? errorText,
-  ) {
+      BuildContext context,
+      String labelText,
+      TextEditingController controller,
+      TextInputType keyboardType,
+      String? errorText,
+      ) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showText(labelText),
-          CustomTextField(
+          CustomTextFields(
             backgroundColor: AppColors.kWhiteColor40Opacity,
             controller: controller,
             height: MediaQuery.of(context).size.height * 0.06,

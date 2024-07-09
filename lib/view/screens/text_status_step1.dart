@@ -9,8 +9,30 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../viewModel/status_viewmodel.dart';
 
-class TextStatusStep1Screen extends StatelessWidget {
+class TextStatusStep1Screen extends StatefulWidget {
   const TextStatusStep1Screen({super.key});
+
+  @override
+  State<TextStatusStep1Screen> createState() => _TextStatusStep1ScreenState();
+}
+
+class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
+
+  bool isRtl = false;
+  TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.text = ''; // Initialize with empty text
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +74,9 @@ class TextStatusStep1Screen extends StatelessWidget {
                   padding: EdgeInsets.only(left: 14.0.w, right: 8.w),
                   child: Consumer<TextStatusViewModel>(
                     builder: (context, viewModel, child) {
+                      if (_textEditingController.text != viewModel.textStatus.text) {
+                        _textEditingController.text = viewModel.textStatus.text!;
+                      }
                       return Container(
                         height: 370.0.h, // Adjust height as needed
                         decoration: BoxDecoration(
@@ -59,46 +84,44 @@ class TextStatusStep1Screen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 14.0),
+                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10.h),
+
+                              SizedBox(height: 2.h),
                               // Text editing canvas
                               Expanded(
                                 child: Stack(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(int.parse(viewModel
-                                            .textStatus.backgroundColorHex!
-                                            .replaceFirst('#', '0xff'))),
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 12.0.w, right: 10.w),
-                                          child: TextField(
-                                            controller: TextEditingController(
-                                                text:
-                                                    viewModel.textStatus.text),
-                                            onChanged: (text) {
-                                              viewModel.setText(text);
-                                            },
-                                            style: const TextStyle(
-                                              fontFamily: "Noto Sans Hebrew",
-                                              fontSize: 20.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            maxLines: null,
-                                            textAlign: TextAlign.center,
-                                            decoration: const InputDecoration(
-                                              hintText: 'הזן את הסטטוס שלך',
-                                              border: InputBorder.none,
+                                    Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse(viewModel.textStatus.backgroundColorHex!.replaceFirst('#', '0xff'))),
+                                          borderRadius: BorderRadius.circular(18.0),
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 12.0.w, right: 10.w),
+                                            child: TextField(
+                                              controller: _textEditingController,
+                                              onChanged: (text){
+                                                viewModel.setText(text);
+                                              },
+                                              style: const TextStyle(
+                                                fontFamily: "Noto Sans Hebrew",
+                                                fontSize: 20.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: null,
+                                              textAlign: TextAlign.center,
+                                               // Set text direction to LTR
+                                              decoration: const InputDecoration(
+                                                // hintText: 'הזן את הסטטוס שלך',
+                                                border: InputBorder.none,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -109,8 +132,7 @@ class TextStatusStep1Screen extends StatelessWidget {
                                       right: 5.w,
                                       left: 5.w,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Colors.red,
                                           Colors.blue,
@@ -122,19 +144,15 @@ class TextStatusStep1Screen extends StatelessWidget {
                                         ].map((color) {
                                           return GestureDetector(
                                             onTap: () {
-                                              viewModel
-                                                  .setBackgroundColor(color);
+                                              viewModel.setBackgroundColor(color);
                                             },
                                             child: Container(
                                               width: 35.w,
                                               height: 30.h,
                                               decoration: BoxDecoration(
                                                 color: color,
-                                                border: Border.all(
-                                                    color:
-                                                        AppColors.primaryColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
+                                                border: Border.all(color: AppColors.primaryColor),
+                                                borderRadius: BorderRadius.circular(12),
                                               ),
                                             ),
                                           );
@@ -151,8 +169,7 @@ class TextStatusStep1Screen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CalendarScreen(
-                                          statusData: viewModel.textStatus),
+                                      builder: (context) => CalendarScreen(statusData: viewModel.textStatus),
                                     ),
                                   );
                                 },
@@ -162,6 +179,7 @@ class TextStatusStep1Screen extends StatelessWidget {
                           ),
                         ),
                       );
+
                     },
                   ),
                 ),

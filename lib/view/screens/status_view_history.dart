@@ -5,15 +5,35 @@ import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
-import '../../viewModel/statusDetails_viewModel.dart';
+import '../../viewModel/StatusDetails_viewModel.dart';
 
-class StatusHistoryView extends StatelessWidget {
+class StatusHistoryView extends StatefulWidget {
   const StatusHistoryView({super.key});
 
   @override
+  _StatusHistoryViewState createState() => _StatusHistoryViewState();
+}
+
+class _StatusHistoryViewState extends State<StatusHistoryView> {
+  late StatusHistoryViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = StatusHistoryViewModel();
+    viewModel.fetchStatusHistory();
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => StatusHistoryViewModel()..fetchStatusHistory(),
+    return ChangeNotifierProvider<StatusHistoryViewModel>.value(
+      value: viewModel,
       child: Scaffold(
         appBar: const HomeAppBar(),
         backgroundColor: AppColors.scaffoldColor,
@@ -34,17 +54,23 @@ class StatusHistoryView extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Consumer<StatusHistoryViewModel>(
                   builder: (context, viewModel, child) {
                     if (viewModel.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.orangeButtonColor,
+                        ),
+                      );
                     } else if (viewModel.statusHistory.isEmpty) {
                       return const Center(
-                          child: Text(
-                        'No status history available',
-                        style: TextStyle(color: Colors.white),
-                      ));
+                        child: Text(
+                          'No status history available',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.6,
@@ -62,17 +88,13 @@ class StatusHistoryView extends StatelessWidget {
                             return Column(
                               children: [
                                 StatusRow(
-                                  iconPath:
-                                      'assets/eyeIcon.svg', // Replace with actual icon path
+                                  iconPath: 'assets/eyeIcon.svg', // Replace with actual icon path
                                   views: status.views.toString(),
-                                  time: status
-                                      .scheduleTime, // assuming scheduleTime is a string
-                                  rightIconPath:
-                                      'assets/icons/dummy_right_icon.svg', // Replace with actual icon path
+                                  time: status.scheduleTime, // assuming scheduleTime is a string
+                                  rightIconPath: 'assets/e6.png', // Replace with actual icon path
                                 ),
                                 Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                                   child: const Divider(
                                     color: Colors.white,
                                   ),
@@ -141,9 +163,9 @@ class StatusRow extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 12.w),
-              SvgPicture.asset(
+              Image.asset(
                 rightIconPath,
-                height: 28.h,
+                height: 25.h,
               ),
             ],
           ),

@@ -23,7 +23,7 @@ class CustomersList extends StatelessWidget {
       body: ChangeNotifierProvider(
         create: (_) => CustomerViewModel()..fetchCustomers(),
         child:
-            Consumer<CustomerViewModel>(builder: (context, viewModel, child) {
+        Consumer<CustomerViewModel>(builder: (context, viewModel, child) {
           return Padding(
             padding: EdgeInsets.only(left: 8.w, right: 8.w),
             child: Column(
@@ -75,11 +75,13 @@ class CustomersList extends StatelessWidget {
                   ),
                   child: Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 10.h, horizontal: 10),
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 10),
                       child: () {
                         if (viewModel.isLoading) {
                           return const Center(
-                              child: CircularProgressIndicator());
+                              child: CircularProgressIndicator(
+                                color: AppColors.orangeButtonColor,
+                              ));
                         }
                         return ScrollbarTheme(
                           data: ScrollbarThemeData(
@@ -101,7 +103,7 @@ class CustomersList extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: ListView.builder(
                                   physics:
-                                      const AlwaysScrollableScrollPhysics(),
+                                  const AlwaysScrollableScrollPhysics(),
                                   controller: scrollController,
                                   shrinkWrap: true,
                                   itemCount: viewModel.customers.length,
@@ -128,33 +130,33 @@ class CustomersList extends StatelessWidget {
                                                   vertical: 5.h),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   (customer.active == 1)
                                                       ? Container(
-                                                          height: 20.h,
-                                                          width: 65.w,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                            color: AppColors
-                                                                .statusContainerColor,
-                                                          ),
-                                                          child: const Center(
-                                                              child: Text(
-                                                                  "Active")),
-                                                        )
+                                                    height: 20.h,
+                                                    width: 65.w,
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          20),
+                                                      color: AppColors
+                                                          .statusContainerColor,
+                                                    ),
+                                                    child: const Center(
+                                                        child: Text(
+                                                            "Active")),
+                                                  )
                                                       : SizedBox(
-                                                          height: 20.h,
-                                                          width: 65.w,
-                                                        ),
+                                                    height: 20.h,
+                                                    width: 65.w,
+                                                  ),
                                                   Directionality(
                                                     textDirection:
-                                                        TextDirection.rtl,
+                                                    TextDirection.rtl,
                                                     child: Row(
                                                       children: [
                                                         Text(

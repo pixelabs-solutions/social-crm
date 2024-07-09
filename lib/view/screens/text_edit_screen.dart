@@ -1,21 +1,39 @@
 import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+
 import 'package:resize/resize.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/Model/status.dart';
-import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
+import '../../Model/statuslist.dart';
+import '../../utilis/ApiConstants.dart';
+import '../../utilis/Toast.dart';
+
+
 import '../../viewModel/customerList_vm.dart';
 import 'calendar_screen.dart';
 
-class TextEditScreen extends StatelessWidget {
+
+class TextEditScreen extends StatefulWidget {
   const TextEditScreen({super.key, required this.statusData});
   final Statuses statusData;
+
+  @override
+  State<TextEditScreen> createState() => _TextEditScreenState();
+}
+
+class _TextEditScreenState extends State<TextEditScreen> {
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,71 +92,26 @@ class TextEditScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: 10.h),
                     _customIconRow("assets/deleteIcon.svg", "text: טקסט",
-                        onTap: () {}),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "שם הלקוח:",
-                              style: AppConstantsTextStyle.heading1Style,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              // "${"widget.customer.phoneNumber"}",
-                              "Junaid",
-                              style: AppConstantsTextStyle
-                                  .kNormalWhiteNotoTextStyle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "מספר טלפון:",
-                              style: AppConstantsTextStyle.heading1Style,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              // "${"widget.customer.phoneNumber"}",
-                              "09876543",
-                              style: AppConstantsTextStyle
-                                  .kNormalWhiteNotoTextStyle,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        onTap: () {
+                          showDeleteDialog(context, widget.statusData.statusIds!);
+                        }),
+
                     SizedBox(height: 10.h),
                     Container(
                       height: 200.h,
                       width: 200.w,
                       decoration: BoxDecoration(
                           color: hexToColor(getTextFromJson(
-                              statusData.content)['background_color']),
+                              widget.statusData.content)['background_color']),
                           borderRadius: BorderRadius.circular(15)),
                       child: Center(
-                        child:
-                            Text(getTextFromJson(statusData.content)['caption'],
-                                style: TextStyle(
-                                  color: hexToColor(getTextFromJson(
-                                      statusData.content)['caption_color']),
-                                )),
+                        child: Text(
+                          getTextFromJson(widget.statusData.content)['caption'],
+                          style: TextStyle(
+                            color: hexToColor(getTextFromJson(
+                                widget.statusData.content)['caption_color']),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 10.h),
@@ -150,14 +123,14 @@ class TextEditScreen extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (i) => CalendarScreen(
                                       statusData: StatusData(
-                                          statusId: statusData.id,
+                                          statusId: widget.statusData.id,
                                           text: getTextFromJson(
-                                              statusData.content)['caption'],
+                                              widget.statusData.content)['caption'],
                                           contentType: "text",
                                           isEditApi: true,
                                           backgroundColorHex: getTextFromJson(
-                                                  statusData.content)[
-                                              'background_color']))));
+                                              widget.statusData.content)[
+                                          'background_color']))));
                         })
                   ],
                 ),
@@ -180,8 +153,7 @@ class TextEditScreen extends StatelessWidget {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 
-  void showDeleteDialog(
-      BuildContext context, CustomerViewModel viewModel, String customerId) {
+  void showDeleteDialog(BuildContext context, String statusID) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -198,10 +170,9 @@ class TextEditScreen extends StatelessWidget {
             TextButton(
               child: const Text('מחק'),
               onPressed: () {
-                viewModel.deleteCustomer(customerId).then((_) {
+                deleteStatus(statusID).then((_) {
                   Navigator.of(context).pop(); // Close dialog
-                  Navigator.of(context)
-                      .pop(); // Navigate back to previous screen
+                  Navigator.of(context).pop(); // Navigate back to previous screen
                 });
               },
             ),
@@ -211,8 +182,7 @@ class TextEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _customIconRow(String icon, String text,
-      {required VoidCallback onTap}) {
+  Widget _customIconRow(String icon, String text, {required VoidCallback onTap}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Row(
@@ -238,16 +208,48 @@ class TextEditScreen extends StatelessWidget {
     );
   }
 
-  Widget showText(String text) {
-    return Padding(
-      padding: EdgeInsets.only(top: 7.h),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Text(
-          text,
-          style: AppConstantsTextStyle.kNormalWhiteNotoTextStyle,
-        ),
-      ),
-    );
+  Future<void> deleteStatus(String statusId) async {
+    String deleteStatusApiUrl = '${ApiEndPointsConstants.DeleteSatus}/$statusId';
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception('No token found');
+      }
+
+      Dio dio = Dio();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      dio.options.headers['Content-Type'] = 'application/json';
+
+      final response = await dio.delete(deleteStatusApiUrl);
+
+      print('Request: ${response.requestOptions}');
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.data}');
+
+      if (response.statusCode == 200) {
+        ToastUtil.showToast(
+          msg: 'סטטוס נמחק בהצלחה',
+          backgroundColor: Colors.green,
+        );
+      } else {
+        throw Exception('Failed to delete status');
+      }
+    } catch (error) {
+      print('Error deleting status: $error');
+      ToastUtil.showToast(
+        msg: 'שגיאה במחיקת סטטוס',
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }

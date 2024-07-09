@@ -118,7 +118,7 @@ class ForgotPasswordForm extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       showText('מספר טלפון שאיתו נרשמת במערכת'),
-                      CustomTextField(
+                      CustomTextFields(
                         controller: phoneController,
                         height: MediaQuery.of(context).size.height * 0.06,
                         keyboardType: TextInputType.number,
@@ -264,7 +264,7 @@ class VerificationCodeForm extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       showText('אנא הכנס את הקוד שנשלח אליך'),
-                      CustomTextField(
+                      CustomTextFields(
                         controller: codeController,
                         height: MediaQuery.of(context).size.height * 0.06,
                         keyboardType: TextInputType.number,

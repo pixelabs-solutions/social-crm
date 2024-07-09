@@ -7,6 +7,7 @@ import 'package:social_crm/utilis/http.dart';
 import 'package:social_crm/utilis/shared_prefes.dart';
 import 'package:social_crm/view/screens/navigaton_main.dart';
 import 'package:social_crm/view/screens/first_screen.dart';
+import 'package:social_crm/viewModel/Status_viewModel.dart';
 
 import 'viewModel/CustomerList_vm.dart';
 import 'viewModel/StatusDetails_viewModel.dart';
@@ -29,9 +30,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
-        ChangeNotifierProvider(
-            create: (_) =>
-                StatusHistoryViewModel()) // Add your CustomerViewModel provider
+
+
+        ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()),
+        ChangeNotifierProvider(create: (_)=>TextStatusViewModel())
+
+
+
       ],
       child: Resize(
         builder: () {

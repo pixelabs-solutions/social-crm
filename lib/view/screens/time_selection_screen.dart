@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_crm/Model/statuslist.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 import '../../Model/status.dart';
 import '../../viewModel/status_viewmodel.dart';
 
@@ -22,6 +25,11 @@ class TimeSelection extends StatefulWidget {
 
 class _TimeSelectionState extends State<TimeSelection> {
   DateTime _selectedTime = DateTime.now();
+  List<Statuses> statuses = [];
+
+  String? scheduleDate;
+  String? scheduleTime;
+  bool isLoading = false;
 
   // Sample list of times
   List<String> times = [
@@ -35,6 +43,8 @@ class _TimeSelectionState extends State<TimeSelection> {
     '05:00',
     '06:00',
   ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -168,21 +178,29 @@ class _TimeSelectionState extends State<TimeSelection> {
                           Text("זמנים תפוסים",
                               style: AppConstantsTextStyle.heading2Style),
                           SizedBox(height: 10.0.h),
-                          Consumer<TextStatusViewModel>(
+                          Expanded(
+                            child: Consumer<TextStatusViewModel>(
                               builder: (context, viewModel, child) {
-                            if (viewModel.statusIsLoading) {
-                              return const Expanded(
-                                child: Center(
+                                if (viewModel.statusIsLoading) {
+                                  return const Center(
                                     child: CircularProgressIndicator(
-                                  backgroundColor: AppColors.orangeButtonColor,
-                                )),
-                              );
-                            }
-                            return Column(
-                              children: _buildTimeRows(
-                                  viewModel.statusList!.data!.statuses),
-                            );
-                          }),
+                                      backgroundColor: AppColors.orangeButtonColor,
+                                    ),
+                                  );
+                                }
+                                if (viewModel.statusSpecificList == null || viewModel.statusSpecificList!.data == null || viewModel.statusSpecificList!.data!.statuses!.isEmpty) {
+                                  return Center(
+                                    child: Text("No statuses available"),
+                                  );
+                                }
+                                return Column(
+                                  children: _buildTimeRows(viewModel.statusSpecificList!.data!.statuses),
+                                );
+                              },
+                            ),
+                          ),
+
+
                           SizedBox(height: 20.0.h),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
@@ -279,11 +297,15 @@ class _TimeSelectionState extends State<TimeSelection> {
   List<Widget> _buildTimeRows(List<Statuses>? statuses) {
     List<Widget> rows = [];
 
-    for (int i = 0; i < statuses!.length; i += 3) {
+    if (statuses == null) {
+      return rows; // Return empty list if statuses is null
+    }
+
+    for (int i = 0; i < statuses.length; i += 3) {
       List<Widget> rowChildren = [];
 
-      for (int j = i; j < i + 3 && j < times.length; j++) {
-        rowChildren.add(Expanded(child: _buildTimeContainer(j)));
+      for (int j = i; j < i + 3 && j < statuses.length; j++) {
+        rowChildren.add(Expanded(child: _buildTimeContainer(statuses[j])));
       }
 
       rows.add(
@@ -300,8 +322,10 @@ class _TimeSelectionState extends State<TimeSelection> {
     return rows;
   }
 
-  Widget _buildTimeContainer(int index) {
+
+  Widget _buildTimeContainer(Statuses status) {
     String svgAsset = 'assets/smalImgIcon.svg';
+    String formattedTime = status.scheduleTime!.substring(0, 5);
 
     return Container(
       margin: EdgeInsets.only(left: 2.w, right: 2.w),
@@ -329,11 +353,13 @@ class _TimeSelectionState extends State<TimeSelection> {
           ),
           SizedBox(width: 8.w),
           Text(
-            times[index],
+            formattedTime,
             style: AppConstantsTextStyle.paragraph2Style,
           ),
         ],
       ),
     );
   }
+
+
 }
