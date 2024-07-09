@@ -2,7 +2,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +123,6 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
                                 .kNormalOrangeNotoTextStyle,
                           ),
                         ),
-
                         if (widget.statusData.statusType == "image") ...[
                           Container(
                             height: 80.h,
@@ -172,9 +170,6 @@ class _DailyPostingScheduleState extends State<DailyPostingSchedule> {
                         ] else ...[
                           VideoThumbtitle(statusData: widget.statusData)
                         ],
-
-                      
-
                         ConstantLargeButton(
                           text: "לשנות את זמני הפרסום →",
                           onPressed: () {

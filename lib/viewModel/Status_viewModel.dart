@@ -405,25 +405,17 @@ class TextStatusViewModel extends ChangeNotifier {
       String? bgcolor, String? caption, String? date, String? time) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    int? userID = prefs.getInt('userID');
+    // int? userID = prefs.getInt('userID');
     try {
       _isLoading = true;
       notifyListeners();
 
       final request = jsonEncode({
-        "type": "text",
-        "content": {
-          "background_color": bgcolor,
-          "caption_color": "#000000",
-          "font_type": "Arial",
-          "caption": caption,
-          "id": userID
-        },
         "schedule_date": date?.substring(0, 10),
         "schedule_time": time?.substring(11, 19)
       });
 
-      final response = await http.post(
+      final response = await http.put(
           Uri.parse('${ApiEndPointsConstants.baseUrl}/status/edit/$statusId'),
           headers: {
             'Authorization': 'Bearer $token',
@@ -431,7 +423,7 @@ class TextStatusViewModel extends ChangeNotifier {
           },
           body: request);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         //*** Chnge this route */
         Navigator.push(
           context,
@@ -474,26 +466,26 @@ class TextStatusViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var token = SharedPrefernce.prefs?.getString('token');
-    int? userID = SharedPrefernce.prefs?.getInt('userID');
-    var formData = FormData();
+    // int? userID = SharedPrefernce.prefs?.getInt('userID');
+    // var formData = FormData();
 
-    // Add non-null values to the FormData
-    formData.fields.addAll([
-      const MapEntry('type', 'image'),
-      MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
-      MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
-      MapEntry('content[caption]', caption ?? ''),
+    // // Add non-null values to the FormData
+    // formData.fields.addAll([
+    //   const MapEntry('type', 'image'),
+    //   MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
+    //   MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
+    //   MapEntry('content[caption]', caption ?? ''),
 
-      MapEntry('user_id', userID.toString()), // Add userID to formData
-    ]);
-    // Add the list of image URLs to the form data
-    if (imagePaths != null && imagePaths.isNotEmpty) {
-      for (var imageUrl in imagePaths) {
-        formData.fields.add(MapEntry('content[images][]', imageUrl));
-      }
-    }
+    //   MapEntry('user_id', userID.toString()), // Add userID to formData
+    // ]);
+    // // Add the list of image URLs to the form data
+    // if (imagePaths != null && imagePaths.isNotEmpty) {
+    //   for (var imageUrl in imagePaths) {
+    //     formData.fields.add(MapEntry('content[images][]', imageUrl));
+    //   }
+    // }
     try {
-      final response = await Dio().post(
+      final response = await Dio().put(
         '${ApiEndPointsConstants.baseUrl}/status/edit/$statusId', // Replace with your API endpoint
         options: Options(
           headers: {
@@ -501,10 +493,13 @@ class TextStatusViewModel extends ChangeNotifier {
                 'Bearer $token', // Replace $token with your actual token
           },
         ),
-        data: formData,
+        data: {
+          'schedule_date': date?.substring(0, 10) ?? '',
+          'schedule_time': time?.substring(11, 19) ?? ''
+        },
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (i) => const PublishSuccess()),
@@ -548,26 +543,26 @@ class TextStatusViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var token = SharedPrefernce.prefs?.getString('token');
-    int? userID = SharedPrefernce.prefs?.getInt('userID');
-    var formData = FormData();
+    // // int? userID = SharedPrefernce.prefs?.getInt('userID');
+    // var formData = FormData();
 
-    // Add non-null values to the FormData
-    formData.fields.addAll([
-      const MapEntry('type', 'video'),
-      MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
-      MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
-      MapEntry('content[caption]', caption ?? ''), // Add caption to content
-      MapEntry('user_id', userID.toString()), // Add userID to formData
-    ]);
+    // // Add non-null values to the FormData
+    // formData.fields.addAll([
+    //   // const MapEntry('type', 'video'),
+    //   MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
+    //   MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
+    //   // MapEntry('content[caption]', caption ?? ''), // Add caption to content
+    //   // MapEntry('user_id', userID.toString()), // Add userID to formData
+    // ]);
 
-    if (videoPaths != null && videoPaths.isNotEmpty) {
-      for (var imageUrl in videoPaths) {
-        formData.fields.add(MapEntry('content[images][]', imageUrl));
-      }
-    }
+    // // if (videoPaths != null && videoPaths.isNotEmpty) {
+    // //   for (var imageUrl in videoPaths) {
+    // //     formData.fields.add(MapEntry('content[images][]', imageUrl));
+    // //   }
+    // // }
 
     try {
-      final response = await Dio().post(
+      final response = await Dio().put(
         '${ApiEndPointsConstants.baseUrl}/status/edit/$statusId', // Replace with your API endpoint
         options: Options(
           headers: {
@@ -575,10 +570,13 @@ class TextStatusViewModel extends ChangeNotifier {
                 'Bearer $token', // Replace $token with your actual token
           },
         ),
-        data: formData,
+        data: {
+          'schedule_date': date?.substring(0, 10) ?? '',
+          'schedule_time': time?.substring(11, 19) ?? ''
+        },
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (i) => const PublishSuccess()),

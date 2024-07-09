@@ -1,8 +1,10 @@
 // viewmodels/customer_viewmodel.dart
 
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../Model/customer.dart';
@@ -15,12 +17,13 @@ class CustomerViewModel extends ChangeNotifier {
   final TextEditingController mailController = TextEditingController();
   final MultiSelectController controller = MultiSelectController();
 
-  bool _isLoading = true;
+  bool isLoading = false;
+  bool _isAddCusLoading = false;
   List<CustomerData> customers = [];
   List<ValueItem> selectedItems = [];
   CustomerData? customer;
 
-  bool get isLoading => _isLoading;
+  bool get isAddCusLoading => _isAddCusLoading;
 
   final List<ValueItem> _items = [
     const ValueItem(label: 'Influencer', value: 'Influencer'),
@@ -32,10 +35,10 @@ class CustomerViewModel extends ChangeNotifier {
 
   Future<void> fetchCustomers() async {
     final String apiUrl = ApiEndPointsConstants.listCustomers;
-    // _isLoading = true;
-    // notifyListeners();
 
     try {
+      isLoading = true;
+      notifyListeners();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
 
@@ -50,10 +53,6 @@ class CustomerViewModel extends ChangeNotifier {
           'Content-Type': 'application/json',
         },
       );
-
-      print('Request: ${response.request}');
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -74,24 +73,22 @@ class CustomerViewModel extends ChangeNotifier {
       ToastUtil.showToast(
           msg: 'Error loading customers', backgroundColor: Colors.red);
     } finally {
-      if (_isLoading) {
-        _isLoading = false;
-        notifyListeners();
-      }
+      isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> addCustomer(BuildContext context) async {
+  Future<void> addCustomer(
+      BuildContext context, CustomerViewModel? viewModl) async {
     final String apiUrl = ApiEndPointsConstants.CreateCustomers;
     if (!validateForm()) return;
 
-    _isLoading = true;
+    _isAddCusLoading = true;
     notifyListeners();
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
-      print(token);
 
       if (token == null) {
         throw Exception('No token found');
@@ -114,34 +111,28 @@ class CustomerViewModel extends ChangeNotifier {
         }),
       );
 
-      // Log the request and response details for debugging
-      print('Request: ${response.request}');
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 201) {
-        await fetchCustomers();
+        viewModl?.fetchCustomers();
+
         ToastUtil.showToast(
             msg: 'לקוח נוסף בהצלחה', backgroundColor: Colors.green);
+
         Navigator.pop(context);
 
         clearForm();
-      } else {
-        throw Exception('Failed to add customer');
       }
     } catch (error) {
-      print('Error adding customer: $error');
       ToastUtil.showToast(
           msg: 'שגיאה בהוספת לקוח', backgroundColor: Colors.red);
     } finally {
-      _isLoading = false;
+      _isAddCusLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> deleteCustomer(String customerId) async {
     final String apiUrl = ApiEndPointsConstants.DeleteCustomers;
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
 
     try {
@@ -179,7 +170,7 @@ class CustomerViewModel extends ChangeNotifier {
         backgroundColor: Colors.red,
       );
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -188,7 +179,7 @@ class CustomerViewModel extends ChangeNotifier {
     if (!validateForm()) return;
     final String apiUrl = ApiEndPointsConstants.EditCustomers;
 
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
 
     try {
@@ -226,14 +217,14 @@ class CustomerViewModel extends ChangeNotifier {
     } catch (error) {
       print('Error editing customer: $error');
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> setActiveStatus(int customerId, int activeStatus) async {
     final String apiUrl = ApiEndPointsConstants.EditCustomersStatus;
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
 
     try {
@@ -277,7 +268,7 @@ class CustomerViewModel extends ChangeNotifier {
       ToastUtil.showToast(
           msg: 'Error updating status', backgroundColor: Colors.red);
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }

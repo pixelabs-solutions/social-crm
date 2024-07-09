@@ -13,16 +13,9 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 
 import '../../viewModel/customerList_vm.dart';
 
-class AddingCustomerDetails extends StatefulWidget {
-  const AddingCustomerDetails({super.key});
-
-  @override
-  State<AddingCustomerDetails> createState() => _AddingCustomerDetailsState();
-}
-
-class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
-  bool isLoading = false;
-
+class AddingCustomerDetails extends StatelessWidget {
+  const AddingCustomerDetails({super.key, this.viewModl});
+  final CustomerViewModel? viewModl;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -127,14 +120,17 @@ class _AddingCustomerDetailsState extends State<AddingCustomerDetails> {
                             SizedBox(
                               height: 20.h,
                             ),
-                            isLoading
-                                ? const CircularProgressIndicator(
-                                    color: AppColors.orangeButtonColor,
+                            viewModel.isAddCusLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.orangeButtonColor,
+                                    ),
                                   ) // Show circular progress indicator when loading
                                 : ConstantLargeButton(
                                     text: 'הוסף לקוח →',
                                     onPressed: () async {
-                                      await viewModel.addCustomer(context);
+                                      await viewModel.addCustomer(
+                                          context, viewModl);
                                     },
                                   ),
                             SizedBox(
