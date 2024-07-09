@@ -87,8 +87,7 @@ class DashboardViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchPendingStatusCount() async {
-    const String apiUrl =
-        'https://scrm-apis.woo-management.com/api/status/list';
+    const String apiUrl = 'https://scrm-apis.woo-management.com/api/status/list';
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -104,16 +103,28 @@ class DashboardViewModel extends ChangeNotifier {
         'Authorization': 'Bearer $token',
       };
 
-      var response = await http.get(
-        Uri.parse(apiUrl),
-        headers: headers,
-      );
-      print("Response Code of Customers  Count APi: ${response.statusCode}");
+      var request = http.Request('GET', Uri.parse(apiUrl));
+      request.body = json.encode({
+        "posted": 0,
+      });
+      request.headers.addAll(headers);
+
+      isLoading = true;
+      notifyListeners();
+
+      final http.StreamedResponse response = await request.send();
+      print("Response From Pending Status List API: ${response.statusCode}");
+
       if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        final total = jsonResponse['data']['count'] ?? 0;
-        print(jsonResponse);
-        pendingAds = total;
+        final jsonResponse = await response.stream.bytesToString();
+        final parsedResponse = jsonDecode(jsonResponse);
+        print(parsedResponse);
+
+        final data = parsedResponse['data'];
+        if (data != null) {
+          final count = data['count'] ?? 0;
+          pendingAds = count;
+        }
       } else {
         print('Failed: ${response.reasonPhrase}');
         pendingAds = 0;
@@ -122,9 +133,11 @@ class DashboardViewModel extends ChangeNotifier {
       print('Error occurred: $e');
       pendingAds = 0;
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
+
 
   Future<void> fetchTotalCustomers() async {
     final String apiUrl = ApiEndPointsConstants.CountCustomers;
@@ -187,7 +200,7 @@ class DashboardViewModel extends ChangeNotifier {
         Uri.parse(apiUrl),
         headers: headers,
       );
-      print("Response Code of Views Api${response.statusCode}");
+      print("Response Code of Highest Views Api${response.statusCode}");
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);

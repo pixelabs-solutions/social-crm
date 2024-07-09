@@ -31,6 +31,7 @@ class TextStatusViewModel extends ChangeNotifier {
   StatusList? get statusList => _statusList;
 
   StatusList? statusSpecificList;
+  StatusList? statusTodayList;
   bool statusIsLoading = false;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -43,6 +44,7 @@ class TextStatusViewModel extends ChangeNotifier {
     getAllStatus();
     getMonthAllStatus();
   }
+
 
   void setText(String text) {
     _textStatus = StatusData(
@@ -395,6 +397,7 @@ class TextStatusViewModel extends ChangeNotifier {
     }
   }
 
+
   ///** Get_All-Status */
 
   Future<void> getSpecficStatus(String dateTime) async {
@@ -480,17 +483,21 @@ class TextStatusViewModel extends ChangeNotifier {
       notifyListeners();
 
       final request = jsonEncode({
-        "type": "text",
-        "content": {
-          "background_color": bgcolor,
-          "caption_color": "#000000",
-          "font_type": "Arial",
-          "caption": caption,
-          "id": userID
-        },
+        // "type": "text",
+        // "content": {
+        //   "background_color": bgcolor,
+        //   "caption_color": "#000000",
+        //   // "font_type": "Arial",
+        //   // "caption": caption,
+        //   // "id": userID,
+        //
+        // },
         "schedule_date": date?.substring(0, 10),
         "schedule_time": time?.substring(11, 19)
       });
+
+      // Print request parameters
+      print("Request Parameters: $request");
 
       final response = await http.post(
           Uri.parse('${ApiEndPointsConstants.baseUrl}/status/edit/$statusId'),
@@ -499,15 +506,17 @@ class TextStatusViewModel extends ChangeNotifier {
             'Content-Type': 'application/json',
           },
           body: request);
+      print("....Edit Api Status Code ${response.statusCode}");
+      print("${response.body}");
+      print('sending ...${ApiEndPointsConstants.baseUrl}/status/edit/$statusId');
 
       if (response.statusCode == 201) {
-        //*** Chnge this route */
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (i) => const PublishSuccess()),
+          MaterialPageRoute(builder: (context) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
-          msg: 'Status Updated Sucessfully',
+          msg: 'Status Updated Successfully',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,

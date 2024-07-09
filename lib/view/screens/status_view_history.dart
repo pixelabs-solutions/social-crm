@@ -7,13 +7,33 @@ import 'package:social_crm/utilis/constant_textstyles.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 import '../../viewModel/StatusDetails_viewModel.dart';
 
-class StatusHistoryView extends StatelessWidget {
+class StatusHistoryView extends StatefulWidget {
   const StatusHistoryView({super.key});
 
   @override
+  _StatusHistoryViewState createState() => _StatusHistoryViewState();
+}
+
+class _StatusHistoryViewState extends State<StatusHistoryView> {
+  late StatusHistoryViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = StatusHistoryViewModel();
+    viewModel.fetchStatusHistory();
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => StatusHistoryViewModel()..fetchStatusHistory(),
+    return ChangeNotifierProvider<StatusHistoryViewModel>.value(
+      value: viewModel,
       child: Scaffold(
         appBar: const HomeAppBar(),
         backgroundColor: AppColors.scaffoldColor,
@@ -25,7 +45,6 @@ class StatusHistoryView extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8.w, right: 8.w),
                 child: Row(
                   children: [
-
                     Center(
                       child: Text(
                         'הסטוריית סטטוסים ( 24 שעות )',
@@ -36,17 +55,22 @@ class StatusHistoryView extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height:MediaQuery.of(context).size.height * 0.6 ,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Consumer<StatusHistoryViewModel>(
                   builder: (context, viewModel, child) {
                     if (viewModel.isLoading) {
-                      return const Center(child: CircularProgressIndicator(
-                        color: AppColors.orangeButtonColor,
-                      ));
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.orangeButtonColor,
+                        ),
+                      );
                     } else if (viewModel.statusHistory.isEmpty) {
-                      return const Center(child: Text('No status history available',style: TextStyle(
-                          color: Colors.white
-                      ),));
+                      return const Center(
+                        child: Text(
+                          'No status history available',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.6,
@@ -56,10 +80,7 @@ class StatusHistoryView extends StatelessWidget {
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(25.0),
                         ),
-                        child:
-
-
-                        ListView.builder(
+                        child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: viewModel.statusHistory.length,
                           itemBuilder: (context, index) {

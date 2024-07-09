@@ -44,11 +44,7 @@ class _TimeSelectionState extends State<TimeSelection> {
     '06:00',
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchUpcomingStatus();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -192,13 +188,13 @@ class _TimeSelectionState extends State<TimeSelection> {
                                     ),
                                   );
                                 }
-                                if (viewModel.statusList == null || viewModel.statusList!.data == null || viewModel.statusList!.data!.statuses!.isEmpty) {
+                                if (viewModel.statusSpecificList == null || viewModel.statusSpecificList!.data == null || viewModel.statusSpecificList!.data!.statuses!.isEmpty) {
                                   return Center(
                                     child: Text("No statuses available"),
                                   );
                                 }
                                 return Column(
-                                  children: _buildTimeRows(viewModel.statusList!.data!.statuses),
+                                  children: _buildTimeRows(viewModel.statusSpecificList!.data!.statuses),
                                 );
                               },
                             ),
@@ -365,53 +361,5 @@ class _TimeSelectionState extends State<TimeSelection> {
     );
   }
 
-  Future<void> fetchUpcomingStatus() async {
-    const String apiUrl = 'https://scrm-apis.woo-management.com/api/status/list';
 
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
-      if (token == null) {
-        print('Token not found in SharedPreferences');
-        return;
-      }
-
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      var request = http.Request('GET', Uri.parse(apiUrl));
-      request.body = json.encode({"posted": 0});
-      request.headers.addAll(headers);
-
-      setState(() {
-        isLoading = true;
-      });
-
-      final http.StreamedResponse response = await request.send();
-      print("Response From Upcoming Status Api: ${response.statusCode}");
-
-      if (response.statusCode == 200) {
-        final jsonResponse = await response.stream.bytesToString();
-        final parsedResponse = jsonDecode(jsonResponse);
-        print(parsedResponse);
-
-        final data = parsedResponse['data'];
-        if (data != null) {
-          final statusesJson = data['statuses'] as List;
-          statuses = statusesJson.map((json) => Statuses.fromJson(json)).toList();
-        }
-      } else {
-        print('Failed: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
 }
