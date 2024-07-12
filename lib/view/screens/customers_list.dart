@@ -118,7 +118,10 @@ class CustomersList extends StatelessWidget {
                                               customer: customer,
                                             ),
                                           ),
-                                        );
+                                        ).then((_) {
+                                          // Refresh customers list after returning from ClientPage
+                                          Provider.of<CustomerViewModel>(context, listen: false).fetchCustomers();
+                                        });
                                       },
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(

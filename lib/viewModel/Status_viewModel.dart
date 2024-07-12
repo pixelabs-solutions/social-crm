@@ -25,6 +25,7 @@ class TextStatusViewModel extends ChangeNotifier {
   StatusData _textStatus = StatusData(text: '', backgroundColorHex: '#FFFFFF');
 
   int statusSpecificCount=0;
+  int todayStatusCount = 0;
   StatusData get textStatus => _textStatus;
 
   StatusList? _statusList;
@@ -34,6 +35,7 @@ class TextStatusViewModel extends ChangeNotifier {
   StatusList? statusTodayList;
   bool statusIsLoading = false;
   bool _isLoading = false;
+  bool isTodayLoading = false;
   bool get isLoading => _isLoading;
 
   bool isSpecficLoading = false;
@@ -43,6 +45,138 @@ class TextStatusViewModel extends ChangeNotifier {
   TextStatusViewModel() {
     getAllStatus();
     getMonthAllStatus();
+    getTodayStatus();
+  }
+
+
+
+  Future<void> getTodayStatus() async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    isTodayLoading = true;
+    notifyListeners();
+
+    try {
+      String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+        queryParameters: {
+          "start_date": todayDate,
+          "end_date": todayDate,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        statusTodayList = StatusList.fromJson(response.data);
+        todayStatusCount = response.data['data']['count'];
+      }
+    } catch (e) {
+      print('Error getting today status: $e');
+    } finally {
+      isTodayLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getAllStatus() async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    statusIsLoading = true;
+    notifyListeners();
+    try {
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        _statusList = StatusList.fromJson(response.data);
+      }
+    } finally {
+      statusIsLoading = false;
+      notifyListeners();
+    }
+  }
+
+
+  ///** Get_All-Status */
+
+  Future<void> getSpecficStatus(String dateTime) async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    isSpecficLoading = true;
+    notifyListeners();
+    try {
+      final response =
+      await dio.get("https://scrm-apis.woo-management.com/api/status/list",
+          options: Options(headers: {
+            'Authorization': 'Bearer $token',
+          }),
+          data: {"start_date": dateTime}
+        // "posted": 0,
+
+        // "end_date": "2024-06-29"
+
+      );
+
+      if (response.statusCode == 200) {
+        statusSpecificList = StatusList.fromJson(response.data);
+      }
+    } finally {
+      isSpecficLoading = false;
+      notifyListeners();
+    }
+  }
+  Future<void> getMonthAllStatus() async {
+    Dio dio = Dio();
+    var token = SharedPrefernce.prefs?.getString('token');
+    isSpecficLoading = true;
+    notifyListeners();
+
+    try {
+      // Get the current month's start and end dates
+      DateTime now = DateTime.now();
+      DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
+      DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+
+      // Format dates in 'yyyy-MM-dd' format as required by your API
+      String startDate = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+      String endDate = DateFormat('yyyy-MM-dd').format(lastDayOfMonth);
+
+      final response = await dio.get(
+        "https://scrm-apis.woo-management.com/api/status/list",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        queryParameters: {
+          "start_date": startDate,
+          "posted": 0,
+          "end_date": endDate,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        statusSpecificList = StatusList.fromJson(response.data);
+
+        // Extract the count variable and save it to viewModel
+        statusSpecificCount = response.data['data']['count'];
+        print("...................................................");
+        print(statusSpecificCount);
+      }
+    } catch (e) {
+      print('Error getting month status: $e');
+    } finally {
+      isSpecficLoading = false;
+      notifyListeners();
+    }
   }
 
 
@@ -375,102 +509,7 @@ class TextStatusViewModel extends ChangeNotifier {
 
   ///** Get_All-Status */
 
-  Future<void> getAllStatus() async {
-    Dio dio = Dio();
-    var token = SharedPrefernce.prefs?.getString('token');
-    statusIsLoading = true;
-    notifyListeners();
-    try {
-      final response = await dio.get(
-        "https://scrm-apis.woo-management.com/api/status/list",
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-        }),
-      );
 
-      if (response.statusCode == 200) {
-        _statusList = StatusList.fromJson(response.data);
-      }
-    } finally {
-      statusIsLoading = false;
-      notifyListeners();
-    }
-  }
-
-
-  ///** Get_All-Status */
-
-  Future<void> getSpecficStatus(String dateTime) async {
-    Dio dio = Dio();
-    var token = SharedPrefernce.prefs?.getString('token');
-    isSpecficLoading = true;
-    notifyListeners();
-    try {
-      final response =
-          await dio.get("https://scrm-apis.woo-management.com/api/status/list",
-              options: Options(headers: {
-                'Authorization': 'Bearer $token',
-              }),
-              data: {"start_date": dateTime}
-              // "posted": 0,
-
-              // "end_date": "2024-06-29"
-
-              );
-
-      if (response.statusCode == 200) {
-        statusSpecificList = StatusList.fromJson(response.data);
-      }
-    } finally {
-      isSpecficLoading = false;
-      notifyListeners();
-    }
-  }
-  Future<void> getMonthAllStatus() async {
-    Dio dio = Dio();
-    var token = SharedPrefernce.prefs?.getString('token');
-    isSpecficLoading = true;
-    notifyListeners();
-
-    try {
-      // Get the current month's start and end dates
-      DateTime now = DateTime.now();
-      DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
-      DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
-
-      // Format dates in 'yyyy-MM-dd' format as required by your API
-      String startDate = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-      String endDate = DateFormat('yyyy-MM-dd').format(lastDayOfMonth);
-
-      final response = await dio.get(
-        "https://scrm-apis.woo-management.com/api/status/list",
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-        queryParameters: {
-          "start_date": startDate,
-          "posted": 0,
-          "end_date": endDate,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        statusSpecificList = StatusList.fromJson(response.data);
-
-        // Extract the count variable and save it to viewModel
-        statusSpecificCount = response.data['data']['count'];
-        print("...................................................");
-        print(statusSpecificCount);
-      }
-    } catch (e) {
-      print('Error getting month status: $e');
-    } finally {
-      isSpecficLoading = false;
-      notifyListeners();
-    }
-  }
 
   //** Post-EditText -Status*/
   Future<void> postTextEditStatus(BuildContext context, int? statusId,

@@ -96,7 +96,7 @@ class _StatusCalendarState extends State<StatusCalendar> {
                       if (viewModel.statusIsLoading) {
                         return const Center(
                           child: CircularProgressIndicator(
-                            backgroundColor: AppColors.orangeButtonColor,
+                            color: AppColors.orangeButtonColor,
                           ),
                         );
                       }

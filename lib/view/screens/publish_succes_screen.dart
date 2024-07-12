@@ -101,8 +101,10 @@ class _PublishSuccessState extends State<PublishSuccess> {
             ConstantLargeButton(
               text: "בוצע",
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (i)=>MainScreen())
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainScreen()),
+                      (route) => false,
                 );
               },
             )

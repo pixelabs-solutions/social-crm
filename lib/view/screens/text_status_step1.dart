@@ -10,7 +10,8 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import '../../viewModel/status_viewmodel.dart';
 
 class TextStatusStep1Screen extends StatefulWidget {
-  const TextStatusStep1Screen({super.key});
+  final String? textCaption;
+  const TextStatusStep1Screen({Key? key, this.textCaption}) : super(key: key);
 
   @override
   State<TextStatusStep1Screen> createState() => _TextStatusStep1ScreenState();
@@ -24,7 +25,8 @@ class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
   @override
   void initState() {
     super.initState();
-    _textEditingController.text = ''; // Initialize with empty text
+    print('Received textCaption: ${widget.textCaption}');
+    _textEditingController=TextEditingController(text: widget.textCaption); // Initialize with the passed textCaption or empty text
   }
 
   @override
@@ -75,7 +77,7 @@ class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
                   child: Consumer<TextStatusViewModel>(
                     builder: (context, viewModel, child) {
                       if (_textEditingController.text != viewModel.textStatus.text) {
-                        _textEditingController.text = viewModel.textStatus.text!;
+                        // _textEditingController.text = viewModel.textStatus.text!;
                       }
                       return Container(
                         height: 370.0.h, // Adjust height as needed
@@ -104,7 +106,9 @@ class _TextStatusStep1ScreenState extends State<TextStatusStep1Screen> {
                                         child: Center(
                                           child: Padding(
                                             padding: EdgeInsets.only(left: 12.0.w, right: 10.w),
-                                            child: TextField(
+                                            child: TextFormField(
+
+
                                               controller: _textEditingController,
                                               onChanged: (text){
                                                 viewModel.setText(text);

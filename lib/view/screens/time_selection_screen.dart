@@ -31,21 +31,6 @@ class _TimeSelectionState extends State<TimeSelection> {
   String? scheduleTime;
   bool isLoading = false;
 
-  // Sample list of times
-  List<String> times = [
-    '10:00',
-    '11:00',
-    '12:00',
-    '01:00',
-    '02:00',
-    '03:00',
-    '04:00',
-    '05:00',
-    '06:00',
-  ];
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,24 +166,27 @@ class _TimeSelectionState extends State<TimeSelection> {
                           Expanded(
                             child: Consumer<TextStatusViewModel>(
                               builder: (context, viewModel, child) {
-                                if (viewModel.statusIsLoading) {
+                                if (viewModel.statusIsLoading || viewModel.isTodayLoading) {
                                   return const Center(
                                     child: CircularProgressIndicator(
                                       backgroundColor: AppColors.orangeButtonColor,
                                     ),
                                   );
                                 }
-                                if (viewModel.statusSpecificList == null || viewModel.statusSpecificList!.data == null || viewModel.statusSpecificList!.data!.statuses!.isEmpty) {
+                                if (viewModel.statusTodayList == null ||
+                                    viewModel.statusTodayList!.data == null ||
+                                    viewModel.statusTodayList!.data!.statuses!.isEmpty) {
                                   return Center(
-                                    child: Text("No statuses available"),
+                                    child: Text("No statuses available for today"),
                                   );
                                 }
                                 return Column(
-                                  children: _buildTimeRows(viewModel.statusSpecificList!.data!.statuses),
+                                  children: _buildTimeRows(viewModel.statusTodayList!.data!.statuses),
                                 );
                               },
                             ),
                           ),
+
 
 
                           SizedBox(height: 20.0.h),
@@ -208,11 +196,22 @@ class _TimeSelectionState extends State<TimeSelection> {
                                 builder: (context, viewModel, child) {
                               if (viewModel.isLoading) {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.orangeButtonColor,
+                                    ));
                               }
                               return ConstantLargeButton(
                                 text: "לפרסום הסטטוס ←",
                                 onPressed: () {
+                                  if (widget.statusData?.selectedTime == null) {
+                                    // Set selected time to current time + 1 minute
+                                    _selectedTime = DateTime.now().add(Duration(minutes: 1));
+                                    // Update the statusData with the new time
+                                    widget.statusData?.selectedTime = _selectedTime;
+                                  } else {
+                                    // Ensure the selected time is already set
+                                    widget.statusData?.selectedTime = _selectedTime;
+                                  }
                                   if (widget.statusData?.isEditApi == true) {
                                     if (widget.statusData?.contentType ==
                                         "text") {

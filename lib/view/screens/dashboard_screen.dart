@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:resize/resize.dart';
 import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:social_crm/utilis/constant_textstyles.dart';
+import 'package:social_crm/view/screens/text_status_step1.dart';
 import 'package:social_crm/view/widgets/custom_appbar.dart';
 
 import '../../viewModel/dashboard_viewModel.dart';
@@ -149,7 +150,11 @@ class DashboardScreen extends StatelessWidget {
                                 const SizedBox(height: 14),
                                 GestureDetector(
                                   onTap: () {
-                                    // Handle button tap
+                                    print("Passing ${model.highestViewers.toString()}");
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (i)=>
+                                            TextStatusStep1Screen(textCaption:model.highestViewers.toString() ,))
+                                    );
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
