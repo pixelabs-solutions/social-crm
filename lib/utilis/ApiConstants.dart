@@ -18,7 +18,7 @@ class ApiEndPointsConstants {
   static String  DeleteCustomers = '$baseUrl/customer/delete';
   static String  CountCustomers = '$baseUrl/customer/count';
   static String  EditCustomersStatus = '$baseUrl/customer/update-active-status';
-
+  static String  listOccupations = '$baseUrl/customer/list-occupations';
   //Status Apis
 
   static String UpcomingSatus = '$baseUrl/status/list';

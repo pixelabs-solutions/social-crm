@@ -19,9 +19,7 @@ import '../screens/first_screen.dart';
 
 class WhatsAppCode extends StatefulWidget {
   final int isApproved;
-  const WhatsAppCode({Key? key,
-    required this.isApproved
-  }) : super(key: key);
+  const WhatsAppCode({Key? key, required this.isApproved}) : super(key: key);
 
   @override
   State<WhatsAppCode> createState() => _WhatsAppCodeState();
@@ -35,112 +33,110 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
     super.initState();
     _loadWhatsAppCode();
   }
+
   void _copyCode() {
     if (whatsAppCode != null) {
       Clipboard.setData(ClipboardData(text: whatsAppCode!));
-      ToastUtil.showToast(msg: "Code Copied Successfully",
-          backgroundColor: Colors.green
+      ToastUtil.showToast(
+        msg: "Code Copied Successfully",
+        backgroundColor: Colors.green,
       );
     }
   }
 
   Future<void> _loadWhatsAppCode() async {
     final prefs = await SharedPreferences.getInstance();
+    String? savedWhatsAppCode = prefs.getString('whatsappCode');
+
+
+    print('Retrieved from SharedPreferences - WhatsApp Code: $savedWhatsAppCode');
     setState(() {
-      whatsAppCode = prefs.getString('whatsAppCode');
+      whatsAppCode = prefs.getString('whatsappCode'); // Fixed typo
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
-
           children: [
             Image.asset("assets/logo.png"),
-
             SizedBox(height: 10.0.h),
             Padding(
-              padding:  EdgeInsets.only(left: 14.w, right: 8.w, top: 15.h),
+              padding: EdgeInsets.only(left: 14.w, right: 8.w, top: 15.h),
               child: Container(
                 height: 250.0.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color:Colors.white,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(18.0),
                 ),
                 child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-
-                      children: [
-
-                        Container(
-
-                            decoration: BoxDecoration(
-                                color: AppColors.orangeButtonColor,
-                                borderRadius: BorderRadius.circular(12)
-
-                            ),
-
-                            child: Padding(
-                              padding:  EdgeInsets.symmetric(
-                                  horizontal: 18.w, vertical: 16.h),
-                              child: SvgPicture.asset("assets/faWhatsapp.svg",
-
-                                height: 60.h,
-                                color: AppColors.primaryColor,
-
-                              ),
-                            )),
-                        SizedBox(height: 20.h,),
-                        Text( whatsAppCode!,
-                          style: TextStyle(
-                              color: AppColors.orangeButtonColor, fontSize: 20.sp,
-                              fontWeight: FontWeight.bold
+                  padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.orangeButtonColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 18.w, vertical: 16.h),
+                          child: SvgPicture.asset(
+                            "assets/faWhatsapp.svg",
+                            height: 60.h,
+                            color: AppColors.primaryColor,
                           ),
                         ),
-                        SizedBox(height: 20.h,),
-
-                        Padding(
-                          padding:  EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 8.0.h),
-                          child: ConstantLargeButton(text: "Copy Code",
-                              onPressed: (){
-                                _copyCode();
-                              }),
-                        )
-                      ],
-                    )
+                      ),
+                      SizedBox(height: 20.h,),
+                      Text(
+                        whatsAppCode ?? 'Loading...',
+                        style: TextStyle(
+                          color: AppColors.orangeButtonColor,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20.h,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14.w, vertical: 8.0.h),
+                        child: ConstantLargeButton(
+                          text: "Copy Code",
+                          onPressed: _copyCode,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-
             ),
             SizedBox(height: 20.0.h),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal:16.0.w),
-              child: ConstantLargeButton(text: "Next",
-                  onPressed: (){
-                    fetchData2();
-                    fetchData();
-                  }
+              padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+              child: ConstantLargeButton(
+                text: "Next",
+                onPressed: () {
+                  fetchData2();
+                  fetchData();
+                },
               ),
-            )
-
-
+            ),
           ],
         ),
       ),
     );
   }
+
   Future<void> fetchData() async {
     final String apiUrl = ApiEndPointsConstants.GetUserProfile; // Replace with your API URL
     final prefs = await SharedPreferences.getInstance();
@@ -160,12 +156,12 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
         // Handle successful response
         final jsonResponse = jsonDecode(response.body);
         print('Response body: ${response.body}');
-        if(widget.isApproved==0){
+        if (widget.isApproved == 0) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => RegistrationSuccess()),
           );
-        }else{
+        } else {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => AuthScreen()),
@@ -176,8 +172,9 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
         print('Response body: ${response.body}');
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == 'error') {
-          ToastUtil.showToast(msg: "Please authenticate first to login",
-              backgroundColor: Colors.red
+          ToastUtil.showToast(
+            msg: "Please authenticate first to login",
+            backgroundColor: Colors.red,
           );
         } else {
           ToastUtil.showToast(msg: "Failed to fetch data");
@@ -189,6 +186,7 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
       ToastUtil.showToast(msg: "Error occurred: $e");
     }
   }
+
   Future<void> fetchData2() async {
     final String apiUrl = ApiEndPointsConstants.Conatcts; // Replace with your API URL
     final prefs = await SharedPreferences.getInstance();
@@ -205,18 +203,14 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
       print('Response status code: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-
         final jsonResponse = jsonDecode(response.body);
         print('Response body: ${response.body}');
-
       } else {
         // Handle error response
         print('Response body: ${response.body}');
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == 'error') {
-
         } else {
-
         }
       }
     } catch (e) {
@@ -225,8 +219,4 @@ class _WhatsAppCodeState extends State<WhatsAppCode> {
       ToastUtil.showToast(msg: "Error occurred: $e");
     }
   }
-
-
-
-
 }

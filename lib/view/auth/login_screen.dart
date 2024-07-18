@@ -132,6 +132,7 @@ class _LoginFormState extends State<LoginForm> {
         body: requestBody,
       );
       print('Response status code: ${response.statusCode}');
+      print('Response status code: ${response.body}');
       if (response.statusCode == 200) {
         print('Login successful');
         print('Response data: ${response.body}');
@@ -143,11 +144,11 @@ class _LoginFormState extends State<LoginForm> {
         final userID = jsonResponse['data']['user']['id'];
         final isApproved = jsonResponse['data']['user']['is_approved'];
         print('++++++++++++++${whatsappCode}+++++++++++++++');
-        print('++++++++++++++${userID}+++++++++++++++');
+        print('+++++++++++userID+++${userID}+++++++++++++++');
 
         // Navigate to the appropriate screen based on WhatsApp code and isApproved
         if (whatsappCode != null && whatsappCode.isNotEmpty) {
-          await saveToken(token, userID, whatsappCode ?? '');
+          await saveToken(token, userID, whatsappCode ?? '',isApproved );
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WhatsAppCode(isApproved: isApproved)),
@@ -158,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
             MaterialPageRoute(builder: (context) => RegistrationSuccess()),
           );
         } else if (isApproved == 1) {
-          await saveToken(token, userID, whatsappCode ?? '');
+          await saveToken(token, userID, whatsappCode ?? '',isApproved);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -207,14 +208,26 @@ class _LoginFormState extends State<LoginForm> {
 
 
 
-  Future<void> saveToken(String token, int UserID, String whatsappCode) async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<void> saveToken(String token, int userID, String whatsappCode, int isApproved) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    await prefs.setInt('UserID', UserID);
-    await prefs.setString('whatsAppCode', whatsappCode);
-    print(
-        'Token and WhatsApp code saved to SharedPreferences: $token, $whatsappCode');
+    await prefs.setInt('userID', userID);
+    await prefs.setString('whatsappCode', whatsappCode);
+    await prefs.setInt('isApproved', isApproved);
 
-    print(token);
+    // Print statements to verify saved values
+    print('Token saved to SharedPreferences: $token');
+    print('UserID saved to SharedPreferences: $userID');
+    print('WhatsApp code saved to SharedPreferences: $whatsappCode');
+
+    // Retrieve and print the saved values to ensure they were saved correctly
+    String? savedToken = prefs.getString('token');
+    int? savedUserID = prefs.getInt('userID');
+    String? savedWhatsAppCode = prefs.getString('whatsappCode');
+
+    print('Retrieved from SharedPreferences - Token: $savedToken');
+    print('Retrieved from SharedPreferences - UserID: $savedUserID');
+    print('Retrieved from SharedPreferences - WhatsApp Code: $savedWhatsAppCode');
   }
+
 }

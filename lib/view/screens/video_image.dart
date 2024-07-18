@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_crm/utilis/constant_colors.dart';
 import 'package:video_player/video_player.dart';
 
 import 'video_view_screen.dart';
@@ -55,6 +56,8 @@ class _VideoImageState extends State<VideoImage> {
                   ],
                 )),
           )
-        : const Center(child: CircularProgressIndicator());
+        : const Center(child: CircularProgressIndicator(
+      color: AppColors.orangeButtonColor,
+    ));
   }
 }

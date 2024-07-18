@@ -16,6 +16,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 3;
+
   final List<Widget> _screens = [
     CustomersList(),
     const StatusHistoryView(),
@@ -29,7 +30,10 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         clipBehavior: Clip.none,
         children: [
-          _screens[_selectedIndex],
+          IndexedStack(
+            index: _selectedIndex,
+            children: _screens,
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -49,9 +53,7 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal:
-                          22.0.w), // Increased padding for left and right
+                  padding: EdgeInsets.symmetric(horizontal: 22.0.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -74,25 +76,23 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildAnimatedIcon(int index) {
     double leftPosition =
         (MediaQuery.of(context).size.width / 8) * (2 * index + 1);
-    double iconSize = 20.h; // Adjust the size of the icon as needed
+    double iconSize = 20.h;
 
-    // Adjusting left position for the last icon to move it slightly left
     if (index == 3) {
-      leftPosition -= 16.w; // Adjust the value as needed
+      leftPosition -= 16.w;
     }
     if (index == 2) {
-      leftPosition -= 8.w; // Adjust the value as needed
+      leftPosition -= 8.w;
     }
     if (index == 1) {
-      leftPosition -= 8.w; // Adjust the value as needed
+      leftPosition -= 8.w;
     }
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
-      bottom: _selectedIndex == index ? 40 : 18, // Adjusted bottom position
-      left: leftPosition -
-          18, // Adjusted left position to center the icon, considering padding
+      bottom: _selectedIndex == index ? 40 : 18,
+      left: leftPosition - 18,
 
       child: GestureDetector(
         onTap: () {
@@ -103,8 +103,8 @@ class _MainScreenState extends State<MainScreen> {
         child: ClipRect(
           clipBehavior: Clip.antiAlias,
           child: Container(
-            height: 45.h, // Total height of the icon container
-            width: 50.w, // Total width of the icon container
+            height: 45.h,
+            width: 50.w,
             decoration: BoxDecoration(
               color: _selectedIndex == index
                   ? AppColors.primaryColor
@@ -112,8 +112,8 @@ class _MainScreenState extends State<MainScreen> {
               borderRadius: BorderRadius.circular(15),
               border: _selectedIndex == index
                   ? Border.all(
-                      color: AppColors.scaffoldColor,
-                      width: 4) // Adjust the border color and width as needed
+                  color: AppColors.scaffoldColor,
+                  width: 4)
                   : null,
             ),
             child: Center(
@@ -147,6 +147,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildNavItem(int index, String assetName) {
-    return SizedBox(width: 40.w); // Placeholder to maintain space for icons
+    return SizedBox(width: 40.w);
   }
 }
+

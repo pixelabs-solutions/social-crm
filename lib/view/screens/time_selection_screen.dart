@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import 'package:social_crm/view/widgets/custome_largebutton.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../../Model/status.dart';
+import '../../utilis/shared_prefes.dart';
 import '../../viewModel/status_viewmodel.dart';
 
 class TimeSelection extends StatefulWidget {
@@ -26,10 +28,72 @@ class TimeSelection extends StatefulWidget {
 class _TimeSelectionState extends State<TimeSelection> {
   DateTime _selectedTime = DateTime.now();
   List<Statuses> statuses = [];
-
+  StatusList? statusTodayList;
   String? scheduleDate;
   String? scheduleTime;
   bool isLoading = false;
+  bool isTodayLoading = false;
+  int todayStatusCount = 0;
+  Dio dio = Dio();
+
+
+  @override
+  void initState() {
+    super.initState();
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+    getTodayStatus();
+  }
+
+
+  Future<void> getTodayStatus() async {
+    var token = await SharedPreferences.getInstance().then((value) => value.getString('token'));
+    setState(() {
+      isTodayLoading = true;
+    });
+
+    try {
+      String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      final Uri url = Uri.https(
+        'scrm-apis.woo-management.com',
+        '/api/status/list',
+        {
+          "start_date": todayDate,
+          "end_date": todayDate,
+        },
+      );
+
+      // Print the complete URL to verify query parameters
+      print('Request URL: ${url.toString()}');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print("The Today Status Api Called+++++++++");
+      print('Today Status Api ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        setState(() {
+          statusTodayList = StatusList.fromJson(jsonResponse);
+          todayStatusCount = statusTodayList!.data!.count ?? 0;
+        });
+      } else {
+        throw Exception('Failed to load today\'s status');
+      }
+    } catch (e) {
+      print('Error getting today status: $e');
+    } finally {
+      setState(() {
+        isTodayLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,29 +227,23 @@ class _TimeSelectionState extends State<TimeSelection> {
                           Text("זמנים תפוסים",
                               style: AppConstantsTextStyle.heading2Style),
                           SizedBox(height: 10.0.h),
-                          Expanded(
-                            child: Consumer<TextStatusViewModel>(
-                              builder: (context, viewModel, child) {
-                                if (viewModel.statusIsLoading || viewModel.isTodayLoading) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: AppColors.orangeButtonColor,
-                                    ),
-                                  );
-                                }
-                                if (viewModel.statusTodayList == null ||
-                                    viewModel.statusTodayList!.data == null ||
-                                    viewModel.statusTodayList!.data!.statuses!.isEmpty) {
-                                  return Center(
-                                    child: Text("No statuses available for today"),
-                                  );
-                                }
-                                return Column(
-                                  children: _buildTimeRows(viewModel.statusTodayList!.data!.statuses),
-                                );
-                              },
+                        Expanded(
+                          child: isTodayLoading
+                              ? Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: AppColors.orangeButtonColor,
                             ),
+                          )
+                              : statusTodayList == null ||
+                              statusTodayList!.data == null ||
+                              statusTodayList!.data!.statuses!.isEmpty
+                              ? Center(
+                            child: Text("No statuses available for today"),
+                          )
+                              : Column(
+                            children: _buildTimeRows(statusTodayList!.data!.statuses),
                           ),
+                        ),
 
 
 

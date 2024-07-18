@@ -113,7 +113,8 @@ class VideoUploadStep3Screen extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (i) => CalendarScreen(
+                                            builder: (i) =>
+                                                CalendarScreen(
                                                   statusData: StatusData(
                                                       contentType: "video"),
                                                 )));
@@ -143,37 +144,5 @@ class VideoUploadStep3Screen extends StatelessWidget {
     );
   }
 
-  Widget _buildContainerWithIcon() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 3.0,
-            spreadRadius: 1.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: Image.asset(
-              'assets/videoImgPreview.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          const Positioned(
-            top: 8.0,
-            left: 8.0,
-            child: Icon(Icons.delete, color: Colors.red, size: 24.0),
-          ),
-        ],
-      ),
-    );
-  }
+
 }

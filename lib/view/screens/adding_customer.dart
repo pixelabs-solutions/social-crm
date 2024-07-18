@@ -106,17 +106,21 @@ class AddingCustomerDetails extends StatelessWidget {
                             showText('תעסוקה'),
                             Directionality(
                               textDirection: TextDirection.rtl,
-                              child: CustomDropdownButton(
-                                fieldBackgroundColor:
-                                AppColors.kWhiteColor40Opacity,
+                              child: viewModel.items.isNotEmpty
+                                  ? CustomDropdownButton(
+                                fieldBackgroundColor: AppColors.kWhiteColor40Opacity,
                                 options: viewModel.items,
                                 selectedItem: viewModel.selectedItems,
                                 onOptionSelected: (options) {
                                   viewModel.selectedItems = options;
                                 },
                                 controller: MultiSelectController(),
-                              ),
+                              )
+                                  : Center(child: CircularProgressIndicator(
+                                color: AppColors.orangeButtonColor,
+                              )),
                             ),
+
                             SizedBox(
                               height: 20.h,
                             ),

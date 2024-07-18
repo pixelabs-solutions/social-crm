@@ -55,6 +55,8 @@ class Statuses {
   int? userId;
   String? statusIds;
   int? posted;
+  int? views;
+
 
   Statuses(
       {this.id,
@@ -65,6 +67,7 @@ class Statuses {
       this.scheduleTime,
       this.userId,
       this.statusIds,
+        this.views,
       this.posted});
 
   Statuses.fromJson(Map<String, dynamic> json) {
@@ -77,6 +80,11 @@ class Statuses {
     userId = json['user_id'];
     statusIds = json['status_ids'];
     posted = json['posted'];
+    views = json['views'] is Map
+        ? json['views']['number_of_views'] ?? 0
+        : (json['views'] is List
+        ? json['views'].length
+        : (json['views'] is int ? json['views'] : 0));
   }
 
   Map<String, dynamic> toJson() {

@@ -237,12 +237,27 @@ class _ClientPageState extends State<ClientPage> {
         if (isLoading)
           Container(
             color: Colors.black.withOpacity(0.5), // Adjust the opacity as needed
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.orangeButtonColor,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(
+                    color: AppColors.orangeButtonColor,
+                  ),
+                  const SizedBox(height: 16.0), // Space between the loading indicator and text
+                  const Text(
+                    "Fetching Customer Details",
+                    style: TextStyle(
+                      color: Colors.white, // Adjust text color as needed
+                      fontSize: 10.0,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
       ],
     );
   }

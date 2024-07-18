@@ -83,6 +83,18 @@ class CustomersList extends StatelessWidget {
                                 color: AppColors.orangeButtonColor,
                               ));
                         }
+                        if (viewModel.customers.isEmpty) {
+                          return Center(
+                            child: Text(
+                              "אין לקוחות", // "No Customers" in Hebrew
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: AppColors.orangeButtonColor, // or any desired color
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }
                         return ScrollbarTheme(
                           data: ScrollbarThemeData(
                             thumbColor: WidgetStateProperty.all(

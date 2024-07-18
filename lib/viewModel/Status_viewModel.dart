@@ -25,17 +25,17 @@ class TextStatusViewModel extends ChangeNotifier {
   StatusData _textStatus = StatusData(text: '', backgroundColorHex: '#FFFFFF');
 
   int statusSpecificCount=0;
-  int todayStatusCount = 0;
+
   StatusData get textStatus => _textStatus;
 
   StatusList? _statusList;
   StatusList? get statusList => _statusList;
 
   StatusList? statusSpecificList;
-  StatusList? statusTodayList;
+
   bool statusIsLoading = false;
   bool _isLoading = false;
-  bool isTodayLoading = false;
+
   bool get isLoading => _isLoading;
 
   bool isSpecficLoading = false;
@@ -45,42 +45,12 @@ class TextStatusViewModel extends ChangeNotifier {
   TextStatusViewModel() {
     getAllStatus();
     getMonthAllStatus();
-    getTodayStatus();
+
   }
 
 
 
-  Future<void> getTodayStatus() async {
-    Dio dio = Dio();
-    var token = SharedPrefernce.prefs?.getString('token');
-    isTodayLoading = true;
-    notifyListeners();
 
-    try {
-      String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-      final response = await dio.get(
-        "https://scrm-apis.woo-management.com/api/status/list",
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-        }),
-        queryParameters: {
-          "start_date": todayDate,
-          "end_date": todayDate,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        statusTodayList = StatusList.fromJson(response.data);
-        todayStatusCount = response.data['data']['count'];
-      }
-    } catch (e) {
-      print('Error getting today status: $e');
-    } finally {
-      isTodayLoading = false;
-      notifyListeners();
-    }
-  }
 
   Future<void> getAllStatus() async {
     Dio dio = Dio();
@@ -194,6 +164,67 @@ class TextStatusViewModel extends ChangeNotifier {
   }
 
   //** Post-Text */
+  // Future<void> postTextStatus(BuildContext context, String? bgcolor,
+  //     String? caption, String? date, String? time) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString('token');
+  //   int? userID = prefs.getInt('userID');
+  //   try {
+  //     _isLoading = true;
+  //     notifyListeners();
+  //
+  //     final request = jsonEncode({
+  //       "type": "text",
+  //       "content": {
+  //         "background_color": bgcolor,
+  //         "caption_color": "#000000",
+  //         "font_type": "Arial",
+  //         "caption": caption,
+  //         "id": userID
+  //       },
+  //       "schedule_date": date?.substring(0, 10),
+  //       "schedule_time": time?.substring(11, 19)
+  //     });
+  //
+  //     final response = await http.post(
+  //         Uri.parse('${ApiEndPointsConstants.baseUrl}/status/create'),
+  //         headers: {
+  //           'Authorization': 'Bearer $token',
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: request);
+  //
+  //     if (response.statusCode == 201) {
+  //       //*** Chnge this route */
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (i) => const PublishSuccess()),
+  //       );
+  //       Fluttertoast.showToast(
+  //         msg: 'Status Uploaded Sucessfully',
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         timeInSecForIosWeb: 3,
+  //         backgroundColor: Colors.green,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0,
+  //       );
+  //     } else {
+  //       Fluttertoast.showToast(
+  //         msg: 'Uploading Failed',
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         timeInSecForIosWeb: 3,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0,
+  //       );
+  //     }
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
   Future<void> postTextStatus(BuildContext context, String? bgcolor,
       String? caption, String? date, String? time) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -216,6 +247,9 @@ class TextStatusViewModel extends ChangeNotifier {
         "schedule_time": time?.substring(11, 19)
       });
 
+      // Print the userID being sent in the request body
+      print("UserID being sent to API: $userID");
+
       final response = await http.post(
           Uri.parse('${ApiEndPointsConstants.baseUrl}/status/create'),
           headers: {
@@ -225,13 +259,13 @@ class TextStatusViewModel extends ChangeNotifier {
           body: request);
 
       if (response.statusCode == 201) {
-        //*** Chnge this route */
+        //*** Change this route */
         Navigator.push(
           context,
           MaterialPageRoute(builder: (i) => const PublishSuccess()),
         );
         Fluttertoast.showToast(
-          msg: 'Status Uploaded Sucessfully',
+          msg: 'Status Uploaded Successfully',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
@@ -256,6 +290,7 @@ class TextStatusViewModel extends ChangeNotifier {
     }
   }
 
+
   //** Post-Image */
 
   Future<void> postImageStatus(
@@ -270,7 +305,7 @@ class TextStatusViewModel extends ChangeNotifier {
       const MapEntry('type', 'image'),
       MapEntry('schedule_date', date?.substring(0, 10) ?? ''),
       MapEntry('schedule_time', time?.substring(11, 19) ?? ''),
-      MapEntry('content[caption]', caption ?? 'hello world'),
+      MapEntry('content[caption]', caption ?? ''),
       MapEntry('user_id', userID.toString()), // Add caption to content
       // Add userID to formData
     ]);

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:provider/provider.dart';
@@ -25,20 +26,51 @@ class CustomerViewModel extends ChangeNotifier {
 
   bool get isAddCusLoading => _isAddCusLoading;
 
-  final List<ValueItem> _items = [
-    const ValueItem(label: 'Influencer', value: 'Influencer'),
-    const ValueItem(label: 'Doctor', value: 'Doctor'),
-    // Add more items as needed
-  ];
+  List<ValueItem> _items = [];
 
   List<ValueItem> get items => _items;
+
+  CustomerViewModel(){
+    fetchOccupations();
+  }
+
+  Future<List<Occupation>> fetchOccupations() async {
+    final String apiUrl = ApiEndPointsConstants.listOccupations;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    final response = await Dio().get(
+      apiUrl,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    log("Ftehed Occupations...${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = response.data['data'];
+      List<Occupation> occupations = data.map((json) => Occupation.fromJson(json)).toList();
+
+      // Update the _items list
+      _items = occupations.map((occupation) {
+        return ValueItem(label: occupation.name, value: occupation.name);
+      }).toList();
+
+      notifyListeners();
+      return occupations;
+    } else {
+      throw Exception('Failed to load occupations');
+    }
+  }
+
 
   Future<void> fetchCustomers() async {
     final String apiUrl = ApiEndPointsConstants.listCustomers;
 
-
     notifyListeners();
-
 
     try {
       isLoading = true;
@@ -321,5 +353,19 @@ class CustomerViewModel extends ChangeNotifier {
     phoneController.clear();
     mailController.clear();
     selectedItems.clear();
+  }
+}
+
+class Occupation {
+  final int id;
+  final String name;
+
+  Occupation({required this.id, required this.name});
+
+  factory Occupation.fromJson(Map<String, dynamic> json) {
+    return Occupation(
+      id: json['id'],
+      name: json['name'],
+    );
   }
 }

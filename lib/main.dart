@@ -8,9 +8,8 @@ import 'package:social_crm/utilis/shared_prefes.dart';
 import 'package:social_crm/view/screens/navigaton_main.dart';
 import 'package:social_crm/view/screens/first_screen.dart';
 import 'package:social_crm/viewModel/Status_viewModel.dart';
-
-import 'viewModel/CustomerList_vm.dart';
-import 'viewModel/StatusDetails_viewModel.dart';
+import 'package:social_crm/viewModel/CustomerList_vm.dart';
+import 'package:social_crm/viewModel/StatusDetails_viewModel.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 void main() async {
@@ -30,13 +29,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CustomerViewModel()),
-
-
         ChangeNotifierProvider(create: (_) => StatusHistoryViewModel()),
-        ChangeNotifierProvider(create: (_)=>TextStatusViewModel())
-
-
-
+        ChangeNotifierProvider(create: (_) => TextStatusViewModel())
       ],
       child: Resize(
         builder: () {
@@ -55,26 +49,32 @@ class MyApp extends StatelessWidget {
 
   bool checkTokenValidity() {
     var token = SharedPrefernce.prefs?.getString('token');
-
-    if (token == null) {
+    var isApproved = SharedPrefernce.prefs?.getInt('isApproved');
+    if (token == null || token.isEmpty) {
       return false; // No token exists
+    }
+    if (isApproved == 0) {
+      return false; // User is not approved
     }
 
     bool isTokenExpired = isTokenExpiredFunction(token);
-    return token.isNotEmpty && !isTokenExpired;
+    return !isTokenExpired;
   }
 
   bool isTokenExpiredFunction(String token) {
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-
-    if (decodedToken['exp'] != null) {
-      int expiryTimeInSeconds = decodedToken['exp'];
-      DateTime expiryDateTime =
-          DateTime.fromMillisecondsSinceEpoch(expiryTimeInSeconds * 1000);
-      print("Token Expiry Date: $expiryDateTime");
-      return expiryDateTime.isBefore(DateTime.now());
-    } else {
-      return true; // If 'exp' claim is missing, consider token as expired
+    try {
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      if (decodedToken['exp'] != null) {
+        int expiryTimeInSeconds = decodedToken['exp'];
+        DateTime expiryDateTime = DateTime.fromMillisecondsSinceEpoch(expiryTimeInSeconds * 1000);
+        print("Token Expiry Date: $expiryDateTime");
+        return expiryDateTime.isBefore(DateTime.now());
+      } else {
+        return true; // If 'exp' claim is missing, consider token as expired
+      }
+    } catch (e) {
+      print("Error decoding token: $e");
+      return true; // If there is an error decoding the token, consider it expired
     }
   }
 }

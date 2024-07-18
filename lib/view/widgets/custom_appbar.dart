@@ -84,28 +84,35 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               style: TextStyle(color: Colors.white),
             ),
             actions: <Widget>[
-              ElevatedButton(
-
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primaryColor,
-                  side: const BorderSide(color: AppColors.orangeButtonColor),
+              Center( // Center the buttons horizontally
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // Center the buttons
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primaryColor,
+                        side: const BorderSide(color: AppColors.orangeButtonColor),
+                      ),
+                      child: const Text('ביטול'),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                    const SizedBox(width: 8), // Add spacing between buttons
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.orangeButtonColor,
+                      ),
+                      child: const Text('התנתקות'),
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // Close the dialog
+                        await logoutUser(context); // Call the logout function
+                      },
+                    ),
+                  ],
                 ),
-                child: const Text('ביטול'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.orangeButtonColor,
-                ),
-                child: const Text('התנתקות'),
-                onPressed: () async {
-                  Navigator.of(context).pop(); // Close the dialog
-                  await logoutUser(context); // Call the logout function
-                },
               ),
             ],
           ),
@@ -113,6 +120,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       },
     );
   }
+
 
 
 

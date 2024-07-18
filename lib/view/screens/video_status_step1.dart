@@ -13,6 +13,7 @@ import '../../viewModel/status_viewmodel.dart';
 import '../widgets/custom_appbar.dart';
 import '../widgets/custome_largebutton.dart';
 import '../widgets/customerSlider.dart';
+import 'calendar_screen.dart'; // Import your CalendarScreen
 
 class VideoUploadStep1Screen extends StatefulWidget {
   const VideoUploadStep1Screen({super.key});
@@ -26,6 +27,7 @@ class _VideoUploadStep1ScreenState extends State<VideoUploadStep1Screen> {
   VideoPlayerController? _videoController;
   double? videoDuration;
   StatusData? statusData;
+  String? selectedFileName;
 
   void _initializeVideoController() {
     _videoController = VideoPlayerController.file(Variables.selectedVideo!)
@@ -33,6 +35,7 @@ class _VideoUploadStep1ScreenState extends State<VideoUploadStep1Screen> {
         setState(() {
           videoDuration =
               (_videoController!.value.duration.inSeconds).toDouble();
+          selectedRange = videoDuration!; // Set selectedRange to the entire duration
         });
         _videoController!.dispose();
       });
@@ -78,18 +81,17 @@ class _VideoUploadStep1ScreenState extends State<VideoUploadStep1Screen> {
               Padding(
                 padding: EdgeInsets.only(left: 14.0.w, right: 10.w, top: 10.h),
                 child: Container(
-                  height: 370
-                      .h, // Adjusted height to accommodate video preview and controls
+                  height: 370.h, // Adjusted height to accommodate video preview and controls
                   width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(18.0),
                   ),
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 15.w),
+                    padding: EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 15.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(height: 10.h),
                         Text(
@@ -99,61 +101,68 @@ class _VideoUploadStep1ScreenState extends State<VideoUploadStep1Screen> {
                         SizedBox(height: 20.0.h),
                         _buildVideoSelectionContainer(),
                         SizedBox(height: 20.0.h),
-                        // Show video preview if video is selected
-                        SizedBox(height: 20.0.h),
                         Text(
-                          'סמנו את כמות השניות לכל סטטוס',
-                          style: AppConstantsTextStyle.heading2Style,
+                          selectedFileName != null
+                              ? 'נבחר קובץ: $selectedFileName'
+                              : 'לא נבחר קובץ וידיאו', // No video selected message
+                          style: AppConstantsTextStyle.paragraph2Style,
                         ),
+
+                        SizedBox(height: 20.0.h),
+
+                        if (videoDuration != null && videoDuration! > 15)
                         SizedBox(height: 10.0.h),
-                        videoDuration != null
+                        videoDuration != null && videoDuration! >= 15
                             ? Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 8.0.w),
-                                child: CustomSlider(
-                                  minValue: 1,
-                                  maxValue: videoDuration!,
-                                  initialValue: 1,
-                                  onValueChanged: (value) {
-                                    setState(() {
-                                      selectedRange = value;
-                                    });
-                                  },
-                                ),
-                              )
+                          padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+                          child: CustomSlider(
+                            minValue: 1,
+                            maxValue: videoDuration!,
+                            initialValue: 1,
+                            onValueChanged: (value) {
+                              setState(() {
+                                selectedRange = value;
+                              });
+                            },
+                          ),
+                        )
                             : const SizedBox.shrink(),
                         SizedBox(height: 20.0.h),
                         Consumer<TextStatusViewModel>(
-                            builder: (context, viewModel, child) {
-                          if (viewModel.isLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: ConstantLargeButton(
-                              text: 'לחיתוך הסרטון ←',
-                              onPressed: () {
-                                if (Variables.selectedVideo == null) {
-                                  Fluttertoast.showToast(
-                                    msg: 'No video selected',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 3,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-                                  return;
-                                } else {
-                                  viewModel.postVideoforSpilts(
-                                      context, selectedRange);
-                                }
-                              },
-                            ),
-                          );
-                        }),
+                          builder: (context, viewModel, child) {
+                            if (viewModel.isLoading) {
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.orangeButtonColor,
+                                  ));
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: ConstantLargeButton(
+                                text: videoDuration != null && videoDuration! < 15
+                                    ? 'העלאה בלי חיתוך'
+                                    : 'לחיתוך הסרטון ←',
+                                onPressed: () {
+                                  if (Variables.selectedVideo == null) {
+                                    Fluttertoast.showToast(
+                                      msg: 'No video selected',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 3,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0,
+                                    );
+                                    return;
+                                  } else {
+                                    viewModel.postVideoforSpilts(
+                                        context, selectedRange);
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -202,11 +211,11 @@ class _VideoUploadStep1ScreenState extends State<VideoUploadStep1Screen> {
 
   Future<void> _selectVideo() async {
     final XFile? video =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (video != null) {
       setState(() {
         Variables.selectedVideo = File(video.path);
-        // _initializeTrimmer();
+        selectedFileName = video.name;
       });
       _initializeVideoController();
     }
